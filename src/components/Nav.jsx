@@ -3,9 +3,9 @@
 
   function Nav({setShowPopup,setIsSignUp}) {
     return (
-      <div className="sticky top-0 left-0 w-full bg-white text-black p-4 flex justify-between items-center z-50">
+      <div className="fixed top-0 left-0 w-full bg-white text-black p-4 flex justify-between items-center z-50">
 
-          <div className='flex gap-3 '>
+          <div className='flex gap-2 ml-4'>
               <img src={Logo} alt="Logo" className='h-10'/>
               <div className="text-2xl font-bold">VitaCraft</div>
           </div>
