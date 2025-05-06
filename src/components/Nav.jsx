@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import {
   FaBars,
@@ -14,6 +15,7 @@ import Logo from './../assets/Logo.png';
 import { motion, AnimatePresence } from 'framer-motion';
 
 function Nav({ setShowPopup, setIsSignUp }) {
+  const { authUser, isLoggedIn, logout, isLoading } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [prevScroll, setPrevScroll] = useState(0);
   const [visible, setVisible] = useState(true);
@@ -26,7 +28,6 @@ function Nav({ setShowPopup, setIsSignUp }) {
     setIsSignUp(isSignup);
     setIsOpen(false);
   };
-
   const handleScroll = () => {
     const currentScroll = window.scrollY;
     setVisible(prevScroll > currentScroll || currentScroll < 10);
@@ -132,6 +133,7 @@ function Nav({ setShowPopup, setIsSignUp }) {
             </motion.div>
           )}
         </motion.nav>
+
       )}
     </AnimatePresence>
   );
