@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaBars, FaTimes, FaUserCircle } from "react-icons/fa";
 import Logo from "./../assets/Logo.png";
 import { useAuth } from "../context/auth_context";
+import { Link } from "react-router-dom";
 
 function Nav({ setShowPopup, setIsSignUp }) {
   const { authUser, isLoggedIn, logout, isLoading } = useAuth();
@@ -34,9 +35,9 @@ function Nav({ setShowPopup, setIsSignUp }) {
           <a href="/" className="hover:text-[#406B98]">
             Home
           </a>
-          <a href="/templates" className="hover:text-[#406B98]">
+          <Link to="/templates" className="hover:text-[#406B98]">
             Templates
-          </a>
+          </Link>
           <a href="/coverpage" className="hover:text-[#406B98]">
             Cover Page
           </a>
@@ -97,18 +98,41 @@ function Nav({ setShowPopup, setIsSignUp }) {
           <a href="/ats" onClick={() => setIsOpen(false)}>
             ATS Checker
           </a>
-          <button
-            onClick={() => handleNavClick(true)}
-            className="text-[#406B98] font-semibold"
-          >
-            Sign Up
-          </button>
-          <button
-            onClick={() => handleNavClick(false)}
-            className="bg-[#406B98] text-white px-4 py-2 rounded font-semibold hover:bg-white hover:text-[#406B98] border"
-          >
-            Log in
-          </button>
+
+          {isLoggedIn && authUser ? (
+            <>
+              <div className="flex items-center space-x-2">
+                <FaUserCircle className="text-xl text-[#406B98]" />
+                <span className="font-semibold text-[#406B98]">
+                  {authUser?.displayName || "Profile"}
+                </span>
+              </div>
+              <button
+                onClick={() => {
+                  _logout();
+                  setIsOpen(false);
+                }}
+                className="text-sm font-medium cursor-pointer text-white px-3 py-2 bg-red-600 rounded hover:text-red-700"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => handleNavClick(true)}
+                className="text-[#406B98] font-semibold"
+              >
+                Sign Up
+              </button>
+              <button
+                onClick={() => handleNavClick(false)}
+                className="bg-[#406B98] text-white px-4 py-2 rounded font-semibold hover:bg-white hover:text-[#406B98] border"
+              >
+                Log in
+              </button>
+            </>
+          )}
         </div>
       )}
     </nav>
