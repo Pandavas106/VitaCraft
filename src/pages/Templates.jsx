@@ -21,6 +21,10 @@ function Templates() {
           setIsSignUp={setIsSignUp}
         />
       )}
+
+      <div className="h-screen bg-[#D0F6FE]">
+        <h1>Resume templates</h1>
+      </div>
     </div>
   );
 }
