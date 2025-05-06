@@ -60,8 +60,15 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider value={value}>
       {loading ? (
         <div className="flex justify-center items-center h-screen backdrop-blur-sm bg-white/30">
-          <p className="text-xl text-gray-600">Loading...</p>
+        <div className="relative w-16 h-16">
+          <div className="absolute inset-0 border-4 border-transparent border-t-blue-500 rounded-full animate-spin"></div>
+          <div className="absolute inset-0 border-4 border-transparent border-b-blue-500 rounded-full animate-spin delay-200"></div>
         </div>
+        
+      </div>
+      
+      
+      
       ) : (
         children
       )}

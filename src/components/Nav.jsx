@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/auth_context";
 import Logo from "./../assets/Logo.png";
 import { motion, AnimatePresence } from "framer-motion";
@@ -20,6 +20,7 @@ function Nav({ setShowPopup, setIsSignUp }) {
   const [isOpen, setIsOpen] = useState(false);
   const [visible, setVisible] = useState(true);
   const prevScrollRef = useRef(0);
+  const location = useLocation();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -55,6 +56,13 @@ function Nav({ setShowPopup, setIsSignUp }) {
     { to: "/ats", label: "ATS Checker", icon: <FaCheckCircle /> },
   ];
 
+  const getLinkClass = (path) =>
+    `flex items-center gap-2 font-medium transition ${
+      location.pathname === path
+        ? "text-[#406B98] font-semibold"
+        : "text-gray-700 hover:text-[#406B98]"
+    }`;
+
   return (
     <AnimatePresence>
       {visible && (
@@ -66,19 +74,17 @@ function Nav({ setShowPopup, setIsSignUp }) {
           className="fixed top-0 left-0 w-full bg-white shadow-md z-[9999]"
         >
           <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            {/* Logo - slightly to left */}
             <Link to="/" className="flex items-center gap-2 ml-[-10px]">
               <img src={Logo} alt="Logo" className="h-10" />
               <span className="text-xl font-bold text-[#406B98]">VitaCraft</span>
             </Link>
 
-            {/* Desktop Nav */}
             <div className="hidden md:flex gap-8 items-center pl-4">
               {navLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="flex items-center gap-2 text-gray-700 hover:text-[#406B98] font-medium transition"
+                  className={getLinkClass(link.to)}
                 >
                   {link.icon}
                   {link.label}
@@ -89,9 +95,9 @@ function Nav({ setShowPopup, setIsSignUp }) {
                 <>
                   <div className="flex items-center gap-2 text-[#406B98] font-semibold">
                     <FaUserCircle className="text-xl" />
-                    <Link to="/profile" className="text-[#406B98] hover:underline">
-    {authUser?.displayName || "Profile"}
-  </Link>
+                    <Link to="/profile" className={getLinkClass("/profile")}>
+                      {authUser?.displayName || "Profile"}
+                    </Link>
                   </div>
                   <button
                     onClick={_logout}
@@ -143,7 +149,7 @@ function Nav({ setShowPopup, setIsSignUp }) {
                     key={link.to}
                     to={link.to}
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-2 text-gray-800 hover:text-[#406B98] transition"
+                    className={getLinkClass(link.to)}
                   >
                     {link.icon}
                     {link.label}
