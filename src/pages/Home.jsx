@@ -20,7 +20,7 @@ import {
   FaWordpress,
 } from "react-icons/fa";
 
-// Your imports remain the same
+
 
 function Home() {
   
