@@ -6,7 +6,7 @@ import TemplateSection from "../components/Home_Components/Template_Section";
 import CoverPageSection from "../components/Home_Components/Coverpage_Section";
 import ATSScoreSection from "../components/Home_Components/ATS_Section";
 import FAQSection from "../components/Home_Components/FAQ_Section";
-import Footer from "../components/Footer";
+
 
 function Home() {
   const [showPopup, setShowPopup] = useState(false);
@@ -42,7 +42,6 @@ function Home() {
       <CoverPageSection/>
       <ATSScoreSection/>
       <FAQSection/>
-      <Footer/>
     </div>
   );
 }

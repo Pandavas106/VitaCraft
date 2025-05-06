@@ -89,7 +89,9 @@ function Nav({ setShowPopup, setIsSignUp }) {
                 <>
                   <div className="flex items-center gap-2 text-[#406B98] font-semibold">
                     <FaUserCircle className="text-xl" />
-                    {authUser?.displayName || "Profile"}
+                    <Link to="/profile" className="text-[#406B98] hover:underline">
+    {authUser?.displayName || "Profile"}
+  </Link>
                   </div>
                   <button
                     onClick={_logout}
