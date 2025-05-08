@@ -3,6 +3,7 @@ import { FaArrowLeft, FaArrowRight, FaPlus } from "react-icons/fa";
 import MainP from "./../assets/MainP.png";
 import R1 from "./../assets/R1.jpg";
 import { useNavigate } from "react-router-dom";
+import Resume1 from "../components/Resume_Templates/Resume1";
 
 function Templates() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);

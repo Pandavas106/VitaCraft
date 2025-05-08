@@ -1,11 +1,10 @@
-import React from 'react';
+import React from "react";
 
-const ResumePreview = ({ resumeData }) => {
+const Resume1 = ({ resumeData }) => {
   const handlePrint = () => window.print();
 
   return (
     <div className="w-full md:w-1/2 bg-white p-6 rounded-lg shadow-md h-screen overflow-y-auto">
-      {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Resume Preview</h2>
         <button
@@ -30,7 +29,6 @@ const ResumePreview = ({ resumeData }) => {
         </button>
       </div>
 
-      {/* Resume Content */}
       <div className="resume-preview p-6 border border-gray-300 rounded-lg">
         {/* Personal Info */}
         <div className="text-center mb-8">
@@ -58,7 +56,9 @@ const ResumePreview = ({ resumeData }) => {
                 </div>
                 <div className="text-right">
                   <div>{edu.location}</div>
-                  <div>{edu.startYear} – {edu.endYear}</div>
+                  <div>
+                    {edu.startYear} – {edu.endYear}
+                  </div>
                 </div>
               </div>
             </div>
@@ -76,7 +76,9 @@ const ResumePreview = ({ resumeData }) => {
                 </div>
                 <div className="text-right text-sm">
                   <div>{exp.location}</div>
-                  <div>{exp.startDate} – {exp.endDate}</div>
+                  <div>
+                    {exp.startDate} – {exp.endDate}
+                  </div>
                 </div>
               </div>
               <ul className="list-disc pl-5 text-sm mt-1">
@@ -129,7 +131,9 @@ const ResumePreview = ({ resumeData }) => {
           {resumeData.projects.map((project) => (
             <div key={project.id} className="mb-4">
               <div className="font-bold">{project.title}</div>
-              <div className="font-semibold text-sm italic mb-1">{project.subtitle}</div>
+              <div className="font-semibold text-sm italic mb-1">
+                {project.subtitle}
+              </div>
               <ul className="list-disc pl-5 text-sm">
                 {project.points.map((point, index) => (
                   <li key={index}>{point}</li>
@@ -169,7 +173,7 @@ const ResumePreview = ({ resumeData }) => {
       </div>
 
       {/* Print Styles */}
-      <style jsx global>{`
+      {/* <style jsx global>{`
         @media print {
           body * {
             visibility: hidden;
@@ -192,16 +196,42 @@ const ResumePreview = ({ resumeData }) => {
             display: none !important;
           }
         }
-      `}</style>
+      `}</style> */}
+      <style>{`
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+
+    .resume-preview,
+    .resume-preview * {
+      visibility: visible;
+    }
+
+    .resume-preview {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      border: none !important;
+    }
+
+    button {
+      display: none !important;
+    }
+  }
+`}</style>
     </div>
   );
 };
 
 const Section = ({ title, children }) => (
   <div className="mb-6">
-    <h2 className="text-xl font-bold border-b-2 border-gray-300 pb-1 mb-3">{title}</h2>
+    <h2 className="text-xl font-bold border-b-2 border-gray-300 pb-1 mb-3">
+      {title}
+    </h2>
     {children}
   </div>
 );
 
-export default ResumePreview;
+export default Resume1;
