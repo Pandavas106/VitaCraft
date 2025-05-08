@@ -12,6 +12,10 @@ import OrganizationData from "../components/LivePreview_Components/Organization_
 import ProjectsData from "../components/LivePreview_Components/Projects_Data";
 import Resume2 from "../components/Resume_Templates/Resume2";
 import Resume3 from "../components/Resume_Templates/Resume3";
+import Resume4 from "../components/Resume_Templates/Resume4";
+import Resume5 from "../components/Resume_Templates/Resume5";
+import Resume6 from "../components/Resume_Templates/Resume6";
+import Resume7 from "../components/Resume_Templates/Resume7";
 
 export default function ResumeBuilder() {
   const [resumeData, setResumeData] = useState(defaultResumeData);
@@ -94,7 +98,7 @@ export default function ResumeBuilder() {
           />
         </div>
         <div className="w-full md:w-2/3 h-screen overflow-y-auto">
-          <Resume1 resumeData={resumeData} />
+          <Resume7 resumeData={resumeData} />
         </div>
       </div>
     </div>
