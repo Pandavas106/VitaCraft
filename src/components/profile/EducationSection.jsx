@@ -30,7 +30,6 @@ const EducationSection = () => {
       [name]: type === 'checkbox' ? checked : value
     }))
     
-    // If current education, clear end date
     if (name === 'current' && checked) {
       setFormData(prev => ({
         ...prev,
@@ -84,27 +83,16 @@ const EducationSection = () => {
   }
 
   return (
-    <div style={{ animation: 'fadeIn 300ms' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#1A202C' }}>Education</h2>
+    <div >
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-extrabold text-center text-blue-700 mb-8 tracking-wide drop-shadow-sm">
+          Education
+        </h2>
         {!isAddingNew && editingId === null && (
           <button 
-            style={{
-              padding: '0.75rem 1.5rem',
-              borderRadius: '0.75rem',
-              fontWeight: 500,
-              background: 'linear-gradient(to right, #3182ce, #D53F8C)',
-              color: 'white',
-              transition: 'all 300ms',
-              transform: 'scale(1)',
-              ':hover': { transform: 'scale(1.05)' },
-              ':focus': { outline: 'none', ring: '2px solid #3182ce' }
-            }}
+            className="px-6 py-3 rounded-lg font-medium text-white bg-gradient-to-r from-indigo-500 to-pink-500 hover:scale-105 transition-all"
             onClick={handleAddNew}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }} viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
-            </svg>
             Add Education
           </button>
         )}
@@ -112,72 +100,117 @@ const EducationSection = () => {
 
       {/* Form for adding/editing */}
       {(isAddingNew || editingId !== null) && (
-        <form onSubmit={handleSubmit} style={{ marginBottom: '2rem', backgroundColor: '#F7FAFC', padding: '1.5rem', borderRadius: '0.5rem', border: '1px solid #E2E8F0', animation: 'slideUp 300ms' }}>
-          <h3 style={{ fontSize: '1.125rem', fontWeight: 500, color: '#1A202C', marginBottom: '1rem' }}>
+        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 mb-6">
+          <h3 className="text-2xl font-medium text-gray-800 mb-4">
             {isAddingNew ? 'Add New Education' : 'Edit Education'}
           </h3>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem', marginBottom: '1rem' }}>
+          <div className="grid grid-cols-1 gap-6 mb-6">
             <div>
-              <label htmlFor="school" style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#4A5568', marginBottom: '0.25rem' }}>
-                School/Institution*
-              </label>
+              <label htmlFor="school" className="block text-gray-600 font-medium mb-2">School/Institution*</label>
               <input
                 type="text"
                 id="school"
                 name="school"
                 value={formData.school}
                 onChange={handleChange}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem 1rem',
-                  borderRadius: '0.75rem',
-                  border: '2px solid #E2E8F0',
-                  backgroundColor: 'white',
-                  focusOutline: 'none',
-                  focusRing: '2px solid #3182ce',
-                  transition: 'all 300ms',
-                  ':hover': { borderColor: '#3182ce' }
-                }}
+                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="University or school name"
                 required
               />
             </div>
             
-            {/* More form fields similar to the one above for location, degree, etc. */}
+            <div>
+              <label htmlFor="degree" className="block text-gray-600 font-medium mb-2">Degree*</label>
+              <input
+                type="text"
+                id="degree"
+                name="degree"
+                value={formData.degree}
+                onChange={handleChange}
+                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Degree obtained"
+                required
+              />
+            </div>
 
+            <div>
+              <label htmlFor="fieldOfStudy" className="block text-gray-600 font-medium mb-2">Field of Study*</label>
+              <input
+                type="text"
+                id="fieldOfStudy"
+                name="fieldOfStudy"
+                value={formData.fieldOfStudy}
+                onChange={handleChange}
+                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Your field of study"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="startDate" className="block text-gray-600 font-medium mb-2">Start Date*</label>
+              <input
+                type="month"
+                id="startDate"
+                name="startDate"
+                value={formData.startDate}
+                onChange={handleChange}
+                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="endDate" className="block text-gray-600 font-medium mb-2">End Date (or Expected)*</label>
+              <input
+                type="month"
+                id="endDate"
+                name="endDate"
+                value={formData.endDate}
+                onChange={handleChange}
+                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={formData.current}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="location" className="block text-gray-600 font-medium mb-2">Location</label>
+              <input
+                type="text"
+                id="location"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="City, Country"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="description" className="block text-gray-600 font-medium mb-2">Description</label>
+              <textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Additional details"
+              ></textarea>
+            </div>
           </div>
-          
-          <div style={{ display: 'flex', gap: '1rem' }}>
+
+          <div className="flex gap-4">
             <button 
               type="button" 
-              style={{
-                padding: '0.75rem 1.5rem',
-                borderRadius: '0.75rem',
-                fontWeight: 500,
-                backgroundColor: 'white',
-                color: '#4A5568',
-                border: '2px solid #E2E8F0',
-                transition: 'all 300ms',
-                ':hover': { backgroundColor: '#EDF2F7', borderColor: '#CBD5E0' }
-              }}
+              className="px-6 py-3 rounded-lg bg-gray-200 text-gray-800 font-medium hover:bg-gray-300 transition-all"
               onClick={handleCancel}
             >
               Cancel
             </button>
             <button 
               type="submit" 
-              style={{
-                padding: '0.75rem 1.5rem',
-                borderRadius: '0.75rem',
-                fontWeight: 500,
-                background: 'linear-gradient(to right, #3182ce, #D53F8C)',
-                color: 'white',
-                transition: 'all 300ms',
-                transform: 'scale(1)',
-                ':hover': { transform: 'scale(1.05)' },
-                ':focus': { outline: 'none', ring: '2px solid #3182ce' }
-              }}
+              className="px-6 py-3 rounded-lg bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-medium hover:scale-105 transition-all"
             >
               {isAddingNew ? 'Add Education' : 'Save Changes'}
             </button>
@@ -187,48 +220,35 @@ const EducationSection = () => {
 
       {/* List of education entries */}
       {education.length > 0 ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="space-y-4">
           {education.map(item => (
             <div 
               key={item.id} 
-              style={{
-                backgroundColor: 'white',
-                padding: '1rem',
-                borderRadius: '0.5rem',
-                border: '1px solid #E2E8F0',
-                transition: 'box-shadow 200ms',
-                ':hover': { boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)' }
-              }}
+              className="bg-white p-6 rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition-all"
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className="flex justify-between">
                 <div>
-                  <h3 style={{ fontWeight: 500 }}>{item.school}</h3>
-                  <p style={{ color: '#718096' }}>{item.degree} in {item.fieldOfStudy}</p>
-                  <p style={{ fontSize: '0.875rem', color: '#A0AEC0' }}>
-                    {new Date(item.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })} - 
-                    {item.current ? ' Present' : ` ${new Date(item.endDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}`}
+                  <h3 className="text-xl font-semibold text-gray-800">{item.school}</h3>
+                  <p className="text-gray-600">{item.degree} in {item.fieldOfStudy}</p>
+                  <p className="text-sm text-gray-500">
+                    {new Date(item.startDate).toLocaleDateString()} - 
+                    {item.current ? ' Present' : ` ${new Date(item.endDate).toLocaleDateString()}`}
                     {item.location && ` • ${item.location}`}
                   </p>
-                  {item.description && (
-                    <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>{item.description}</p>
-                  )}
+                  {item.description && <p className="text-sm text-gray-600 mt-2">{item.description}</p>}
                 </div>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <div className="flex gap-2">
                   <button 
-                    style={{ color: '#4A5568', ':hover': { color: '#2D3748' } }}
+                    className="text-blue-500 hover:text-blue-700"
                     onClick={() => handleEdit(item.id)}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" style={{ height: '1.25rem', width: '1.25rem' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
+                    Edit
                   </button>
                   <button 
-                    style={{ color: '#4A5568', ':hover': { color: '#E53E3E' } }}
+                    className="text-red-500 hover:text-red-700"
                     onClick={() => handleDelete(item.id)}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" style={{ height: '1.25rem', width: '1.25rem' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
+                    Delete
                   </button>
                 </div>
               </div>
@@ -236,24 +256,10 @@ const EducationSection = () => {
           ))}
         </div>
       ) : (
-        <div style={{ textAlign: 'center', paddingTop: '2rem', paddingBottom: '2rem', color: '#A0AEC0' }}>
-          <svg xmlns="http://www.w3.org/2000/svg" style={{ height: '3rem', width: '3rem', margin: 'auto', color: '#E2E8F0', marginBottom: '1rem' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
-          <p style={{ fontSize: '1.125rem' }}>No education history added yet</p>
-          <p style={{ fontSize: '0.875rem', marginBottom: '1rem' }}>Add your educational background to enhance your resume</p>
+        <div className="text-center py-10 text-gray-500">
+          <p>No education history added yet</p>
           <button 
-            style={{
-              padding: '0.75rem 1.5rem',
-              borderRadius: '0.75rem',
-              fontWeight: 500,
-              background: 'linear-gradient(to right, #3182ce, #D53F8C)',
-              color: 'white',
-              transition: 'all 300ms',
-              transform: 'scale(1)',
-              ':hover': { transform: 'scale(1.05)' },
-              ':focus': { outline: 'none', ring: '2px solid #3182ce' }
-            }}
+            className="px-6 py-3 mt-4 rounded-lg bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-medium hover:scale-105 transition-all"
             onClick={handleAddNew}
           >
             Add Education
