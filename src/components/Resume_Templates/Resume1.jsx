@@ -4,8 +4,8 @@ const Resume1 = ({ resumeData }) => {
   const handlePrint = () => window.print();
 
   return (
-    <div className="w-full md:w-1/2 bg-white p-6 rounded-lg shadow-md h-screen overflow-y-auto">
-      <div className="flex justify-between items-center mb-4">
+    <div className="w-full bg-white p-6 rounded-lg shadow-md h-screen overflow-y-auto">
+      <div className="flex justify-between items-center mb-4 no-print">
         <h2 className="text-xl font-semibold">Resume Preview</h2>
         <button
           onClick={handlePrint}
@@ -29,9 +29,8 @@ const Resume1 = ({ resumeData }) => {
         </button>
       </div>
 
-      <div className="resume-preview p-6 border border-gray-300 rounded-lg">
-        {/* Personal Info */}
-        <div className="text-center mb-8">
+      <div className="resume-preview p-6 border border-gray-300 rounded-lg print:border-0 print:p-4 print:shadow-none">
+        <div className="text-center mb-6 print:mb-4">
           <h1 className="text-2xl font-bold">{resumeData.personalInfo.name}</h1>
           <div className="flex flex-wrap justify-center gap-x-4 mt-1 text-sm text-gray-700">
             <span>{resumeData.personalInfo.email}</span>
@@ -40,14 +39,21 @@ const Resume1 = ({ resumeData }) => {
           </div>
           <div className="flex justify-center gap-x-4 mt-1 text-sm text-gray-700">
             <span>{resumeData.personalInfo.shortName}</span>
-            <span>{resumeData.personalInfo.linkedIn}</span>
+            <a
+              href={resumeData.personalInfo.linkedInURL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-inherit no-underline"
+            >
+              <span>{resumeData.personalInfo.linkedIn}</span>
+            </a>
           </div>
         </div>
 
         {/* Education */}
         <Section title="EDUCATION">
           {resumeData.education.map((edu) => (
-            <div key={edu.id} className="mb-3">
+            <div key={edu.id} className="mb-2">
               <div className="flex justify-between">
                 <div>
                   <div className="font-bold">{edu.degree}</div>
@@ -68,7 +74,7 @@ const Resume1 = ({ resumeData }) => {
         {/* Work Experience */}
         <Section title="WORK EXPERIENCE">
           {resumeData.experience.map((exp) => (
-            <div key={exp.id} className="mb-4">
+            <div key={exp.id} className="mb-3 print:mb-2">
               <div className="flex justify-between">
                 <div>
                   <div className="font-bold">{exp.role}</div>
@@ -129,7 +135,7 @@ const Resume1 = ({ resumeData }) => {
         {/* Projects */}
         <Section title="PROJECTS">
           {resumeData.projects.map((project) => (
-            <div key={project.id} className="mb-4">
+            <div key={project.id} className="mb-3 print:mb-2">
               <div className="font-bold">{project.title}</div>
               <div className="font-semibold text-sm italic mb-1">
                 {project.subtitle}
@@ -173,61 +179,84 @@ const Resume1 = ({ resumeData }) => {
       </div>
 
       {/* Print Styles */}
-      {/* <style jsx global>{`
+      <style>{`
         @media print {
+          /* Hide everything except the resume content */
           body * {
             visibility: hidden;
           }
-
+          
+          /* Make container take full page */
+          body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: visible;
+          }
+          
+          /* Show only the resume preview */
           .resume-preview,
           .resume-preview * {
             visibility: visible;
           }
-
+          
+          /* Position resume for printing */
           .resume-preview {
             position: absolute;
             left: 0;
             top: 0;
             width: 100%;
-            border: none !important;
+            height: auto;
+            page-break-inside: avoid;
+            box-shadow: none;
           }
-
-          button {
+          
+          /* Hide UI elements */
+          .no-print {
             display: none !important;
           }
+          
+          /* Optimize for single page */
+          .resume-preview {
+            font-size: 11pt;
+          }
+          
+          /* Spacing optimizations */
+          .resume-preview h2 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+          }
+          
+          .resume-preview .mb-6 {
+            margin-bottom: 0.75rem;
+          }
+          
+          .resume-preview .mb-4 {
+            margin-bottom: 0.5rem;
+          }
+          
+          .resume-preview .mb-3 {
+            margin-bottom: 0.3rem;
+          }
+          
+          .resume-preview .mb-2 {
+            margin-bottom: 0.2rem;
+          }
+          
+          /* No page breaks inside sections */
+          .section {
+            page-break-inside: avoid;
+          }
         }
-      `}</style> */}
-      <style>{`
-  @media print {
-    body * {
-      visibility: hidden;
-    }
-
-    .resume-preview,
-    .resume-preview * {
-      visibility: visible;
-    }
-
-    .resume-preview {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      border: none !important;
-    }
-
-    button {
-      display: none !important;
-    }
-  }
-`}</style>
+      `}</style>
     </div>
   );
 };
 
 const Section = ({ title, children }) => (
-  <div className="mb-6">
-    <h2 className="text-xl font-bold border-b-2 border-gray-300 pb-1 mb-3">
+  <div className="section mb-6 print:mb-3">
+    <h2 className="text-xl font-bold border-b-2 border-gray-300 pb-1 mb-3 print:mb-2 print:text-lg">
       {title}
     </h2>
     {children}

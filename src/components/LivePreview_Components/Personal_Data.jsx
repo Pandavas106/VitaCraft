@@ -56,6 +56,12 @@ function PersonalData({ resumeData, setResumeData,openSections ,toggleSection}) 
         value={resumeData.personalInfo.linkedIn}
         onChange={handlePersonalInfoChange}
       />
+      <InputField
+        label="LinkedIn URL"
+        name="linkedInURL"
+        value={resumeData.personalInfo.linkedInURL}
+        onChange={handlePersonalInfoChange}
+      />
     </FormSection>
   );
 }
