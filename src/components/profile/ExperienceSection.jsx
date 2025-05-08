@@ -8,7 +8,7 @@ const ExperienceSection = () => {
 
   const [isAddingNew, setIsAddingNew] = useState(false)
   const [editingId, setEditingId] = useState(null)
-  
+
   const emptyExperience = {
     id: '',
     company: '',
@@ -19,7 +19,7 @@ const ExperienceSection = () => {
     description: '',
     current: false
   }
-  
+
   const [formData, setFormData] = useState(emptyExperience)
 
   const handleChange = (e) => {
@@ -28,7 +28,7 @@ const ExperienceSection = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }))
-    
+
     // If current job, clear end date
     if (name === 'current' && checked) {
       setFormData(prev => ({
@@ -64,20 +64,20 @@ const ExperienceSection = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    
+
     let updatedExperience
-    
+
     if (isAddingNew) {
       updatedExperience = [
         ...experience,
         { ...formData, id: uuidv4() }
       ]
     } else {
-      updatedExperience = experience.map(item => 
+      updatedExperience = experience.map(item =>
         item.id === editingId ? formData : item
       )
     }
-    
+
     updateExperience(updatedExperience)
     handleCancel()
   }
@@ -87,7 +87,7 @@ const ExperienceSection = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-neutral-900">Work Experience</h2>
         {!isAddingNew && editingId === null && (
-          <button 
+          <button
             className="btn-primary flex items-center"
             onClick={handleAddNew}
           >
@@ -105,7 +105,7 @@ const ExperienceSection = () => {
           <h3 className="text-lg font-medium text-neutral-900 mb-4">
             {isAddingNew ? 'Add New Experience' : 'Edit Experience'}
           </h3>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label htmlFor="company" className="block text-sm font-medium text-neutral-700 mb-1">
@@ -122,7 +122,7 @@ const ExperienceSection = () => {
                 required
               />
             </div>
-            
+
             <div>
               <label htmlFor="position" className="block text-sm font-medium text-neutral-700 mb-1">
                 Position/Title*
@@ -138,7 +138,7 @@ const ExperienceSection = () => {
                 required
               />
             </div>
-            
+
             <div>
               <label htmlFor="location" className="block text-sm font-medium text-neutral-700 mb-1">
                 Location
@@ -153,7 +153,7 @@ const ExperienceSection = () => {
                 placeholder="City, Country or Remote"
               />
             </div>
-            
+
             <div className="md:col-span-2 flex items-center">
               <input
                 type="checkbox"
@@ -167,7 +167,7 @@ const ExperienceSection = () => {
                 I currently work here
               </label>
             </div>
-            
+
             <div>
               <label htmlFor="startDate" className="block text-sm font-medium text-neutral-700 mb-1">
                 Start Date*
@@ -182,7 +182,7 @@ const ExperienceSection = () => {
                 required
               />
             </div>
-            
+
             <div>
               <label htmlFor="endDate" className="block text-sm font-medium text-neutral-700 mb-1">
                 End Date{!formData.current && '*'}
@@ -198,7 +198,7 @@ const ExperienceSection = () => {
                 required={!formData.current}
               />
             </div>
-            
+
             <div className="md:col-span-2">
               <label htmlFor="description" className="block text-sm font-medium text-neutral-700 mb-1">
                 Description*
@@ -218,17 +218,17 @@ const ExperienceSection = () => {
               </p>
             </div>
           </div>
-          
+
           <div className="flex gap-4">
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="btn-secondary"
               onClick={handleCancel}
             >
               Cancel
             </button>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="btn-primary"
             >
               {isAddingNew ? 'Add Experience' : 'Save Changes'}
@@ -241,8 +241,8 @@ const ExperienceSection = () => {
       {experience.length > 0 ? (
         <div className="space-y-4">
           {experience.map(item => (
-            <div 
-              key={item.id} 
+            <div
+              key={item.id}
               className="bg-white p-4 rounded-lg border border-neutral-200 hover:shadow-md transition-shadow duration-200"
             >
               <div className="flex justify-between">
@@ -250,7 +250,7 @@ const ExperienceSection = () => {
                   <h3 className="font-medium">{item.position}</h3>
                   <p className="text-neutral-600">{item.company}</p>
                   <p className="text-sm text-neutral-500">
-                    {new Date(item.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })} - 
+                    {new Date(item.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })} -
                     {item.current ? ' Present' : ` ${new Date(item.endDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}`}
                     {item.location && ` • ${item.location}`}
                   </p>
@@ -259,7 +259,7 @@ const ExperienceSection = () => {
                   )}
                 </div>
                 <div className="flex gap-2">
-                  <button 
+                  <button
                     className="text-neutral-500 hover:text-neutral-700"
                     onClick={() => handleEdit(item.id)}
                   >
@@ -267,7 +267,7 @@ const ExperienceSection = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                   </button>
-                  <button 
+                  <button
                     className="text-neutral-500 hover:text-error-600"
                     onClick={() => handleDelete(item.id)}
                   >
@@ -287,7 +287,7 @@ const ExperienceSection = () => {
           </svg>
           <p className="text-lg">No work experience added yet</p>
           <p className="text-sm mb-4">Add your professional experience to showcase your skills</p>
-          <button 
+          <button
             className="btn-primary"
             onClick={handleAddNew}
           >

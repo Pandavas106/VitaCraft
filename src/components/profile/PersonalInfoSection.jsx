@@ -1,312 +1,131 @@
-import { useState, useRef } from 'react'
-import { useResume } from '../../context/ResumeContext'
+import React, { useState } from "react";
 
-const PersonalInfoSection = () => {
-  const { resumeData, updateProfile } = useResume()
-  const { profile } = resumeData
-  const fileInputRef = useRef(null)
-  
+const ProfileSection = () => {
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: profile.firstName || '',
-    lastName: profile.lastName || '',
-    title: profile.title || '',
-    email: profile.email || '',
-    phone: profile.phone || '',
-    location: profile.location || '',
-    website: profile.website || '',
-    summary: profile.summary || '',
-  })
-  
-  const [profileImage, setProfileImage] = useState(profile.profilePicture || null)
-  const [isEditing, setIsEditing] = useState(false)
-  
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-  
+    firstName: "John",
+    lastName: "Doe",
+    title: "Frontend Developer",
+    email: "john@example.com",
+    phone: "123-456-7890",
+    location: "New York",
+    website: "https://johndoe.dev",
+    summary: "I build responsive and user-friendly interfaces using React & Tailwind CSS.",
+  });
+  const [profileImage, setProfileImage] = useState(null);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleImageChange = (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setProfileImage(reader.result)
-      }
-      reader.readAsDataURL(file)
+      const reader = new FileReader();
+      reader.onloadend = () => setProfileImage(reader.result);
+      reader.readAsDataURL(file);
     }
-  }
-  
-  const handleRemoveImage = () => {
-    setProfileImage(null)
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
-  }
-  
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    updateProfile({
-      ...formData,
-      profilePicture: profileImage
-    })
-    setIsEditing(false)
-  }
-  
+  };
+
   return (
-    <div style={{ animation: 'fade-in 0.3s' }}>
-      <h2 style={{ fontSize: '1.25rem', fontWeight: '600', color: '#333', marginBottom: '1.5rem' }}>Personal Information</h2>
-      
-      {!isEditing ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', '@media (min-width: 768px)': { flexDirection: 'row' } }}>
-          <div style={{ width: '33%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ position: 'relative', width: '10rem', height: '10rem', borderRadius: '50%', overflow: 'hidden', backgroundColor: '#e0e0e0', border: '1px solid #ccc', marginBottom: '1rem' }}>
-              {profileImage ? (
-                <img 
-                  src={profileImage} 
-                  alt="Profile" 
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              ) : (
-                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" style={{ width: '5rem', height: '5rem' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-              )}
+    <div >
+      <h2 className="text-3xl font-extrabold text-center text-blue-700 mb-8 tracking-wide drop-shadow-sm">
+  Personal Information
+</h2>
+      {/* Profile Image + Name + Title */}
+      <div className="flex flex-col items-center">
+        <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-blue-500 shadow-md">
+          {profileImage ? (
+            <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full bg-gray-200 text-gray-500 flex items-center justify-center">
+              No Image
             </div>
-          </div>
-          
-          <div style={{ width: '66%' }}>
-            <div style={{ marginBottom: '1.5rem' }}>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.5rem' }}>
-                {profile.firstName || profile.lastName 
-                  ? `${profile.firstName} ${profile.lastName}`
-                  : 'Your Name'}
-              </h3>
-              <p style={{ color: '#4b5563' }}>
-                {profile.title || 'Professional Title'}
-              </p>
-            </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem', marginBottom: '1.5rem', '@media (min-width: 768px)': { gridTemplateColumns: '1fr 1fr' } }}>
-              <div>
-                <h4 style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>Email</h4>
-                <p>{profile.email || 'Not specified'}</p>
-              </div>
-              <div>
-                <h4 style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>Phone</h4>
-                <p>{profile.phone || 'Not specified'}</p>
-              </div>
-              <div>
-                <h4 style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>Location</h4>
-                <p>{profile.location || 'Not specified'}</p>
-              </div>
-              <div>
-                <h4 style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>Website</h4>
-                <p>{profile.website || 'Not specified'}</p>
-              </div>
-            </div>
-            
-            <div>
-              <h4 style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>Professional Summary</h4>
-              <p style={{ color: '#4b5563', whiteSpace: 'pre-line' }}>
-                {profile.summary || 'No summary provided yet. Add a brief overview of your professional background, key skills, and career goals.'}
-              </p>
-            </div>
-            
-            <button 
-              style={{ marginTop: '1.5rem', background: 'linear-gradient(to right, #3b82f6, #9333ea)', color: '#fff', borderRadius: '1.5rem', padding: '0.75rem 1.5rem', fontWeight: '500' }}
-              onClick={() => setIsEditing(true)}
-            >
-              Edit Personal Information
-            </button>
-          </div>
+          )}
         </div>
-      ) : (
-        <form onSubmit={handleSubmit} style={{ animation: 'fade-in 0.3s' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', '@media (min-width: 768px)': { flexDirection: 'row' } }}>
-            <div style={{ width: '33%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{ position: 'relative', width: '10rem', height: '10rem', borderRadius: '50%', overflow: 'hidden', backgroundColor: '#e0e0e0', border: '1px solid #ccc', marginBottom: '1rem' }}>
-                {profileImage ? (
-                  <img 
-                    src={profileImage} 
-                    alt="Profile" 
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
-                ) : (
-                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" style={{ width: '5rem', height: '5rem' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                )}
-              </div>
-              
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
+
+        {isEditing && (
+          <input
+            type="file"
+            onChange={handleImageChange}
+            className="mt-3 text-sm text-gray-600"
+          />
+        )}
+
+        <h1 className="mt-4 text-2xl font-bold text-gray-800">
+          {formData.firstName} {formData.lastName}
+        </h1>
+        <p className="text-blue-600 font-medium text-lg">{formData.title}</p>
+
+        {!isEditing && (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="mt-4 text-sm px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Edit Profile
+          </button>
+        )}
+      </div>
+
+      {/* Details Section */}
+      <div className="mt-8 space-y-4 text-left text-gray-700">
+        {isEditing ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {["email", "phone", "location", "website"].map((field, i) => (
+              <div key={i}>
+                <label className="text-sm font-semibold text-gray-600 capitalize">{field}</label>
                 <input
-                  type="file"
-                  ref={fileInputRef}
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  style={{ display: 'none' }}
+                  type={field === "email" ? "email" : "text"}
+                  name={field}
+                  value={formData[field]}
+                  onChange={handleInputChange}
+                  className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
-                <button 
-                  type="button" 
-                  style={{ color: '#1e40af', fontWeight: '500' }}
-                  onClick={() => fileInputRef.current.click()}
-                >
-                  Upload Photo
-                </button>
-                {profileImage && (
-                  <button 
-                    type="button"
-                    style={{ color: '#dc2626', fontWeight: '500' }}
-                    onClick={handleRemoveImage}
-                  >
-                    Remove
-                  </button>
-                )}
               </div>
+            ))}
+            <div className="md:col-span-2">
+              <label className="text-sm font-semibold text-gray-600">Summary</label>
+              <textarea
+                name="summary"
+                value={formData.summary}
+                onChange={handleInputChange}
+                rows="4"
+                className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
             </div>
-            
-            <div style={{ width: '66%' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem', marginBottom: '1.5rem', '@media (min-width: 768px)': { gridTemplateColumns: '1fr 1fr' } }}>
-                <div>
-                  <label htmlFor="firstName" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    id="firstName"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
-                    placeholder="Enter your first name"
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="lastName" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    id="lastName"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
-                    placeholder="Enter your last name"
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="title" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
-                    Professional Title
-                  </label>
-                  <input
-                    type="text"
-                    id="title"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
-                    placeholder="e.g., Software Engineer"
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="email" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
-                    placeholder="Enter your email"
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="phone" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
-                    Phone
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
-                    placeholder="Enter your phone number"
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="location" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    id="location"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
-                    placeholder="City, Country"
-                  />
-                </div>
-                
-                <div style={{ gridColumn: 'span 2' }}>
-                  <label htmlFor="website" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
-                    Website/Portfolio
-                  </label>
-                  <input
-                    type="url"
-                    id="website"
-                    name="website"
-                    value={formData.website}
-                    onChange={handleChange}
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
-                    placeholder="Enter your website URL"
-                  />
-                </div>
-                
-                <div style={{ gridColumn: 'span 2' }}>
-                  <label htmlFor="summary" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
-                    Summary
-                  </label>
-                  <textarea
-                    id="summary"
-                    name="summary"
-                    value={formData.summary}
-                    onChange={handleChange}
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
-                    placeholder="Enter a brief professional summary"
-                    rows="5"
-                  />
-                </div>
-              </div>
-              
-              <button 
-                type="submit"
-                style={{ marginTop: '1.5rem', background: 'linear-gradient(to right, #3b82f6, #9333ea)', color: '#fff', borderRadius: '1.5rem', padding: '0.75rem 1.5rem', fontWeight: '500' }}
+            <div className="md:col-span-2 flex justify-end gap-4">
+              <button
+                onClick={() => setIsEditing(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
               >
-                Save Changes
+                Cancel
+              </button>
+              <button
+                onClick={() => setIsEditing(false)}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                Save
               </button>
             </div>
           </div>
-        </form>
-      )}
+        ) : (
+          <div className="space-y-2">
+            <p><strong>Email:</strong> {formData.email}</p>
+            <p><strong>Phone:</strong> {formData.phone}</p>
+            <p><strong>Location:</strong> {formData.location}</p>
+            <p>
+              <strong>Website:</strong>{" "}
+              <a href={formData.website} className="text-blue-500 underline">
+                {formData.website}
+              </a>
+            </p>
+            <p><strong>Summary:</strong> {formData.summary}</p>
+          </div>
+        )}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default PersonalInfoSection
+export default ProfileSection;

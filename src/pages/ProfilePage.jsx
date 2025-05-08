@@ -100,21 +100,13 @@ const ProfilePage = () => {
           </div>
 
           {/* Content Area */}
-          <div style={{
-            background: 'white',
-            borderRadius: '24px',
-            padding: '2rem',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-            border: '1px solid rgba(79, 70, 229, 0.1)',
-            minHeight: '600px'
-          }}>
-            <div style={{
-              height: '100%',
-              overflow: 'auto'
-            }}>
-              {renderContent()}
-            </div>
-          </div>
+          <div className="bg-gradient-to-br from-white to-blue-50 rounded-3xl p-8 shadow-md border border-indigo-200 min-h-[600px]">
+  <div className="h-full overflow-auto">
+    {renderContent()}
+  </div>
+</div>
+
+
         </div>
 
         {/* Action Button */}
@@ -122,31 +114,6 @@ const ProfilePage = () => {
           textAlign: 'center',
           marginTop: '2rem'
         }}>
-          <button
-            onClick={() => navigate('/builder')}
-            style={{
-              background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
-              color: 'white',
-              padding: '1rem 2rem',
-              borderRadius: '12px',
-              fontSize: '1rem',
-              fontWeight: '600',
-              border: 'none',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 4px 6px rgba(79, 70, 229, 0.2)'
-            }}
-            onMouseEnter={e => {
-              e.target.style.transform = 'translateY(-2px)'
-              e.target.style.boxShadow = '0 6px 8px rgba(79, 70, 229, 0.3)'
-            }}
-            onMouseLeave={e => {
-              e.target.style.transform = 'translateY(0)'
-              e.target.style.boxShadow = '0 4px 6px rgba(79, 70, 229, 0.2)'
-            }}
-          >
-            Continue to Resume Builder
-          </button>
         </div>
       </div>
     </div>
