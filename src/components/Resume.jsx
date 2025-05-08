@@ -3,7 +3,6 @@ import { Phone, Mail, Globe, Github, Plus, Trash2 } from "lucide-react";
 import React from "react";
 
 export default function Resume() {
-  // Personal Information
   const [personalInfo, setPersonalInfo] = useState({
     name: "FIRST LAST",
     address: "123 Street Rd, Town, State 12345",
@@ -12,8 +11,6 @@ export default function Resume() {
     linkedin: "linkedin.com/in/username",
     github: "github.com/username",
   });
-
-  // Education
   const [education, setEducation] = useState({
     university: "Test University",
     degree: "Bachelor of Science in Computer Science",
@@ -30,7 +27,6 @@ export default function Resume() {
     ],
   });
 
-  // Experience
   const [experiences, setExperiences] = useState([
     {
       company: "Electronics Company",
@@ -58,7 +54,7 @@ export default function Resume() {
     },
   ]);
 
-  // Projects
+
   const [projects, setProjects] = useState([
     {
       name: "Gym Reservation Bot",
@@ -93,7 +89,7 @@ export default function Resume() {
     },
   ]);
 
-  // Technical Skills
+  
   const [skills, setSkills] = useState({
     languages: "Python, Java, C, HTML/CSS, JavaScript, SQL",
     devtools:
@@ -101,7 +97,7 @@ export default function Resume() {
     technologies: "Linux, Jenkins, GitHub, Jira, WordPress",
   });
 
-  // Leadership
+  
   const [leadership, setLeadership] = useState({
     organization: "Fraternity",
     period: "Spring 2020 - Present",

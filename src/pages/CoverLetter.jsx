@@ -59,7 +59,7 @@ function CoverLetter() {
           {/* Horizontal Template Scroll */}
           <div
             id="template-scroll"
-            className="flex gap-6 overflow-x-auto scrollbar-thin scrollbar-thumb pb-4 scroll-smooth"
+            className="flex gap-6 p-10 overflow-x-auto scrollbar-thin scrollbar-thumb pb-4 scroll-smooth"
           >
             {/* Create New Template Card */}
             <div className="flex-shrink-0 hover:cursor-pointer transform transition-transform hover:scale-105">
