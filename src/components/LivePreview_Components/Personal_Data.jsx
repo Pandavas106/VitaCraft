@@ -1,7 +1,12 @@
 import React from "react";
 import { FormSection, InputField } from "../FormSection";
 
-function PersonalData({ resumeData, setResumeData,openSections ,toggleSection}) {
+function PersonalData({
+  resumeData,
+  setResumeData,
+  openSections,
+  toggleSection,
+}) {
   const handlePersonalInfoChange = (e) => {
     const { name, value } = e.target;
     setResumeData({
@@ -48,6 +53,12 @@ function PersonalData({ resumeData, setResumeData,openSections ,toggleSection}) 
         label="Address"
         name="address"
         value={resumeData.personalInfo.address}
+        onChange={handlePersonalInfoChange}
+      />
+      <InputField
+        label="Role"
+        name="role"
+        value={resumeData.personalInfo.role}
         onChange={handlePersonalInfoChange}
       />
       <InputField
