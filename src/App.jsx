@@ -9,10 +9,10 @@ import Footer from "./components/Footer";
 import Nav from "./components/Nav";
 import SignIn from "./pages/SignIn";
 import { useState } from "react";
-
 import CoverLetter from "./pages/CoverLetter.jsx";
 import ATSCheckerPage from "./pages/ATSChecker.jsx";
-
+import React from "react";
+import LivePreview from "./pages/LivePreview.jsx";
 function App() {
   const [showPopup, setShowPopup] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
@@ -39,6 +39,7 @@ function App() {
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/coverpage" element={<CoverLetter />} />
                 <Route path="/ats" element={<ATSCheckerPage />} />
+                <Route path="/livepreview" element={<LivePreview />} />
               </Routes>
             </div>
           </Router>
