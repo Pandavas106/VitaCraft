@@ -56,75 +56,69 @@ const PersonalInfoSection = () => {
   }
   
   return (
-    <div className="animate-fade-in">
-      <h2 className="text-xl font-semibold text-neutral-900 mb-6">Personal Information</h2>
+    <div style={{ animation: 'fade-in 0.3s' }}>
+      <h2 style={{ fontSize: '1.25rem', fontWeight: '600', color: '#333', marginBottom: '1.5rem' }}>Personal Information</h2>
       
       {!isEditing ? (
-        <div className="flex flex-col md:flex-row gap-8">
-          <div className="md:w-1/3 flex flex-col items-center">
-            <div className="relative w-40 h-40 rounded-full overflow-hidden bg-neutral-200 border border-neutral-300 mb-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', '@media (min-width: 768px)': { flexDirection: 'row' } }}>
+          <div style={{ width: '33%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ position: 'relative', width: '10rem', height: '10rem', borderRadius: '50%', overflow: 'hidden', backgroundColor: '#e0e0e0', border: '1px solid #ccc', marginBottom: '1rem' }}>
               {profileImage ? (
                 <img 
                   src={profileImage} 
                   alt="Profile" 
-                  className="w-full h-full object-cover"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-neutral-500">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-20 w-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" style={{ width: '5rem', height: '5rem' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
               )}
             </div>
-            <button 
-              className="text-primary-600 hover:text-primary-700 font-medium"
-              onClick={() => setIsEditing(true)}
-            >
-              Change Photo
-            </button>
           </div>
           
-          <div className="md:w-2/3">
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">
+          <div style={{ width: '66%' }}>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.5rem' }}>
                 {profile.firstName || profile.lastName 
                   ? `${profile.firstName} ${profile.lastName}`
                   : 'Your Name'}
               </h3>
-              <p className="text-neutral-600">
+              <p style={{ color: '#4b5563' }}>
                 {profile.title || 'Professional Title'}
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem', marginBottom: '1.5rem', '@media (min-width: 768px)': { gridTemplateColumns: '1fr 1fr' } }}>
               <div>
-                <h4 className="text-sm text-neutral-500 mb-1">Email</h4>
+                <h4 style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>Email</h4>
                 <p>{profile.email || 'Not specified'}</p>
               </div>
               <div>
-                <h4 className="text-sm text-neutral-500 mb-1">Phone</h4>
+                <h4 style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>Phone</h4>
                 <p>{profile.phone || 'Not specified'}</p>
               </div>
               <div>
-                <h4 className="text-sm text-neutral-500 mb-1">Location</h4>
+                <h4 style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>Location</h4>
                 <p>{profile.location || 'Not specified'}</p>
               </div>
               <div>
-                <h4 className="text-sm text-neutral-500 mb-1">Website</h4>
+                <h4 style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>Website</h4>
                 <p>{profile.website || 'Not specified'}</p>
               </div>
             </div>
             
             <div>
-              <h4 className="text-sm text-neutral-500 mb-1">Professional Summary</h4>
-              <p className="text-neutral-700 whitespace-pre-line">
+              <h4 style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>Professional Summary</h4>
+              <p style={{ color: '#4b5563', whiteSpace: 'pre-line' }}>
                 {profile.summary || 'No summary provided yet. Add a brief overview of your professional background, key skills, and career goals.'}
               </p>
             </div>
             
             <button 
-              className="mt-6 btn-primary"
+              style={{ marginTop: '1.5rem', background: 'linear-gradient(to right, #3b82f6, #9333ea)', color: '#fff', borderRadius: '1.5rem', padding: '0.75rem 1.5rem', fontWeight: '500' }}
               onClick={() => setIsEditing(true)}
             >
               Edit Personal Information
@@ -132,36 +126,36 @@ const PersonalInfoSection = () => {
           </div>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="animate-fade-in">
-          <div className="flex flex-col md:flex-row gap-8">
-            <div className="md:w-1/3 flex flex-col items-center">
-              <div className="relative w-40 h-40 rounded-full overflow-hidden bg-neutral-200 border border-neutral-300 mb-4">
+        <form onSubmit={handleSubmit} style={{ animation: 'fade-in 0.3s' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', '@media (min-width: 768px)': { flexDirection: 'row' } }}>
+            <div style={{ width: '33%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ position: 'relative', width: '10rem', height: '10rem', borderRadius: '50%', overflow: 'hidden', backgroundColor: '#e0e0e0', border: '1px solid #ccc', marginBottom: '1rem' }}>
                 {profileImage ? (
                   <img 
                     src={profileImage} 
                     alt="Profile" 
-                    className="w-full h-full object-cover"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-neutral-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-20 w-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" style={{ width: '5rem', height: '5rem' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
                 )}
               </div>
               
-              <div className="flex gap-2">
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <input
                   type="file"
                   ref={fileInputRef}
                   accept="image/*"
                   onChange={handleImageChange}
-                  className="hidden"
+                  style={{ display: 'none' }}
                 />
                 <button 
                   type="button" 
-                  className="text-primary-600 hover:text-primary-700 font-medium"
+                  style={{ color: '#1e40af', fontWeight: '500' }}
                   onClick={() => fileInputRef.current.click()}
                 >
                   Upload Photo
@@ -169,7 +163,7 @@ const PersonalInfoSection = () => {
                 {profileImage && (
                   <button 
                     type="button"
-                    className="text-error-600 hover:text-error-700 font-medium"
+                    style={{ color: '#dc2626', fontWeight: '500' }}
                     onClick={handleRemoveImage}
                   >
                     Remove
@@ -178,10 +172,10 @@ const PersonalInfoSection = () => {
               </div>
             </div>
             
-            <div className="md:w-2/3">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div style={{ width: '66%' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem', marginBottom: '1.5rem', '@media (min-width: 768px)': { gridTemplateColumns: '1fr 1fr' } }}>
                 <div>
-                  <label htmlFor="firstName" className="block text-sm font-medium text-neutral-700 mb-1">
+                  <label htmlFor="firstName" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
                     First Name
                   </label>
                   <input
@@ -190,13 +184,13 @@ const PersonalInfoSection = () => {
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
-                    className="input-field"
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
                     placeholder="Enter your first name"
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="lastName" className="block text-sm font-medium text-neutral-700 mb-1">
+                  <label htmlFor="lastName" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
                     Last Name
                   </label>
                   <input
@@ -205,13 +199,13 @@ const PersonalInfoSection = () => {
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
-                    className="input-field"
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
                     placeholder="Enter your last name"
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="title" className="block text-sm font-medium text-neutral-700 mb-1">
+                  <label htmlFor="title" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
                     Professional Title
                   </label>
                   <input
@@ -220,13 +214,13 @@ const PersonalInfoSection = () => {
                     name="title"
                     value={formData.title}
                     onChange={handleChange}
-                    className="input-field"
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
                     placeholder="e.g., Software Engineer"
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-neutral-700 mb-1">
+                  <label htmlFor="email" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
                     Email
                   </label>
                   <input
@@ -235,13 +229,13 @@ const PersonalInfoSection = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="input-field"
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
                     placeholder="Enter your email"
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-neutral-700 mb-1">
+                  <label htmlFor="phone" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
                     Phone
                   </label>
                   <input
@@ -250,13 +244,13 @@ const PersonalInfoSection = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="input-field"
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
                     placeholder="Enter your phone number"
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="location" className="block text-sm font-medium text-neutral-700 mb-1">
+                  <label htmlFor="location" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
                     Location
                   </label>
                   <input
@@ -265,13 +259,13 @@ const PersonalInfoSection = () => {
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
-                    className="input-field"
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
                     placeholder="City, Country"
                   />
                 </div>
                 
-                <div className="md:col-span-2">
-                  <label htmlFor="website" className="block text-sm font-medium text-neutral-700 mb-1">
+                <div style={{ gridColumn: 'span 2' }}>
+                  <label htmlFor="website" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
                     Website/Portfolio
                   </label>
                   <input
@@ -280,42 +274,33 @@ const PersonalInfoSection = () => {
                     name="website"
                     value={formData.website}
                     onChange={handleChange}
-                    className="input-field"
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
                     placeholder="Enter your website URL"
                   />
                 </div>
                 
-                <div className="md:col-span-2">
-                  <label htmlFor="summary" className="block text-sm font-medium text-neutral-700 mb-1">
-                    Professional Summary
+                <div style={{ gridColumn: 'span 2' }}>
+                  <label htmlFor="summary" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563', marginBottom: '0.25rem' }}>
+                    Summary
                   </label>
                   <textarea
                     id="summary"
                     name="summary"
                     value={formData.summary}
                     onChange={handleChange}
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '1.25rem', border: '2px solid #e5e7eb', backgroundColor: '#fff', outline: 'none', transition: 'all 0.3s', boxSizing: 'border-box' }}
+                    placeholder="Enter a brief professional summary"
                     rows="5"
-                    className="input-field"
-                    placeholder="Write a brief summary of your professional background and key skills"
-                  ></textarea>
+                  />
                 </div>
               </div>
               
-              <div className="flex gap-4">
-                <button 
-                  type="button" 
-                  className="btn-secondary"
-                  onClick={() => setIsEditing(false)}
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit" 
-                  className="btn-primary"
-                >
-                  Save Information
-                </button>
-              </div>
+              <button 
+                type="submit"
+                style={{ marginTop: '1.5rem', background: 'linear-gradient(to right, #3b82f6, #9333ea)', color: '#fff', borderRadius: '1.5rem', padding: '0.75rem 1.5rem', fontWeight: '500' }}
+              >
+                Save Changes
+              </button>
             </div>
           </div>
         </form>
