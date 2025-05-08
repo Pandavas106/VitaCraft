@@ -10,6 +10,8 @@ import CertificateData from "../components/LivePreview_Components/Certificate_Da
 import AchievementsData from "../components/LivePreview_Components/Achievements_Data";
 import OrganizationData from "../components/LivePreview_Components/Organization_Data";
 import ProjectsData from "../components/LivePreview_Components/Projects_Data";
+import Resume2 from "../components/Resume_Templates/Resume2";
+import Resume3 from "../components/Resume_Templates/Resume3";
 
 export default function ResumeBuilder() {
   const [resumeData, setResumeData] = useState(defaultResumeData);
@@ -91,7 +93,9 @@ export default function ResumeBuilder() {
             toggleSection={toggleSection}
           />
         </div>
-        <Resume1 resumeData={resumeData} />
+        <div className="w-full md:w-2/3 h-screen overflow-y-auto">
+          <Resume1 resumeData={resumeData} />
+        </div>
       </div>
     </div>
   );

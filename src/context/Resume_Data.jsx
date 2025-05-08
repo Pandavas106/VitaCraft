@@ -6,6 +6,7 @@ export const defaultResumeData = {
     address: "Intur,Guntur,AP-522341",
     shortName: "Nelavalli Phanindra",
     linkedIn: "Phanindra-Nelavalli",
+    linkedInURL: "https://www.linkedin.com/in/phanindra-nelavalli-b074a8255/",
   },
   education: [
     {
