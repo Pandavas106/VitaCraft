@@ -1,852 +1,860 @@
-import { useState } from "react";
-import { Phone, Mail, Globe, Github, Plus, Trash2 } from "lucide-react";
-import React from "react";
+import { useState, useEffect } from "react";
+import ResumePreview from "../components/LivePreview_Components/Resume_Preview";
 
-const LivePreview = () => {
-  // Personal Information
-  const [personalInfo, setPersonalInfo] = useState({
-    name: "FIRST LAST",
-    address: "123 Street Rd, Town, State 12345",
-    phone: "123-456-7890",
-    email: "email@gmail.com",
-    linkedin: "linkedin.com/in/username",
-    github: "github.com/username",
-  });
+const defaultResumeData = {
+  personalInfo: {
+    name: "Nelavalli Venkata Bhaskara Devi Phanindra",
+    email: "nelavalliphanindra4@gmail.com",
+    phone: "9989494236",
+    address: "Intur,Guntur,AP-522341",
+    shortName: "Nelavalli Phanindra",
+    linkedIn: "Phanindra-Nelavalli",
+  },
+  education: [
+    {
+      id: 1,
+      degree: "Bachelor of Technology (B.Tech) in Computer Science Engineering",
+      institution: "Vishnu Institute of Technology",
+      score: "CGPA - 9.42",
+      location: "Bhimavarm, India",
+      startYear: "2022",
+      endYear: "present",
+    },
+    {
+      id: 2,
+      degree: "Intermediate",
+      institution: "K.V.S.R.T Junior College",
+      score: "Percentage - 97.6%",
+      location: "Chilumuru, India",
+      startYear: "2020",
+      endYear: "2022",
+    },
+    {
+      id: 3,
+      degree: "SSC",
+      institution: "K.Z.P High School",
+      score: "Percentage - 99%",
+      location: "Intur, India",
+      startYear: "2019",
+      endYear: "2020",
+    },
+  ],
+  experience: [
+    {
+      id: 1,
+      role: "Frontend Developer",
+      company: "TechCorp Inc.",
+      location: "San Francisco, CA",
+      startDate: "Jan 2022",
+      endDate: "Present",
+      points: [
+        "Developed and maintained the user interface using React and Tailwind CSS.",
+        "Collaborated with backend developers to integrate APIs and optimize performance.",
+        "Led a UI redesign that improved user engagement by 30%.",
+      ],
+    },
+  ],
 
-  // Education
-  const [education, setEducation] = useState({
-    university: "Test University",
-    degree: "Bachelor of Science in Computer Science",
-    location: "City, State",
-    period: "Sept. 2017 - May 2021",
-    courses: [
-      "Data Structures",
-      "Algorithms Analysis",
-      "Artificial Intelligence",
-      "Systems Programming",
-      "Software Methodology",
-      "Computer Technology",
-      "Computer Architecture",
+  profile:
+    "Enthusiastic Computer Science Engineering student with a solid understanding of software development, web, and mobile application development. Interested in exploring new technologies, especially Machine Learning (ML) and Artificial Intelligence (AI). Looking for opportunities to apply skills in projects that contribute to technological progress and solve real-world problems.",
+  skills: {
+    technical: [
+      "Programming Languages : Python, SQL, JavaScript",
+      "Frontend Technologies : HTML, CSS, React.js",
+      "Backend Technologies : Node.js,Express.js",
+      "Android Development : Flutter, React Native(Basics)",
+      "Data Analysis Tools : Pandas, NumPy",
+      "Designing Tools : Figma",
     ],
-  });
-
-  // Experience
-  const [experiences, setExperiences] = useState([
-    {
-      company: "Electronics Company",
-      position: "Software Engineer Intern",
-      location: "City, State",
-      period: "May 2020 - August 2020",
-      responsibilities: [
-        "Developed a Python script to automatically perform a set of unit tests daily on a product in development in order to decrease the duration of quality assurance typically run by QA.",
-        "Incorporated scripts using Python and PowerShell to aggregate XML test results into an organized format and to load the latest build on each of the iterations so that daily testing can be performed.",
-        "Organized reporting scripts to collect all test results for the day, report a summary of testing run, and handle the automatic build rate and test files, running the tests, and generating a report of the results once per day.",
-        "Explored ways to display the results of a daily report of the top issues numbers using HTML, Javascript, and CSS.",
-      ],
-    },
-    {
-      company: "Startup, Inc",
-      position: "Front End Developer Intern",
-      location: "City, State",
-      period: "May 2019 - August 2019",
-      responsibilities: [
-        "Participated in the design of the front-end of a mobile application for iOS/Android using Xcode and Android Studio.",
-        "Worked with Google Firebase to manage user inputted data across multiple platforms including web and mobile apps.",
-        "Developed new functionality to the mobile application to allow users to create accounts to register and/or login.",
-        "Utilized Android Studio as a development environment in order to visualize the application in both iOS and Android.",
-      ],
-    },
-  ]);
-
-  // Projects
-  const [projects, setProjects] = useState([
-    {
-      name: "Gym Reservation Bot",
-      technologies: "Python, Selenium, Google Cloud Console",
-      period: "January 2021",
-      details: [
-        "Developed an automated bot using Python and Google Cloud in order to register myself for a timeslot at my school gym.",
-        "Created a bot to automatically go to the school gym website, log in, and check for timeslots at preferred times.",
-        "Created a Linux virtual machine to run on Google Cloud so that the program is able to run everyday from the cloud.",
-        "Used Cron to schedule the program to execute automatically at a 4:45 every morning as a reservation is made for 48 hours before the timeslot.",
-      ],
-    },
-    {
-      name: "Ticket Price Calculator App",
-      technologies: "Java, Android Studio",
-      period: "November 2020",
-      details: [
-        "Created an Android application using Java and Android Studio to calculate ticket prices for trips to various places in NYC.",
-        "Processed user inputted information in the back-end of the app to return a subtotal price based on the tickets selected.",
-        "Utilized the layout and image features of XML file application in order to allow different screen to interact with each other.",
-      ],
-    },
-    {
-      name: "Transaction Management GUI",
-      technologies: "Java, Eclipse, JavaFX",
-      period: "October 2020",
-      details: [
-        "Designed a simple banking transaction system using Java to simulate the common functions of using a bank account.",
-        "Created a system with a GUI which allows users to do actions such as creating an account, deposits, withdraw, but all in a visual manner.",
-        "Implemented object-oriented programming practices such as inheritance to create different account types and databases.",
-      ],
-    },
-  ]);
-
-  // Technical Skills
-  const [skills, setSkills] = useState({
-    languages: "Python, Java, C, HTML/CSS, JavaScript, SQL",
-    devtools:
-      "VS Code, Eclipse, Google Cloud Platform, Selenium, Android Studio",
-    technologies: "Linux, Jenkins, GitHub, Jira, WordPress",
-  });
-
-  // Leadership
-  const [leadership, setLeadership] = useState({
-    organization: "Fraternity",
-    period: "Spring 2020 - Present",
-    university: "University Name",
-    details: [
-      "Maintained a 4.0 star fraternity ranking for the Office of Fraternity and Sorority Affairs (highest possible ranking).",
-      "Managed executive board of 5 members and ran weekly meetings to oversee progress in essential parts of the chapter.",
-      "Led chapter members to work towards making the chapter more community service, academics, and unity.",
+    soft: [
+      "Communication",
+      "Team Collaboration",
+      "Problem Resolution",
+      "Time Organization",
+      "Building Professional Relationships",
+      "Logical Analysis",
     ],
-  });
+  },
+  certificates: [
+    "Google Foundations of CyberSercurity in Coursera",
+    "Paloalto CyberScurity",
+    "AWS Academy Cloud Foundations",
+  ],
+  projects: [
+    {
+      id: 1,
+      title: "Sign Bridge",
+      subtitle: "Indian Sign Language Translator",
+      points: [
+        "Developed a cross-platform mobile app using Flutter to convert voice input to Indian Sign Language (ISL) visuals, serving 100+ users in the testing phase.",
+        "Implemented Flask for backend services and API integration, reducing server response time by 20% and ensuring efficient data handling.",
+        "Integrated Firebase for real-time database management and user authentication, achieving 99% reliability and secure user data storage.",
+        "Applied Machine Learning models (BERT, Transformers) to achieve 85% accuracy in voice-to-text and text-to-sign language conversion across 500+ interactions.",
+        "Enhanced communication accessibility, receiving 90% positive feedback from pilot users and recognition from mentors.",
+      ],
+    },
+    {
+      id: 2,
+      title: "Lexica AR",
+      subtitle: "Immersive Educational Tool",
+      points: [
+        "Created a mobile app with React Native and ViroReact, engaging 200+ students with AR features to simplify complex concepts.",
+        "Integrated Firebase for real-time data management, personalized learning, and secure authentication, improving app efficiency by 30%.",
+        "Designed AR models to visualize complex topics, increasing student comprehension by 40% based on feedback.",
+        "Achieved a 95% AR content retrieval rate, reducing downtime and ensuring smooth access to resources.",
+        "Boosted student participation and confidence by 25% through hands-on AR learning experiences.",
+        "Bridged the gap between theoretical and practical learning, earning praise from educators",
+      ],
+    },
+    {
+      id: 3,
+      title: "E-CELL",
+      subtitle: "Entrepreneurship Resource & Event Platform",
+      points: [
+        "Developed and maintained the E-CELL website, supporting 500+ monthly users with entrepreneurship resources and event access.",
+        "Added features like event registration and member login, increasing user engagement by 30% and improving access to resources for 200+ members.",
+        "Integrated Three.js to create 3D visualizations of startups, increasing website engagement by 40%.",
+        "Built UI components with React.js and backend services with Node.js/Express.js, improving website load times by 25%.",
+        "Utilized Firebase for real-time event tracking and user authentication, achieving 99.9% uptime.",
+      ],
+    },
+  ],
+  achievements: [
+    "Finalist in the Internal Hackathon of SIH at VITB, where I developed a solution to a practical problem, creating a working prototype.",
+    "Finalist in the Spark Tank Competition at college, where I designed a solution and presented it to industry experts, receiving valuable feedback.",
+    "Top 50 team in the DEMUX 24-Hour Hackathon at BVRIT Narsapur, where my team developed the AGRO-GENSIS app, collaborating to meet deadlines and deliver a functional prototype.",
+  ],
+  organizations: [
+    {
+      id: 1,
+      name: "E-CELL VITB",
+      position: "Techniccal Lead",
+      location: "Bhimavaram, India",
+    },
+  ],
+};
 
-  // Helper function to update personal info
-  const updatePersonalInfo = (field, value) => {
-    setPersonalInfo({ ...personalInfo, [field]: value });
-  };
-
-  // Helper function to update education
-  const updateEducation = (field, value) => {
-    setEducation({ ...education, [field]: value });
-  };
-
-  // Helper function to update courses
-  const updateCourses = (value) => {
-    const coursesArray = value.split(",").map((item) => item.trim());
-    updateEducation("courses", coursesArray);
-  };
-
-  // Helper function to update experiences
-  const updateExperience = (index, field, value) => {
-    const updatedExperiences = [...experiences];
-    updatedExperiences[index] = {
-      ...updatedExperiences[index],
-      [field]: value,
-    };
-    setExperiences(updatedExperiences);
-  };
-
-  // Helper function to update experience responsibilities
-  const updateResponsibilities = (index, value) => {
-    const responsibilitiesArray = value
-      .split("\n")
-      .filter((item) => item.trim() !== "");
-    updateExperience(index, "responsibilities", responsibilitiesArray);
-  };
-
-  // Helper function to update projects
-  const updateProject = (index, field, value) => {
-    const updatedProjects = [...projects];
-    updatedProjects[index] = { ...updatedProjects[index], [field]: value };
-    setProjects(updatedProjects);
-  };
-
-  // Helper function to update project details
-  const updateProjectDetails = (index, value) => {
-    const detailsArray = value.split("\n").filter((item) => item.trim() !== "");
-    updateProject(index, "details", detailsArray);
-  };
-
-  // Helper function to update skills
-  const updateSkills = (field, value) => {
-    setSkills({ ...skills, [field]: value });
-  };
-
-  // Helper function to update leadership
-  const updateLeadership = (field, value) => {
-    setLeadership({ ...leadership, [field]: value });
-  };
-
-  // Helper function to update leadership details
-  const updateLeadershipDetails = (value) => {
-    const detailsArray = value.split("\n").filter((item) => item.trim() !== "");
-    updateLeadership("details", detailsArray);
-  };
-
-  // Functions to add and remove sections
-  const addExperience = () => {
-    setExperiences([
-      ...experiences,
-      {
-        company: "New Company",
-        position: "Position Title",
-        location: "City, State",
-        period: "Month Year - Month Year",
-        responsibilities: ["Responsibility 1", "Responsibility 2"],
-      },
-    ]);
-  };
-
-  const removeExperience = (index) => {
-    const updatedExperiences = [...experiences];
-    updatedExperiences.splice(index, 1);
-    setExperiences(updatedExperiences);
-  };
-
-  const addProject = () => {
-    setProjects([
-      ...projects,
-      {
-        name: "New Project",
-        technologies: "Technologies Used",
-        period: "Month Year",
-        details: ["Project detail 1", "Project detail 2"],
-      },
-    ]);
-  };
-
-  const removeProject = (index) => {
-    const updatedProjects = [...projects];
-    updatedProjects.splice(index, 1);
-    setProjects(updatedProjects);
-  };
-
-  const addCourse = () => {
-    const updatedCourses = [...education.courses, "New Course"];
-    updateEducation("courses", updatedCourses);
-  };
-
-  const removeCourse = (index) => {
-    const updatedCourses = [...education.courses];
-    updatedCourses.splice(index, 1);
-    updateEducation("courses", updatedCourses);
-  };
-
-  const addLeadershipDetail = () => {
-    const updatedDetails = [...leadership.details, "New leadership detail"];
-    updateLeadership("details", updatedDetails);
-  };
-
-  const removeLeadershipDetail = (index) => {
-    const updatedDetails = [...leadership.details];
-    updatedDetails.splice(index, 1);
-    updateLeadership("details", updatedDetails);
-  };
-
+// Form component for each section
+const FormSection = ({ title, children, isOpen, toggle }) => {
   return (
-    <div className="flex flex-col md:flex-row gap-6 bg-gray-100 p-4">
-      {/* Form Section */}
-      <div className="w-full md:w-1/2 bg-white p-4 rounded shadow overflow-y-auto max-h-screen">
-        <h2 className="text-xl font-bold mb-4 text-center">Resume Editor</h2>
-
-        {/* Personal Information Form */}
-        <div className="mb-6 border-b pb-4">
-          <h3 className="font-bold mb-2">Personal Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Full Name
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={personalInfo.name}
-                onChange={(e) => updatePersonalInfo("name", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Address
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={personalInfo.address}
-                onChange={(e) => updatePersonalInfo("address", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Phone
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={personalInfo.phone}
-                onChange={(e) => updatePersonalInfo("phone", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={personalInfo.email}
-                onChange={(e) => updatePersonalInfo("email", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                LinkedIn
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={personalInfo.linkedin}
-                onChange={(e) => updatePersonalInfo("linkedin", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                GitHub
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={personalInfo.github}
-                onChange={(e) => updatePersonalInfo("github", e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Education Form */}
-        <div className="mb-6 border-b pb-4">
-          <h3 className="font-bold mb-2">Education</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                University
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={education.university}
-                onChange={(e) => updateEducation("university", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Degree
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={education.degree}
-                onChange={(e) => updateEducation("degree", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Location
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={education.location}
-                onChange={(e) => updateEducation("location", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Period
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={education.period}
-                onChange={(e) => updateEducation("period", e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="mt-3">
-            <div className="flex justify-between items-center mb-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Relevant Coursework
-              </label>
-              <button
-                type="button"
-                className="flex items-center text-sm text-blue-600 hover:text-blue-800"
-                onClick={addCourse}
-              >
-                <Plus size={16} className="mr-1" /> Add Course
-              </button>
-            </div>
-
-            {education.courses.map((course, index) => (
-              <div key={index} className="flex items-center mb-2">
-                <input
-                  type="text"
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                  value={course}
-                  onChange={(e) => {
-                    const updatedCourses = [...education.courses];
-                    updatedCourses[index] = e.target.value;
-                    updateEducation("courses", updatedCourses);
-                  }}
-                />
-                <button
-                  type="button"
-                  className="ml-2 text-red-500 hover:text-red-700"
-                  onClick={() => removeCourse(index)}
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Experience Form */}
-        <div className="mb-6 border-b pb-4">
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="font-bold">Experience</h3>
-            <button
-              type="button"
-              className="flex items-center text-sm text-blue-600 hover:text-blue-800"
-              onClick={addExperience}
-            >
-              <Plus size={16} className="mr-1" /> Add Experience
-            </button>
-          </div>
-
-          {experiences.map((exp, index) => (
-            <div key={index} className="mb-4 p-3 border rounded">
-              <div className="flex justify-between items-center mb-2">
-                <h4 className="font-semibold">Job {index + 1}</h4>
-                <button
-                  type="button"
-                  className="text-red-500 hover:text-red-700 flex items-center"
-                  onClick={() => removeExperience(index)}
-                >
-                  <Trash2 size={16} className="mr-1" /> Remove
-                </button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Company
-                  </label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    value={exp.company}
-                    onChange={(e) =>
-                      updateExperience(index, "company", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Position
-                  </label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    value={exp.position}
-                    onChange={(e) =>
-                      updateExperience(index, "position", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    value={exp.location}
-                    onChange={(e) =>
-                      updateExperience(index, "location", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Period
-                  </label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    value={exp.period}
-                    onChange={(e) =>
-                      updateExperience(index, "period", e.target.value)
-                    }
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Responsibilities (one per line)
-                </label>
-                <textarea
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                  rows="4"
-                  value={exp.responsibilities.join("\n")}
-                  onChange={(e) =>
-                    updateResponsibilities(index, e.target.value)
-                  }
-                />
-              </div>
-            </div>
-          ))}
-          {experiences.length === 0 && (
-            <div className="text-center py-4 text-gray-500">
-              No experience entries yet. Click "Add Experience" to create one.
-            </div>
-          )}
-        </div>
-
-        {/* Projects Form */}
-        <div className="mb-6 border-b pb-4">
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="font-bold">Projects</h3>
-            <button
-              type="button"
-              className="flex items-center text-sm text-blue-600 hover:text-blue-800"
-              onClick={addProject}
-            >
-              <Plus size={16} className="mr-1" /> Add Project
-            </button>
-          </div>
-
-          {projects.map((project, index) => (
-            <div key={index} className="mb-4 p-3 border rounded">
-              <div className="flex justify-between items-center mb-2">
-                <h4 className="font-semibold">Project {index + 1}</h4>
-                <button
-                  type="button"
-                  className="text-red-500 hover:text-red-700 flex items-center"
-                  onClick={() => removeProject(index)}
-                >
-                  <Trash2 size={16} className="mr-1" /> Remove
-                </button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Project Name
-                  </label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    value={project.name}
-                    onChange={(e) =>
-                      updateProject(index, "name", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Technologies
-                  </label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    value={project.technologies}
-                    onChange={(e) =>
-                      updateProject(index, "technologies", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Period
-                  </label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    value={project.period}
-                    onChange={(e) =>
-                      updateProject(index, "period", e.target.value)
-                    }
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Details (one per line)
-                </label>
-                <textarea
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                  rows="4"
-                  value={project.details.join("\n")}
-                  onChange={(e) => updateProjectDetails(index, e.target.value)}
-                />
-              </div>
-            </div>
-          ))}
-          {projects.length === 0 && (
-            <div className="text-center py-4 text-gray-500">
-              No project entries yet. Click "Add Project" to create one.
-            </div>
-          )}
-        </div>
-
-        {/* Technical Skills Form */}
-        <div className="mb-6 border-b pb-4">
-          <h3 className="font-bold mb-2">Technical Skills</h3>
-          <div className="grid grid-cols-1 gap-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Languages
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={skills.languages}
-                onChange={(e) => updateSkills("languages", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Developer Tools
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={skills.devtools}
-                onChange={(e) => updateSkills("devtools", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Technologies/Frameworks
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={skills.technologies}
-                onChange={(e) => updateSkills("technologies", e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Leadership Form */}
-        <div className="mb-6">
-          <h3 className="font-bold mb-2">Leadership / Extracurricular</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Organization
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={leadership.organization}
-                onChange={(e) =>
-                  updateLeadership("organization", e.target.value)
-                }
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Period
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={leadership.period}
-                onChange={(e) => updateLeadership("period", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                University
-              </label>
-              <input
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                value={leadership.university}
-                onChange={(e) => updateLeadership("university", e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="mt-3">
-            <div className="flex justify-between items-center mb-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Leadership Details
-              </label>
-              <button
-                type="button"
-                className="flex items-center text-sm text-blue-600 hover:text-blue-800"
-                onClick={addLeadershipDetail}
-              >
-                <Plus size={16} className="mr-1" /> Add Detail
-              </button>
-            </div>
-
-            {leadership.details.map((detail, index) => (
-              <div key={index} className="flex items-center mb-2">
-                <input
-                  type="text"
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                  value={detail}
-                  onChange={(e) => {
-                    const updatedDetails = [...leadership.details];
-                    updatedDetails[index] = e.target.value;
-                    updateLeadership("details", updatedDetails);
-                  }}
-                />
-                <button
-                  type="button"
-                  className="ml-2 text-red-500 hover:text-red-700"
-                  onClick={() => removeLeadershipDetail(index)}
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
+    <div className="mb-4 border border-gray-200 rounded-lg shadow-sm">
+      <div
+        className="flex justify-between items-center p-3 bg-gray-100 cursor-pointer"
+        onClick={toggle}
+      >
+        <h3 className="text-lg font-medium">{title}</h3>
+        <span>{isOpen ? "▲" : "▼"}</span>
       </div>
-
-      {/* Resume Preview */}
-      <div className="w-full md:w-1/2 bg-white p-6 rounded shadow overflow-y-auto max-h-screen">
-        <div className="font-serif">
-          {/* Header */}
-          <header className="border-b-2 border-gray-800 pb-2 mb-4">
-            <h1 className="text-center text-2xl font-bold tracking-wide">
-              {personalInfo.name}
-            </h1>
-            <div className="flex justify-center flex-wrap gap-x-4 text-sm mt-1">
-              <div className="flex items-center">
-                <span>{personalInfo.address}</span>
-              </div>
-              <div className="flex items-center">
-                <Phone size={14} className="mr-1" />
-                <span>{personalInfo.phone}</span>
-              </div>
-              <div className="flex items-center">
-                <Mail size={14} className="mr-1" />
-                <span>{personalInfo.email}</span>
-              </div>
-              <div className="flex items-center">
-                <Globe size={14} className="mr-1" />
-                <span>{personalInfo.linkedin}</span>
-              </div>
-              <div className="flex items-center">
-                <Github size={14} className="mr-1" />
-                <span>{personalInfo.github}</span>
-              </div>
-            </div>
-          </header>
-
-          {/* Education Section */}
-          <section className="mb-4">
-            <h2 className="text-lg font-bold">Education</h2>
-            <div className="flex justify-between">
-              <div className="font-bold">{education.university}</div>
-              <div className="text-right">{education.period}</div>
-            </div>
-            <div className="flex justify-between text-sm italic">
-              <div>{education.degree}</div>
-              <div>{education.location}</div>
-            </div>
-            <div className="mt-1">
-              <div className="font-bold text-sm">Relevant Coursework:</div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-x-2 text-sm">
-                {education.courses.map((course, index) => (
-                  <div key={index}>• {course}</div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Experience Section */}
-          <section className="mb-4">
-            <h2 className="text-lg font-bold">Experience</h2>
-            {experiences.map((exp, index) => (
-              <div key={index} className="mb-2">
-                <div className="flex justify-between">
-                  <div className="font-bold">{exp.company}</div>
-                  <div className="text-right">{exp.period}</div>
-                </div>
-                <div className="flex justify-between text-sm italic">
-                  <div>{exp.position}</div>
-                  <div>{exp.location}</div>
-                </div>
-                <ul className="list-disc ml-5 text-sm">
-                  {exp.responsibilities.map((resp, rIndex) => (
-                    <li key={rIndex}>{resp}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </section>
-
-          {/* Projects Section */}
-          <section className="mb-4">
-            <h2 className="text-lg font-bold">Projects</h2>
-            {projects.map((project, index) => (
-              <div key={index} className="mb-2">
-                <div className="flex justify-between">
-                  <div className="font-bold">
-                    {project.name} |{" "}
-                    <span className="font-normal italic">
-                      {project.technologies}
-                    </span>
-                  </div>
-                  <div className="text-right">{project.period}</div>
-                </div>
-                <ul className="list-disc ml-5 text-sm">
-                  {project.details.map((detail, dIndex) => (
-                    <li key={dIndex}>{detail}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </section>
-
-          {/* Technical Skills Section */}
-          <section className="mb-4">
-            <h2 className="text-lg font-bold">Technical Skills</h2>
-            <div className="text-sm">
-              <div>
-                <span className="font-bold">Languages:</span> {skills.languages}
-              </div>
-              <div>
-                <span className="font-bold">Developer Tools:</span>{" "}
-                {skills.devtools}
-              </div>
-              <div>
-                <span className="font-bold">Technologies/Frameworks:</span>{" "}
-                {skills.technologies}
-              </div>
-            </div>
-          </section>
-
-          {/* Leadership Section */}
-          <section>
-            <h2 className="text-lg font-bold">Leadership / Extracurricular</h2>
-            <div className="mb-2">
-              <div className="flex justify-between">
-                <div className="font-bold">{leadership.organization}</div>
-                <div className="text-right">{leadership.period}</div>
-              </div>
-              <div className="flex justify-between text-sm italic">
-                <div></div>
-                <div>{leadership.university}</div>
-              </div>
-              <ul className="list-disc ml-5 text-sm">
-                {leadership.details.map((detail, dIndex) => (
-                  <li key={dIndex}>{detail}</li>
-                ))}
-              </ul>
-            </div>
-          </section>
-        </div>
-      </div>
+      {isOpen && <div className="p-4 bg-white">{children}</div>}
     </div>
   );
 };
-export default LivePreview;
+
+// Input component for form fields
+const InputField = ({ label, name, value, onChange, type = "text" }) => {
+  return (
+    <div className="mb-3">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        {label}
+      </label>
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+      />
+    </div>
+  );
+};
+
+// Textarea component for longer text
+const TextareaField = ({ label, name, value, onChange }) => {
+  return (
+    <div className="mb-3">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        {label}
+      </label>
+      <textarea
+        name={name}
+        value={value}
+        onChange={onChange}
+        rows={4}
+        className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+      />
+    </div>
+  );
+};
+
+// Array Fields component for handling arrays with add/remove functionality
+const ArrayField = ({ items, setItems, renderItem, addNewItem }) => {
+  return (
+    <div className="mb-3">
+      {items.map((item, index) => (
+        <div key={index} className="mb-3 pb-3 border-b border-gray-200">
+          {renderItem(item, index)}
+          <button
+            type="button"
+            onClick={() => {
+              const newItems = [...items];
+              newItems.splice(index, 1);
+              setItems(newItems);
+            }}
+            className="mt-2 text-sm text-red-600 hover:text-red-800"
+          >
+            Remove
+          </button>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={addNewItem}
+        className="text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded"
+      >
+        Add Item
+      </button>
+    </div>
+  );
+};
+
+export default function ResumeBuilder() {
+  const [resumeData, setResumeData] = useState(defaultResumeData);
+  const [openSections, setOpenSections] = useState({
+    personalInfo: true,
+    education: false,
+    profile: false,
+    skills: false,
+    certificates: false,
+    projects: false,
+    achievements: false,
+    organizations: false,
+  });
+
+  const toggleSection = (section) => {
+    setOpenSections({
+      ...openSections,
+      [section]: !openSections[section],
+    });
+  };
+
+  const handlePersonalInfoChange = (e) => {
+    const { name, value } = e.target;
+    setResumeData({
+      ...resumeData,
+      personalInfo: {
+        ...resumeData.personalInfo,
+        [name]: value,
+      },
+    });
+  };
+
+  const handleEducationChange = (e, index) => {
+    const { name, value } = e.target;
+    const newEducation = [...resumeData.education];
+    newEducation[index] = {
+      ...newEducation[index],
+      [name]: value,
+    };
+    setResumeData({
+      ...resumeData,
+      education: newEducation,
+    });
+  };
+
+  const handleExperienceChange = (index, field, value) => {
+    const newExperience = [...resumeData.experience];
+    if (field.startsWith("point-")) {
+      const pointIndex = parseInt(field.split("-")[1]);
+      newExperience[index].points[pointIndex] = value;
+    } else {
+      newExperience[index][field] = value;
+    }
+    setResumeData({ ...resumeData, experience: newExperience });
+  };
+
+  const handleProfileChange = (e) => {
+    setResumeData({
+      ...resumeData,
+      profile: e.target.value,
+    });
+  };
+
+  const handleSkillsChange = (type, index, value) => {
+    const newSkills = { ...resumeData.skills };
+    newSkills[type][index] = value;
+    setResumeData({
+      ...resumeData,
+      skills: newSkills,
+    });
+  };
+
+  const handleCertificatesChange = (index, value) => {
+    const newCertificates = [...resumeData.certificates];
+    newCertificates[index] = value;
+    setResumeData({
+      ...resumeData,
+      certificates: newCertificates,
+    });
+  };
+
+  const handleProjectChange = (projectIndex, field, value) => {
+    const newProjects = [...resumeData.projects];
+
+    if (field.startsWith("point-")) {
+      const pointIndex = parseInt(field.split("-")[1]);
+      newProjects[projectIndex].points[pointIndex] = value;
+    } else {
+      newProjects[projectIndex] = {
+        ...newProjects[projectIndex],
+        [field]: value,
+      };
+    }
+
+    setResumeData({
+      ...resumeData,
+      projects: newProjects,
+    });
+  };
+
+  const handleAchievementChange = (index, value) => {
+    const newAchievements = [...resumeData.achievements];
+    newAchievements[index] = value;
+    setResumeData({
+      ...resumeData,
+      achievements: newAchievements,
+    });
+  };
+
+  const handleOrganizationChange = (e, index) => {
+    const { name, value } = e.target;
+    const newOrganizations = [...resumeData.organizations];
+    newOrganizations[index] = {
+      ...newOrganizations[index],
+      [name]: value,
+    };
+    setResumeData({
+      ...resumeData,
+      organizations: newOrganizations,
+    });
+  };
+
+  return (
+    <div className="min-h-screen  p-5 bg-[#D0F6FE] py-8">
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Form Section */}
+        <div className="w-full md:w-1/2 bg-white p-6 rounded-lg shadow-md h-screen overflow-y-auto">
+          <h2 className="text-xl font-semibold mb-4">Edit Resume</h2>
+
+          {/* Personal Information */}
+          <FormSection
+            title="Personal Information"
+            isOpen={openSections.personalInfo}
+            toggle={() => toggleSection("personalInfo")}
+          >
+            <InputField
+              label="Full Name"
+              name="name"
+              value={resumeData.personalInfo.name}
+              onChange={handlePersonalInfoChange}
+            />
+            <InputField
+              label="Short Name"
+              name="shortName"
+              value={resumeData.personalInfo.shortName}
+              onChange={handlePersonalInfoChange}
+            />
+            <InputField
+              label="Email"
+              name="email"
+              value={resumeData.personalInfo.email}
+              onChange={handlePersonalInfoChange}
+              type="email"
+            />
+            <InputField
+              label="Phone"
+              name="phone"
+              value={resumeData.personalInfo.phone}
+              onChange={handlePersonalInfoChange}
+            />
+            <InputField
+              label="Address"
+              name="address"
+              value={resumeData.personalInfo.address}
+              onChange={handlePersonalInfoChange}
+            />
+            <InputField
+              label="LinkedIn"
+              name="linkedIn"
+              value={resumeData.personalInfo.linkedIn}
+              onChange={handlePersonalInfoChange}
+            />
+          </FormSection>
+
+          {/* Education */}
+          <FormSection
+            title="Education"
+            isOpen={openSections.education}
+            toggle={() => toggleSection("education")}
+          >
+            <ArrayField
+              items={resumeData.education}
+              setItems={(newItems) =>
+                setResumeData({ ...resumeData, education: newItems })
+              }
+              renderItem={(edu, index) => (
+                <div>
+                  <InputField
+                    label="Degree"
+                    name="degree"
+                    value={edu.degree}
+                    onChange={(e) => handleEducationChange(e, index)}
+                  />
+                  <InputField
+                    label="Institution"
+                    name="institution"
+                    value={edu.institution}
+                    onChange={(e) => handleEducationChange(e, index)}
+                  />
+                  <InputField
+                    label="Score"
+                    name="score"
+                    value={edu.score}
+                    onChange={(e) => handleEducationChange(e, index)}
+                  />
+                  <InputField
+                    label="Location"
+                    name="location"
+                    value={edu.location}
+                    onChange={(e) => handleEducationChange(e, index)}
+                  />
+                  <div className="flex gap-4">
+                    <InputField
+                      label="Start Year"
+                      name="startYear"
+                      value={edu.startYear}
+                      onChange={(e) => handleEducationChange(e, index)}
+                    />
+                    <InputField
+                      label="End Year"
+                      name="endYear"
+                      value={edu.endYear}
+                      onChange={(e) => handleEducationChange(e, index)}
+                    />
+                  </div>
+                </div>
+              )}
+              addNewItem={() => {
+                const newEducation = [...resumeData.education];
+                const newId = newEducation.length
+                  ? Math.max(...newEducation.map((e) => e.id)) + 1
+                  : 1;
+                newEducation.push({
+                  id: newId,
+                  degree: "",
+                  institution: "",
+                  score: "",
+                  location: "",
+                  startYear: "",
+                  endYear: "",
+                });
+                setResumeData({ ...resumeData, education: newEducation });
+              }}
+            />
+          </FormSection>
+
+          {/* Profile */}
+          <FormSection
+            title="Profile"
+            isOpen={openSections.profile}
+            toggle={() => toggleSection("profile")}
+          >
+            <TextareaField
+              label="Profile Description"
+              name="profile"
+              value={resumeData.profile}
+              onChange={handleProfileChange}
+            />
+          </FormSection>
+
+          <FormSection
+            title="Work Experience"
+            isOpen={openSections.experience}
+            toggle={() => toggleSection("experience")}
+          >
+            <ArrayField
+              items={resumeData.experience}
+              setItems={(newItems) =>
+                setResumeData({ ...resumeData, experience: newItems })
+              }
+              renderItem={(exp, index) => (
+                <div>
+                  <InputField
+                    label="Role / Job Title"
+                    name={`role`}
+                    value={exp.role}
+                    onChange={(e) =>
+                      handleExperienceChange(index, "role", e.target.value)
+                    }
+                  />
+                  <InputField
+                    label="Company"
+                    name={`company`}
+                    value={exp.company}
+                    onChange={(e) =>
+                      handleExperienceChange(index, "company", e.target.value)
+                    }
+                  />
+                  <InputField
+                    label="Location"
+                    name={`location`}
+                    value={exp.location}
+                    onChange={(e) =>
+                      handleExperienceChange(index, "location", e.target.value)
+                    }
+                  />
+                  <InputField
+                    label="Start Date"
+                    name={`startDate`}
+                    value={exp.startDate}
+                    onChange={(e) =>
+                      handleExperienceChange(index, "startDate", e.target.value)
+                    }
+                  />
+                  <InputField
+                    label="End Date"
+                    name={`endDate`}
+                    value={exp.endDate}
+                    onChange={(e) =>
+                      handleExperienceChange(index, "endDate", e.target.value)
+                    }
+                  />
+
+                  <h5 className="text-sm font-medium mt-2 mb-1">
+                    Work Highlights
+                  </h5>
+                  {exp.points.map((point, pointIndex) => (
+                    <div key={pointIndex} className="flex items-start mb-2">
+                      <textarea
+                        value={point}
+                        onChange={(e) =>
+                          handleExperienceChange(
+                            index,
+                            `point-${pointIndex}`,
+                            e.target.value
+                          )
+                        }
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        rows={2}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newPoints = [...exp.points];
+                          newPoints.splice(pointIndex, 1);
+                          handleExperienceChange(index, "points", newPoints);
+                        }}
+                        className="ml-2 text-red-600 hover:text-red-800"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newPoints = [...exp.points, ""];
+                      handleExperienceChange(index, "points", newPoints);
+                    }}
+                    className="text-xs bg-gray-200 hover:bg-gray-300 py-1 px-2 rounded"
+                  >
+                    Add Point
+                  </button>
+                </div>
+              )}
+              addNewItem={() => {
+                const newExperience = [...resumeData.experience];
+                const newId = newExperience.length
+                  ? Math.max(...newExperience.map((e) => e.id)) + 1
+                  : 1;
+                newExperience.push({
+                  id: newId,
+                  role: "",
+                  company: "",
+                  location: "",
+                  startDate: "",
+                  endDate: "",
+                  points: [""],
+                });
+                setResumeData({ ...resumeData, experience: newExperience });
+              }}
+            />
+          </FormSection>
+
+          {/* Skills */}
+          <FormSection
+            title="Skills"
+            isOpen={openSections.skills}
+            toggle={() => toggleSection("skills")}
+          >
+            <h4 className="text-md font-medium mb-2">Technical Skills</h4>
+            <ArrayField
+              items={resumeData.skills.technical}
+              setItems={(newItems) =>
+                setResumeData({
+                  ...resumeData,
+                  skills: { ...resumeData.skills, technical: newItems },
+                })
+              }
+              renderItem={(skill, index) => (
+                <InputField
+                  label={`Technical Skill ${index + 1}`}
+                  name={`technical-${index}`}
+                  value={skill}
+                  onChange={(e) =>
+                    handleSkillsChange("technical", index, e.target.value)
+                  }
+                />
+              )}
+              addNewItem={() => {
+                const newSkills = { ...resumeData.skills };
+                newSkills.technical.push("");
+                setResumeData({ ...resumeData, skills: newSkills });
+              }}
+            />
+
+            <h4 className="text-md font-medium mb-2 mt-4">Soft Skills</h4>
+            <ArrayField
+              items={resumeData.skills.soft}
+              setItems={(newItems) =>
+                setResumeData({
+                  ...resumeData,
+                  skills: { ...resumeData.skills, soft: newItems },
+                })
+              }
+              renderItem={(skill, index) => (
+                <InputField
+                  label={`Soft Skill ${index + 1}`}
+                  name={`soft-${index}`}
+                  value={skill}
+                  onChange={(e) =>
+                    handleSkillsChange("soft", index, e.target.value)
+                  }
+                />
+              )}
+              addNewItem={() => {
+                const newSkills = { ...resumeData.skills };
+                newSkills.soft.push("");
+                setResumeData({ ...resumeData, skills: newSkills });
+              }}
+            />
+          </FormSection>
+
+          {/* Certificates */}
+          <FormSection
+            title="Certificates"
+            isOpen={openSections.certificates}
+            toggle={() => toggleSection("certificates")}
+          >
+            <ArrayField
+              items={resumeData.certificates}
+              setItems={(newItems) =>
+                setResumeData({ ...resumeData, certificates: newItems })
+              }
+              renderItem={(cert, index) => (
+                <InputField
+                  label={`Certificate ${index + 1}`}
+                  name={`certificate-${index}`}
+                  value={cert}
+                  onChange={(e) =>
+                    handleCertificatesChange(index, e.target.value)
+                  }
+                />
+              )}
+              addNewItem={() => {
+                const newCertificates = [...resumeData.certificates];
+                newCertificates.push("");
+                setResumeData({
+                  ...resumeData,
+                  certificates: newCertificates,
+                });
+              }}
+            />
+          </FormSection>
+
+          {/* Projects */}
+          <FormSection
+            title="Projects"
+            isOpen={openSections.projects}
+            toggle={() => toggleSection("projects")}
+          >
+            <ArrayField
+              items={resumeData.projects}
+              setItems={(newItems) =>
+                setResumeData({ ...resumeData, projects: newItems })
+              }
+              renderItem={(project, index) => (
+                <div>
+                  <InputField
+                    label="Project Title"
+                    name={`title`}
+                    value={project.title}
+                    onChange={(e) =>
+                      handleProjectChange(index, "title", e.target.value)
+                    }
+                  />
+                  <InputField
+                    label="Project Subtitle"
+                    name={`subtitle`}
+                    value={project.subtitle}
+                    onChange={(e) =>
+                      handleProjectChange(index, "subtitle", e.target.value)
+                    }
+                  />
+
+                  <h5 className="text-sm font-medium mt-2 mb-1">
+                    Project Points
+                  </h5>
+                  {project.points.map((point, pointIndex) => (
+                    <div key={pointIndex} className="flex items-start mb-2">
+                      <textarea
+                        value={point}
+                        onChange={(e) =>
+                          handleProjectChange(
+                            index,
+                            `point-${pointIndex}`,
+                            e.target.value
+                          )
+                        }
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        rows={2}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newPoints = [...project.points];
+                          newPoints.splice(pointIndex, 1);
+                          handleProjectChange(index, "points", newPoints);
+                        }}
+                        className="ml-2 text-red-600 hover:text-red-800"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newPoints = [...project.points, ""];
+                      handleProjectChange(index, "points", newPoints);
+                    }}
+                    className="text-xs bg-gray-200 hover:bg-gray-300 py-1 px-2 rounded"
+                  >
+                    Add Point
+                  </button>
+                </div>
+              )}
+              addNewItem={() => {
+                const newProjects = [...resumeData.projects];
+                const newId = newProjects.length
+                  ? Math.max(...newProjects.map((p) => p.id)) + 1
+                  : 1;
+                newProjects.push({
+                  id: newId,
+                  title: "",
+                  subtitle: "",
+                  points: [""],
+                });
+                setResumeData({ ...resumeData, projects: newProjects });
+              }}
+            />
+          </FormSection>
+
+          {/* Achievements */}
+          <FormSection
+            title="Achievements"
+            isOpen={openSections.achievements}
+            toggle={() => toggleSection("achievements")}
+          >
+            <ArrayField
+              items={resumeData.achievements}
+              setItems={(newItems) =>
+                setResumeData({ ...resumeData, achievements: newItems })
+              }
+              renderItem={(achievement, index) => (
+                <TextareaField
+                  label={`Achievement ${index + 1}`}
+                  name={`achievement-${index}`}
+                  value={achievement}
+                  onChange={(e) =>
+                    handleAchievementChange(index, e.target.value)
+                  }
+                />
+              )}
+              addNewItem={() => {
+                const newAchievements = [...resumeData.achievements];
+                newAchievements.push("");
+                setResumeData({
+                  ...resumeData,
+                  achievements: newAchievements,
+                });
+              }}
+            />
+          </FormSection>
+
+          {/* Organizations */}
+          <FormSection
+            title="Organizations"
+            isOpen={openSections.organizations}
+            toggle={() => toggleSection("organizations")}
+          >
+            <ArrayField
+              items={resumeData.organizations}
+              setItems={(newItems) =>
+                setResumeData({ ...resumeData, organizations: newItems })
+              }
+              renderItem={(org, index) => (
+                <div>
+                  <InputField
+                    label="Organization Name"
+                    name="name"
+                    value={org.name}
+                    onChange={(e) => handleOrganizationChange(e, index)}
+                  />
+                  <InputField
+                    label="Position"
+                    name="position"
+                    value={org.position}
+                    onChange={(e) => handleOrganizationChange(e, index)}
+                  />
+                  <InputField
+                    label="Location"
+                    name="location"
+                    value={org.location}
+                    onChange={(e) => handleOrganizationChange(e, index)}
+                  />
+                </div>
+              )}
+              addNewItem={() => {
+                const newOrganizations = [...resumeData.organizations];
+                const newId = newOrganizations.length
+                  ? Math.max(...newOrganizations.map((o) => o.id)) + 1
+                  : 1;
+                newOrganizations.push({
+                  id: newId,
+                  name: "",
+                  position: "",
+                  location: "",
+                });
+                setResumeData({
+                  ...resumeData,
+                  organizations: newOrganizations,
+                });
+              }}
+            />
+          </FormSection>
+        </div>
+        <ResumePreview resumeData={resumeData} />
+      </div>
+    </div>
+  );
+}

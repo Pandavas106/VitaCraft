@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight, FaPlus } from "react-icons/fa";
 import MainP from "./../assets/MainP.png";
+import R1 from "./../assets/R1.jpg";
+import { useNavigate } from "react-router-dom";
 
 function Templates() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -12,12 +14,20 @@ function Templates() {
     };
   }, []);
 
+  const navigator = useNavigate();
+
   const scrollContainer = (direction) => {
     const container = document.getElementById("resume-scroll");
     if (container) {
       const scrollAmount = direction === "left" ? -300 : 300;
       container.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
+  };
+  const Templates = [R1, MainP, MainP, MainP];
+
+  const navigateToLivePreview = (idx) => {
+    setSelectedTemplate(idx);
+    navigator("/livepreview");
   };
 
   return (
@@ -28,7 +38,8 @@ function Templates() {
           Create Your Resume
         </h1>
         <p className="mt-3 text-gray-600 md:text-lg max-w-2xl">
-          Craft a job-winning resume with our modern, ATS-friendly templates built for every profession.
+          Craft a job-winning resume with our modern, ATS-friendly built for
+          every profession.
         </p>
 
         {/* Template Scroller */}
@@ -58,7 +69,7 @@ function Templates() {
           {/* Horizontal Scroll */}
           <div
             id="resume-scroll"
-            className="flex gap-6 overflow-x-auto scrollbar-thin scrollbar-thumb pb-4 scroll-smooth"
+            className="flex gap-6 p-10 overflow-x-auto scrollbar-thin scrollbar-thumb pb-4 scroll-smooth"
           >
             {/* Create New */}
             <div className="flex-shrink-0 hover:cursor-pointer transform transition-transform hover:scale-105">
@@ -74,11 +85,11 @@ function Templates() {
             </div>
 
             {/* Template Cards */}
-            {[...Array(5)].map((_, idx) => (
+            {Templates.map((_, idx) => (
               <div
                 className="flex-shrink-0 transform transition-transform hover:scale-105 hover:cursor-pointer"
                 key={idx}
-                onClick={() => setSelectedTemplate(idx)}
+                onClick={() => navigateToLivePreview(idx)}
               >
                 <div
                   className={`w-[220px] h-[300px] mb-3 flex flex-col gap-2 justify-center items-center rounded-lg shadow-lg ${
@@ -88,7 +99,7 @@ function Templates() {
                   } transition-all`}
                 >
                   <img
-                    src={MainP}
+                    src={Templates[idx]}
                     alt={`Resume Template ${idx + 1}`}
                     className="object-fill w-full h-full rounded-lg"
                   />

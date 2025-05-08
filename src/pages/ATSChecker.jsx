@@ -322,7 +322,6 @@ const ATSCheckerPage = () => {
           </motion.div>
         </div>
       </div>
-      <Resume />
     </>
   );
 };
