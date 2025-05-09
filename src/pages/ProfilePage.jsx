@@ -5,6 +5,10 @@ import PersonalInfoSection from '../components/profile/PersonalInfoSection'
 import EducationSection from '../components/profile/EducationSection'
 import ExperienceSection from '../components/profile/ExperienceSection'
 import SkillsSection from '../components/profile/SkillsSection'
+import ProjectsSection from '../components/profile/ProjectsSection'
+import CertificationsSection from '../components/profile/CertificationsSection'
+import AchievementsSection from '../components/profile/AchievementsSection'
+
 
 const ProfilePage = () => {
   const { resumeData } = useResume()
@@ -20,6 +24,7 @@ const ProfilePage = () => {
       description: 'Basic details and contact information',
       color: '#4f46e5'
     },
+
     {
       id: 'education',
       title: 'Education',
@@ -43,7 +48,32 @@ const ProfilePage = () => {
       icon: '⚡',
       description: 'Technical and professional competencies',
       color: '#0d9488'
+    },
+    {
+      id: 'projects',
+      title: 'Projects',
+      component: ProjectsSection,
+      icon: '📁',
+      description: 'Personal and professional projects',
+      color: '#a855f7'
+    },
+    {
+      id: 'certifications',
+      title: 'Certifications',
+      component: CertificationsSection,
+      icon: '📜',
+      description: 'Professional certifications and licenses',
+      color: '#fbbf24'
+    },
+    {
+      id: 'achievements',
+      title: 'Achievements',
+      component: AchievementsSection,
+      icon: '🏆',
+      description: 'Awards and recognitions',
+      color: '#ec4899'
     }
+
   ]
 
   const renderContent = () => {

@@ -8,7 +8,7 @@ const ExperienceSection = () => {
 
   const [isAddingNew, setIsAddingNew] = useState(false)
   const [editingId, setEditingId] = useState(null)
-
+  
   const emptyExperience = {
     id: '',
     company: '',
@@ -19,8 +19,118 @@ const ExperienceSection = () => {
     description: '',
     current: false
   }
-
+  
   const [formData, setFormData] = useState(emptyExperience)
+
+  const containerStyle = {
+    backgroundColor: '#ffffff',
+    borderRadius: '16px',
+    padding: '2rem',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+  }
+
+  const headerStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '2rem',
+  }
+
+  const titleStyle = {
+    fontSize: '1.5rem',
+    fontWeight: '600',
+    color: '#1f2937',
+  }
+
+  const addButtonStyle = {
+    backgroundColor: '#4f46e5',
+    color: 'white',
+    padding: '0.75rem 1.5rem',
+    borderRadius: '8px',
+    border: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+  }
+
+  const formStyle = {
+    backgroundColor: '#f8fafc',
+    borderRadius: '12px',
+    padding: '2rem',
+    marginBottom: '2rem',
+    border: '1px solid #e2e8f0',
+    animation: 'slideDown 0.3s ease-out',
+  }
+
+  const gridStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: '1rem',
+    marginBottom: '1.5rem',
+  }
+
+  const inputStyle = {
+    width: '100%',
+    padding: '0.75rem',
+    borderRadius: '8px',
+    border: '2px solid #e5e7eb',
+    fontSize: '1rem',
+    transition: 'all 0.3s ease',
+    outline: 'none',
+  }
+
+  const labelStyle = {
+    display: 'block',
+    marginBottom: '0.5rem',
+    fontSize: '0.9rem',
+    fontWeight: '500',
+    color: '#4b5563',
+  }
+
+  const textareaStyle = {
+    ...inputStyle,
+    gridColumn: 'span 2',
+    minHeight: '120px',
+    resize: 'vertical',
+  }
+
+  const buttonGroupStyle = {
+    display: 'flex',
+    gap: '1rem',
+    justifyContent: 'flex-end',
+  }
+
+  const primaryButtonStyle = {
+    backgroundColor: '#4f46e5',
+    color: 'white',
+    padding: '0.75rem 1.5rem',
+    borderRadius: '8px',
+    border: 'none',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+  }
+
+  const secondaryButtonStyle = {
+    ...primaryButtonStyle,
+    backgroundColor: 'white',
+    border: '2px solid #4f46e5',
+    color: '#4f46e5',
+  }
+
+  const experienceCardStyle = {
+    backgroundColor: 'white',
+    borderRadius: '12px',
+    padding: '1.5rem',
+    marginBottom: '1rem',
+    border: '1px solid #e2e8f0',
+    transition: 'all 0.3s ease',
+    cursor: 'pointer',
+    ':hover': {
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    },
+  }
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -28,8 +138,7 @@ const ExperienceSection = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }))
-
-    // If current job, clear end date
+    
     if (name === 'current' && checked) {
       setFormData(prev => ({
         ...prev,
@@ -64,172 +173,150 @@ const ExperienceSection = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
+    
     let updatedExperience
-
+    
     if (isAddingNew) {
       updatedExperience = [
         ...experience,
         { ...formData, id: uuidv4() }
       ]
     } else {
-      updatedExperience = experience.map(item =>
+      updatedExperience = experience.map(item => 
         item.id === editingId ? formData : item
       )
     }
-
+    
     updateExperience(updatedExperience)
     handleCancel()
   }
 
   return (
-    <div className="animate-fade-in">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-neutral-900">Work Experience</h2>
+    <div >
+      <div style={headerStyle}>
+        <h2 style={titleStyle}>Work Experience</h2>
         {!isAddingNew && editingId === null && (
-          <button
-            className="btn-primary flex items-center"
+          <button 
+            style={addButtonStyle}
             onClick={handleAddNew}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
-            </svg>
             Add Experience
           </button>
         )}
       </div>
 
-      {/* Form for adding/editing */}
       {(isAddingNew || editingId !== null) && (
-        <form onSubmit={handleSubmit} className="mb-8 bg-neutral-50 p-6 rounded-lg border border-neutral-200 animate-slide-up">
-          <h3 className="text-lg font-medium text-neutral-900 mb-4">
+        <form onSubmit={handleSubmit} style={formStyle}>
+          <h3 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', color: '#1f2937' }}>
             {isAddingNew ? 'Add New Experience' : 'Edit Experience'}
           </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          
+          <div style={gridStyle}>
             <div>
-              <label htmlFor="company" className="block text-sm font-medium text-neutral-700 mb-1">
-                Company/Organization*
-              </label>
+              <label style={labelStyle}>Company/Organization*</label>
               <input
                 type="text"
-                id="company"
                 name="company"
                 value={formData.company}
                 onChange={handleChange}
-                className="input-field"
+                style={inputStyle}
                 placeholder="Company name"
                 required
               />
             </div>
-
+            
             <div>
-              <label htmlFor="position" className="block text-sm font-medium text-neutral-700 mb-1">
-                Position/Title*
-              </label>
+              <label style={labelStyle}>Position/Title*</label>
               <input
                 type="text"
-                id="position"
                 name="position"
                 value={formData.position}
                 onChange={handleChange}
-                className="input-field"
+                style={inputStyle}
                 placeholder="Your job title"
                 required
               />
             </div>
-
+            
             <div>
-              <label htmlFor="location" className="block text-sm font-medium text-neutral-700 mb-1">
-                Location
-              </label>
+              <label style={labelStyle}>Location</label>
               <input
                 type="text"
-                id="location"
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
-                className="input-field"
+                style={inputStyle}
                 placeholder="City, Country or Remote"
               />
             </div>
-
-            <div className="md:col-span-2 flex items-center">
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <input
                 type="checkbox"
                 id="current"
                 name="current"
                 checked={formData.current}
                 onChange={handleChange}
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-neutral-300 rounded"
+                style={{ width: '1rem', height: '1rem' }}
               />
-              <label htmlFor="current" className="ml-2 block text-sm text-neutral-700">
+              <label htmlFor="current" style={{ color: '#4b5563', fontSize: '0.9rem' }}>
                 I currently work here
               </label>
             </div>
-
+            
             <div>
-              <label htmlFor="startDate" className="block text-sm font-medium text-neutral-700 mb-1">
-                Start Date*
-              </label>
+              <label style={labelStyle}>Start Date*</label>
               <input
                 type="month"
-                id="startDate"
                 name="startDate"
                 value={formData.startDate}
                 onChange={handleChange}
-                className="input-field"
+                style={inputStyle}
                 required
               />
             </div>
-
+            
             <div>
-              <label htmlFor="endDate" className="block text-sm font-medium text-neutral-700 mb-1">
-                End Date{!formData.current && '*'}
-              </label>
+              <label style={labelStyle}>End Date{!formData.current && '*'}</label>
               <input
                 type="month"
-                id="endDate"
                 name="endDate"
                 value={formData.endDate}
                 onChange={handleChange}
-                className="input-field"
+                style={inputStyle}
                 disabled={formData.current}
                 required={!formData.current}
               />
             </div>
-
-            <div className="md:col-span-2">
-              <label htmlFor="description" className="block text-sm font-medium text-neutral-700 mb-1">
-                Description*
-              </label>
+            
+            <div style={{ gridColumn: 'span 2' }}>
+              <label style={labelStyle}>Description*</label>
               <textarea
-                id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                rows="5"
-                className="input-field"
+                style={textareaStyle}
                 placeholder="Describe your responsibilities, achievements, and skills used"
                 required
+                rows="5"
               ></textarea>
-              <p className="text-sm text-neutral-500 mt-1">
+              <p style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '0.5rem' }}>
                 Use bullet points by starting each line with "• " to format your description professionally.
               </p>
             </div>
           </div>
-
-          <div className="flex gap-4">
-            <button
-              type="button"
-              className="btn-secondary"
+          
+          <div style={buttonGroupStyle}>
+            <button 
+              type="button" 
+              style={secondaryButtonStyle}
               onClick={handleCancel}
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="btn-primary"
+            <button 
+              type="submit" 
+              style={primaryButtonStyle}
             >
               {isAddingNew ? 'Add Experience' : 'Save Changes'}
             </button>
@@ -237,43 +324,37 @@ const ExperienceSection = () => {
         </form>
       )}
 
-      {/* List of experience entries */}
       {experience.length > 0 ? (
-        <div className="space-y-4">
+        <div>
           {experience.map(item => (
-            <div
-              key={item.id}
-              className="bg-white p-4 rounded-lg border border-neutral-200 hover:shadow-md transition-shadow duration-200"
-            >
-              <div className="flex justify-between">
+            <div key={item.id} style={experienceCardStyle}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  <h3 className="font-medium">{item.position}</h3>
-                  <p className="text-neutral-600">{item.company}</p>
-                  <p className="text-sm text-neutral-500">
-                    {new Date(item.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })} -
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.25rem' }}>
+                    {item.position}
+                  </h3>
+                  <p style={{ color: '#4b5563', marginBottom: '0.25rem' }}>{item.company}</p>
+                  <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>
+                    {new Date(item.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })} - 
                     {item.current ? ' Present' : ` ${new Date(item.endDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}`}
                     {item.location && ` • ${item.location}`}
                   </p>
-                  {item.description && (
-                    <div className="text-sm mt-2 whitespace-pre-line">{item.description}</div>
-                  )}
+                  <div style={{ marginTop: '1rem', whiteSpace: 'pre-line', fontSize: '0.9rem' }}>
+                    {item.description}
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    className="text-neutral-500 hover:text-neutral-700"
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button 
                     onClick={() => handleEdit(item.id)}
+                    style={{ padding: '0.5rem', color: '#4b5563' }}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
+                    ✏️
                   </button>
-                  <button
-                    className="text-neutral-500 hover:text-error-600"
+                  <button 
                     onClick={() => handleDelete(item.id)}
+                    style={{ padding: '0.5rem', color: '#ef4444' }}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
+                    🗑️
                   </button>
                 </div>
               </div>
@@ -281,14 +362,13 @@ const ExperienceSection = () => {
           ))}
         </div>
       ) : (
-        <div className="text-center py-8 text-neutral-500">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-neutral-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-          <p className="text-lg">No work experience added yet</p>
-          <p className="text-sm mb-4">Add your professional experience to showcase your skills</p>
-          <button
-            className="btn-primary"
+        <div style={{ textAlign: 'center', padding: '3rem 0', color: '#6b7280' }}>
+          <p style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>No work experience added yet</p>
+          <p style={{ fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+            Add your professional experience to showcase your skills
+          </p>
+          <button 
+            style={primaryButtonStyle}
             onClick={handleAddNew}
           >
             Add Experience
