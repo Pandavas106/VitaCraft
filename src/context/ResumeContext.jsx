@@ -18,7 +18,8 @@ const initialResumeData = {
   skills: [],
   certifications: [],
   languages: [],
-  projects: []
+  projects: [],
+  achievements: []  // Added achievements section
 }
 
 const ResumeContext = createContext(null)
@@ -74,6 +75,13 @@ export const ResumeProvider = ({ children }) => {
     }))
   }
 
+  const updateAchievements = (achievementsList) => {   // Added update function for achievements
+    setResumeData(prev => ({
+      ...prev,
+      achievements: achievementsList
+    }))
+  }
+
   const resetResume = () => {
     setResumeData(initialResumeData)
   }
@@ -85,6 +93,7 @@ export const ResumeProvider = ({ children }) => {
       updateEducation,
       updateExperience,
       updateSkills,
+      updateAchievements, // Provided in the context
       resetResume
     }}>
       {children}

@@ -85,12 +85,12 @@ const EducationSection = () => {
   return (
     <div >
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-extrabold text-center text-blue-700 mb-8 tracking-wide drop-shadow-sm">
+        <h2 className="text-3xl font-bold text-center  mb-8 tracking-wide drop-shadow-sm">
           Education
         </h2>
         {!isAddingNew && editingId === null && (
           <button 
-            className="px-6 py-3 rounded-lg font-medium text-white bg-gradient-to-r from-indigo-500 to-pink-500 hover:scale-105 transition-all"
+            className="bg-indigo-600 text-white px-6 py-2 rounded-lg text-base transition duration-300 hover:bg-indigo-700"
             onClick={handleAddNew}
           >
             Add Education
@@ -210,7 +210,7 @@ const EducationSection = () => {
             </button>
             <button 
               type="submit" 
-              className="px-6 py-3 rounded-lg bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-medium hover:scale-105 transition-all"
+              className="bg-indigo-600 text-white px-6 py-2 rounded-lg text-base transition duration-300 hover:bg-indigo-700"
             >
               {isAddingNew ? 'Add Education' : 'Save Changes'}
             </button>
@@ -259,7 +259,7 @@ const EducationSection = () => {
         <div className="text-center py-10 text-gray-500">
           <p>No education history added yet</p>
           <button 
-            className="px-6 py-3 mt-4 rounded-lg bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-medium hover:scale-105 transition-all"
+            className="bg-indigo-600 text-white px-6 py-2 rounded-lg text-base transition duration-300 hover:bg-indigo-700"
             onClick={handleAddNew}
           >
             Add Education
