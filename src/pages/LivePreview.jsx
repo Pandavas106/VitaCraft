@@ -16,8 +16,11 @@ import Resume4 from "../components/Resume_Templates/Resume4";
 import Resume5 from "../components/Resume_Templates/Resume5";
 import Resume6 from "../components/Resume_Templates/Resume6";
 import Resume7 from "../components/Resume_Templates/Resume7";
+import { useLocation } from "react-router-dom";
 
-export default function ResumeBuilder() {
+export default function LivePreview() {
+  const location = useLocation();
+  const { idx } = location.state || {};
   const [resumeData, setResumeData] = useState(defaultResumeData);
   const [openSections, setOpenSections] = useState({
     personalInfo: true,
@@ -35,6 +38,7 @@ export default function ResumeBuilder() {
       ...openSections,
       [section]: !openSections[section],
     });
+    console.log(idx);
   };
 
   return (
@@ -98,7 +102,13 @@ export default function ResumeBuilder() {
           />
         </div>
         <div className="w-full md:w-2/3 h-screen overflow-y-auto">
-          <Resume7 resumeData={resumeData} />
+          {idx == 0 && <Resume1 resumeData={resumeData} />}
+          {idx == 1 && <Resume2 resumeData={resumeData} />}
+          {idx == 2 && <Resume3 resumeData={resumeData} />}
+          {idx == 3 && <Resume4 resumeData={resumeData} />}
+          {idx == 4 && <Resume5 resumeData={resumeData} />}
+          {idx == 5 && <Resume6 resumeData={resumeData} />}
+          {idx == 6 && <Resume7 resumeData={resumeData} />}
         </div>
       </div>
     </div>

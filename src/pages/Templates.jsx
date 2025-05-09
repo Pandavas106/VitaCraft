@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight, FaPlus } from "react-icons/fa";
 import MainP from "./../assets/MainP.png";
-import R1 from "./../assets/R1.jpg";
+import R1 from "./../assets/Resumes/R1.jpg";
+import R2 from "./../assets/Resumes/R2.jpg";
+import R3 from "./../assets/Resumes/R3.jpg";
+import R4 from "./../assets/Resumes/R4.jpg";
+import R5 from "./../assets/Resumes/R5.jpg";
+import R6 from "./../assets/Resumes/R6.jpg";
+import R7 from "./../assets/Resumes/R7.jpg";
 import { useNavigate } from "react-router-dom";
-import Resume1 from "../components/Resume_Templates/Resume1";
 
 function Templates() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -24,11 +29,12 @@ function Templates() {
       container.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
-  const Templates = [R1, MainP, MainP, MainP];
+  const Template = [R1, R2, R3, R4, R5, R6, R7];
+  const Templates = [R1, R2, R3];
 
   const navigateToLivePreview = (idx) => {
     setSelectedTemplate(idx);
-    navigator("/livepreview");
+    navigator("/livepreview", { state: { idx: idx } });
   };
 
   return (
@@ -44,7 +50,7 @@ function Templates() {
         </p>
 
         {/* Template Scroller */}
-        <div className="md:my-10 my-8 relative">
+        <div className="md:my-10 my-5 relative">
           <h2 className="font-semibold text-xl text-[#1E293B] mb-4">
             Recent Templates
           </h2>
@@ -70,7 +76,7 @@ function Templates() {
           {/* Horizontal Scroll */}
           <div
             id="resume-scroll"
-            className="flex gap-6 p-10 overflow-x-auto scrollbar-thin scrollbar-thumb pb-4 scroll-smooth"
+            className="flex gap-6 px-10 py-5 overflow-x-auto scrollbar-thin scrollbar-thumb pb-4 scroll-smooth"
           >
             {/* Create New */}
             <div className="flex-shrink-0 hover:cursor-pointer transform transition-transform hover:scale-105">
@@ -120,19 +126,25 @@ function Templates() {
       </div>
 
       {/* Resume Templates Grid */}
-      <div className="min-h-screen md:px-12 md:py-16 px-6 py-10">
-        <h1 className="text-3xl md:text-5xl font-bold font-[Hanuman] tracking-wide text-[#1E293B] mb-1">
-          Resume Templates
-        </h1>
-        <h2 className="text-lg md:text-2xl font-medium tracking-wide text-gray-700">
-          A great job starts with a great resume.
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mt-4 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          {[...Array(10)].map((_, idx) => (
-            <div className="cursor-pointer" key={idx}>
-              <div className="w-full h-[280px] mb-2 flex flex-col gap-2 justify-center items-center rounded-md shadow-md bg-white">
+      <div className="min-h-screen md:px-12 md:py-16 py-10">
+        <div className="px-8  mb-9 md:p-0">
+          <h1 className="text-3xl md:text-5xl font-bold font-[Hanuman] tracking-wide text-[#1E293B] mb-1">
+            Resume Templates
+          </h1>
+          <h2 className="text-lg md:text-2xl font-medium tracking-wide text-gray-700">
+            A great job starts with a great resume.
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 px-10 sm:grid-cols-2 md:grid-cols-3 mt-4 lg:grid-cols-4 xl:grid-cols-5 gap-12">
+          {Template.map((_, idx) => (
+            <div
+              className="cursor-pointer transform transition-transform hover:scale-105"
+              key={idx}
+              onClick={() => navigateToLivePreview(idx)}
+            >
+              <div className="w-full h-full mb-2 flex flex-col gap-2 justify-center items-center rounded-md shadow-md bg-white">
                 <img
-                  src={MainP}
+                  src={Template[idx]}
                   alt={`Resume Template ${idx + 1}`}
                   className="w-full h-full object-fill rounded"
                 />
