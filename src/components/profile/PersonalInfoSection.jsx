@@ -19,7 +19,7 @@ const PersonalInfoSection = ({
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true });
   const summary = defaultResumeData.profile;
-  const [isUpdating ,setIsUpdating] =useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   if (!isActive) return null;
 
@@ -386,4 +386,3 @@ const PersonalInfoSection = ({
 };
 
 export default PersonalInfoSection;
-
