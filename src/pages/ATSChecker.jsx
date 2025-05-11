@@ -2,6 +2,33 @@ import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Resume from "../components/Resume";
+import mammoth from "mammoth";
+// utils/pdfUtils.js
+import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker?url'; // 👈 this is important
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+
+
+
+export async function extractTextFromPDF(arrayBuffer) {
+  const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+  const pdf = await loadingTask.promise;
+  let text = "";
+
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const strings = content.items.map((item) => item.str);
+    text += strings.join(" ") + "\n";
+  }
+
+  return text;
+}
+
+
+
+
 
 const ATSCheckerPage = () => {
   const [file, setFile] = useState(null);
@@ -24,34 +51,93 @@ const ATSCheckerPage = () => {
     navigator("/templates");
   };
 
-  const handleSubmit = () => {
+  const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+  const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+  const handleSubmit = async () => {
     if (!file || !jobDescription) {
       alert("Please upload your resume and add a job description");
       return;
     }
-
+  
     setIsAnalyzing(true);
-
-    setTimeout(() => {
-      setResults({
-        score: 78,
-        keywordMatch: 82,
-        sectionHeadings: 95,
-        fileCompatibility: 100,
-        readability: 90,
-        missingKeywords: [
-          "project management",
-          "agile methodology",
-          "team leadership",
-        ],
-        suggestions: [
-          "Add more specific achievements with metrics",
-          "Include the keyword 'project management' in your experience section",
-          "Consider adding a dedicated skills section highlighting technical skills",
-        ],
+  
+    try {
+      let resumeText = "";
+  
+      if (file.type === "application/pdf") {
+        const arrayBuffer = await file.arrayBuffer();
+        resumeText = await extractTextFromPDF(arrayBuffer);
+      } else if (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        resumeText = result.value;
+      } else if (file.type === "application/msword") {
+        // Basic fallback for .doc using FileReader (may not be accurate)
+        const reader = new FileReader();
+        resumeText = await new Promise((resolve) => {
+          reader.onload = () => resolve(reader.result);
+          reader.readAsText(file);
+        });
+      } else {
+        alert("Unsupported file type");
+        setIsAnalyzing(false);
+        return;
+      }
+  
+      const prompt = `
+  You are an ATS resume analyzer. Based on the following resume and job description, evaluate the resume and return a JSON object like this:
+  {
+    "score": 0-100,
+    "keywordMatch": 0-100,
+    "sectionHeadings": 0-100,
+    "fileCompatibility": 100,
+    "readability": 0-100,
+    "missingKeywords": ["..."],
+    "suggestions": ["..."]
+  }
+  
+  Job Description: """${jobDescription}"""
+  Resume: """${resumeText}"""
+      `;
+  
+      const response = await fetch(GEMINI_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+        }),
       });
+  
+      const data = await response.json();
+      const jsonText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+if (!jsonText) {
+  console.log("Raw Gemini response:", data);
+  console.log("API key being used:", GEMINI_API_KEY);
+  throw new Error("Invalid response from Gemini API");
+}
+
+let result;
+const cleanedJsonText = jsonText.replace(/```json|```/g, '').trim();
+try {
+  result = JSON.parse(cleanedJsonText);
+} catch (parseError) {
+  console.log(cleanedJsonText);
+  console.error("Error parsing Gemini response:", parseError);
+  alert("Received an unexpected response from Gemini.");
+  setIsAnalyzing(false);
+  return;
+}
+setResults(result);
+
+      setResults(result);
+    } catch (error) {
+      console.error("Error analyzing resume:", error);
+      alert("Something went wrong while analyzing your resume.");
+    } finally {
       setIsAnalyzing(false);
-    }, 2000);
+    }
   };
 
   const handleReset = () => {
