@@ -1,8 +1,10 @@
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { defaultResumeData } from "../../context/Resume_Data";
+import { db } from "../../../firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
-const EducationSection = ({ isActive, setActiveSection }) => {
+const EducationSection = ({ isActive, setActiveSection, authUser }) => {
   const [educations, setEducations] = useState(defaultResumeData.education);
   const [isAddingEducation, setIsAddingEducation] = useState(false);
   const [isEditing, setIsEditing] = useState(null);
@@ -69,13 +71,26 @@ const EducationSection = ({ isActive, setActiveSection }) => {
     setIsAddingEducation(false);
   };
 
-
   const handleDeleteEducation = (id) => {
     setEducations(educations.filter((edu) => edu.id !== id));
   };
 
-
   if (!isActive) return null;
+  const handleUpdate = async () => {
+    try {
+      const userId = authUser.uid; // or use authUser.uid if from context
+      if (!userId) throw new Error("User not authenticated");
+
+      await updateDoc(doc(db, "users", userId), {
+        education: educations,
+      });
+
+      alert("Education data updated successfully!");
+    } catch (error) {
+      console.error("Error updating education:", error);
+      alert("Failed to update education.");
+    }
+  };
 
   return (
     <motion.div
@@ -210,14 +225,12 @@ const EducationSection = ({ isActive, setActiveSection }) => {
               </div>
             </div>
           </div>
-
         ) : educations.length === 0 ? (
           <div className="bg-gray-50 p-8 rounded-lg text-center">
             <p className="text-gray-500">No education details added yet.</p>
             <button
               onClick={() => setIsAddingEducation(true)}
               className="mt-4 text-[#406B98] underline hover:text-[#335680]"
-
             >
               Add your first education details
             </button>
@@ -289,13 +302,15 @@ const EducationSection = ({ isActive, setActiveSection }) => {
 
                 <p className="text-gray-700 mt-3">{edu.score}</p>
               </div>
-
             ))}
           </div>
         )}
         <div className="mt-6 flex justify-end">
           <button
-            onClick={() => setActiveSession("Experience")}
+            onClick={() => {
+              handleUpdate(); // 🔧 Actually call the function
+              setActiveSession("Experience");
+            }}
             className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
           >
             Update
@@ -322,4 +337,3 @@ const EducationSection = ({ isActive, setActiveSection }) => {
 };
 
 export default EducationSection;
-
