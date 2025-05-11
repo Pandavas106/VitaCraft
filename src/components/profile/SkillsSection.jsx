@@ -1,49 +1,26 @@
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { defaultResumeData } from "../../context/Resume_Data";
 
 const SkillsSection = ({ isActive, setActiveSection }) => {
   // Skills State
-  const [skills, setSkills] = useState({
-    technical: [
-      "Programming Languages : Python, SQL, JavaScript",
-      "Frontend Technologies : HTML, CSS, React.js",
-      "Backend Technologies : Node.js, Express.js",
-      "Android Development : Flutter, React Native(Basics)",
-      "Data Analysis Tools : Pandas, NumPy",
-      "Designing Tools : Figma",
-    ],
-    soft: [
-      "Communication",
-      "Team Collaboration",
-      "Problem Resolution",
-      "Time Organization",
-      "Building Professional Relationships",
-      "Logical Analysis",
-    ],
-  });
+  const [skills, setSkills] = useState(defaultResumeData.skills);
   const [newTechnicalSkill, setNewTechnicalSkill] = useState("");
   const [newSoftSkill, setNewSoftSkill] = useState("");
   const [editingTechnicalIndex, setEditingTechnicalIndex] = useState(null);
   const [editingSoftIndex, setEditingSoftIndex] = useState(null);
 
   // Certificates State
-  const [certificates, setCertificates] = useState([
-    "Google Foundations of CyberSercurity in Coursera",
-    "Paloalto CyberScurity",
-    "AWS Academy Cloud Foundations",
-  ]);
+  const [certificates, setCertificates] = useState(
+    defaultResumeData.certificates
+  );
   const [newCertificate, setNewCertificate] = useState("");
   const [editingCertificateIndex, setEditingCertificateIndex] = useState(null);
 
   // Organizations State
-  const [organizations, setOrganizations] = useState([
-    {
-      id: 1,
-      name: "E-CELL VITB",
-      position: "Technical Lead",
-      location: "Bhimavaram, India",
-    },
-  ]);
+  const [organizations, setOrganizations] = useState(
+    defaultResumeData.organizations
+  );
   const [isAddingOrg, setIsAddingOrg] = useState(false);
   const [editingOrgId, setEditingOrgId] = useState(null);
   const [newOrg, setNewOrg] = useState({

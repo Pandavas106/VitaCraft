@@ -1,46 +1,9 @@
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { defaultResumeData } from "../../context/Resume_Data";
 
 const ProjectsSection = ({ isActive, setActiveSection }) => {
-  const [projects, setProjects] = useState([
-    {
-      id: 1,
-      title: "Sign Bridge",
-      subtitle: "Indian Sign Language Translator",
-      points: [
-        "Developed a cross-platform mobile app using Flutter to convert voice input to Indian Sign Language (ISL) visuals, serving 100+ users in the testing phase.",
-        "Implemented Flask for backend services and API integration, reducing server response time by 20% and ensuring efficient data handling.",
-        "Integrated Firebase for real-time database management and user authentication, achieving 99% reliability and secure user data storage.",
-        "Applied Machine Learning models (BERT, Transformers) to achieve 85% accuracy in voice-to-text and text-to-sign language conversion across 500+ interactions.",
-        "Enhanced communication accessibility, receiving 90% positive feedback from pilot users and recognition from mentors.",
-      ],
-    },
-    {
-      id: 2,
-      title: "Lexica AR",
-      subtitle: "Immersive Educational Tool",
-      points: [
-        "Created a mobile app with React Native and ViroReact, engaging 200+ students with AR features to simplify complex concepts.",
-        "Integrated Firebase for real-time data management, personalized learning, and secure authentication, improving app efficiency by 30%.",
-        "Designed AR models to visualize complex topics, increasing student comprehension by 40% based on feedback.",
-        "Achieved a 95% AR content retrieval rate, reducing downtime and ensuring smooth access to resources.",
-        "Boosted student participation and confidence by 25% through hands-on AR learning experiences.",
-        "Bridged the gap between theoretical and practical learning, earning praise from educators",
-      ],
-    },
-    {
-      id: 3,
-      title: "E-CELL",
-      subtitle: "Entrepreneurship Resource & Event Platform",
-      points: [
-        "Developed and maintained the E-CELL website, supporting 500+ monthly users with entrepreneurship resources and event access.",
-        "Added features like event registration and member login, increasing user engagement by 30% and improving access to resources for 200+ members.",
-        "Integrated Three.js to create 3D visualizations of startups, increasing website engagement by 40%.",
-        "Built UI components with React.js and backend services with Node.js/Express.js, improving website load times by 25%.",
-        "Utilized Firebase for real-time event tracking and user authentication, achieving 99.9% uptime.",
-      ],
-    },
-  ]);
+  const [projects, setProjects] = useState(defaultResumeData.projects);
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [isEditing, setIsEditing] = useState(null);
   const [newProject, setNewProject] = useState({

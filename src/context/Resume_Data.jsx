@@ -8,6 +8,7 @@ export const defaultResumeData = {
     linkedIn: "Phanindra-Nelavalli",
     role: "FrontEnd Developer",
     linkedInURL: "https://www.linkedin.com/in/phanindra-nelavalli-b074a8255/",
+    location: "Narasaraopet",
   },
   education: [
     {

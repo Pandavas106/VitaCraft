@@ -1,12 +1,9 @@
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { defaultResumeData } from "../../context/Resume_Data";
 
 const AchievementsSection = ({ isActive, setActiveSection }) => {
-  const [achievements, setAchievements] = useState([
-    "Finalist in the Internal Hackathon of SIH at VITB, where I developed a solution to a practical problem, creating a working prototype.",
-    "Finalist in the Spark Tank Competition at college, where I designed a solution and presented it to industry experts, receiving valuable feedback.",
-    "Top 50 team in the DEMUX 24-Hour Hackathon at BVRIT Narsapur, where my team developed the AGRO-GENSIS app, collaborating to meet deadlines and deliver a functional prototype.",
-  ]);
+  const [achievements, setAchievements] = useState(defaultResumeData.achievements);
   const [isAddingAchievement, setIsAddingAchievement] = useState(false);
   const [isEditing, setIsEditing] = useState(null);
   const [newAchievement, setNewAchievement] = useState("");
@@ -226,10 +223,10 @@ const AchievementsSection = ({ isActive, setActiveSection }) => {
 
       <div className="mt-6 flex justify-between">
         <button
-          onClick={() => setActiveSection("Certifications")}
+          onClick={() => setActiveSection("Projects")}
           className="px-6 py-3 bg-gray-200 text-gray-700 rounded font-medium hover:bg-gray-300 transition-colors"
         >
-          Back: Certifications
+          Back: Projects
         </button>
       </div>
     </motion.div>

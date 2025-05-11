@@ -1,31 +1,44 @@
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { defaultResumeData } from "../../context/Resume_Data";
 
 const ExperienceSection = ({ isActive, setActiveSection }) => {
-  const [experiences, setExperiences] = useState([
-    {
-      id: 1,
-      company: "ABC Technologies",
-      position: "Frontend Developer Intern",
-      location: "Hyderabad, India",
-      startDate: "2023-05",
-      endDate: "2023-08",
-      current: false,
-      description:
-        "Worked on developing responsive web applications using React and Tailwind CSS. Collaborated with the design team to implement UI components and features.",
-    },
-  ]);
+  const [experiences, setExperiences] = useState(defaultResumeData.experience);
   const [isAddingExperience, setIsAddingExperience] = useState(false);
   const [isEditing, setIsEditing] = useState(null);
   const [newExperience, setNewExperience] = useState({
     company: "",
-    position: "",
+    role: "",
     location: "",
     startDate: "",
     endDate: "",
     current: false,
     description: "",
   });
+
+  const handlePointChange = (index, value) => {
+    const updatedPoints = [...newExperience.points];
+    updatedPoints[index] = value;
+    setNewExperience((prev) => ({
+      ...prev,
+      points: updatedPoints,
+    }));
+  };
+
+  const addNewPoint = () => {
+    setNewExperience((prev) => ({
+      ...prev,
+      points: [...prev.points, ""],
+    }));
+  };
+
+  const removePoint = (index) => {
+    const updatedPoints = newExperience.points.filter((_, i) => i !== index);
+    setNewExperience((prev) => ({
+      ...prev,
+      points: updatedPoints,
+    }));
+  };
 
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true });
@@ -47,7 +60,7 @@ const ExperienceSection = ({ isActive, setActiveSection }) => {
     setExperiences([...experiences, experienceWithId]);
     setNewExperience({
       company: "",
-      position: "",
+      role: "",
       location: "",
       startDate: "",
       endDate: "",
@@ -72,7 +85,7 @@ const ExperienceSection = ({ isActive, setActiveSection }) => {
     );
     setNewExperience({
       company: "",
-      position: "",
+      role: "",
       location: "",
       startDate: "",
       endDate: "",
@@ -138,12 +151,12 @@ const ExperienceSection = ({ isActive, setActiveSection }) => {
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-600">
-                  Position
+                  role
                 </label>
                 <input
                   type="text"
-                  name="position"
-                  value={newExperience.position}
+                  name="role"
+                  value={newExperience.role}
                   onChange={handleInputChange}
                   className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
                 />
@@ -201,18 +214,38 @@ const ExperienceSection = ({ isActive, setActiveSection }) => {
                 </label>
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-gray-600">
-                  Description
+                <label className="block text-sm font-semibold text-gray-600 mb-1">
+                  Description Points
                 </label>
-                <textarea
-                  name="description"
-                  value={newExperience.description}
-                  onChange={handleInputChange}
-                  rows="4"
-                  className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
-                  placeholder="Describe your responsibilities and achievements..."
-                />
+                {newExperience.points.map((point, index) => (
+                  <div key={index} className="flex gap-2 items-center mb-2">
+                    <input
+                      type="text"
+                      value={point}
+                      onChange={(e) => handlePointChange(index, e.target.value)}
+                      className="w-full border px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
+                      placeholder={`Point ${index + 1}`}
+                    />
+                    {newExperience.points.length > 1 && (
+                      <button
+                        onClick={() => removePoint(index)}
+                        type="button"
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={addNewPoint}
+                  className="mt-2 text-[#406B98] text-sm underline hover:text-[#335680]"
+                >
+                  + Add another point
+                </button>
               </div>
+
               <div className="md:col-span-2 flex justify-end gap-4 mt-4">
                 <button
                   onClick={() => {
@@ -220,7 +253,7 @@ const ExperienceSection = ({ isActive, setActiveSection }) => {
                     setIsEditing(null);
                     setNewExperience({
                       company: "",
-                      position: "",
+                      role: "",
                       location: "",
                       startDate: "",
                       endDate: "",
@@ -304,20 +337,28 @@ const ExperienceSection = ({ isActive, setActiveSection }) => {
                 <div className="flex flex-col md:flex-row md:justify-between mb-3">
                   <div>
                     <h3 className="text-lg font-semibold text-[#406B98]">
-                      {exp.position}
+                      {exp.role}
                     </h3>
                     <p className="text-gray-700 font-medium">{exp.company}</p>
                   </div>
                   <div className="text-gray-500 text-sm mt-2 md:mt-0 md:text-right">
                     <div>
                       {formatDate(exp.startDate)} -{" "}
-                      {exp.current ? "Present" : formatDate(exp.endDate)}
+                      {exp.endDate == "Present"
+                        ? "Present"
+                        : formatDate(exp.endDate)}
                     </div>
                     <div>{exp.location}</div>
                   </div>
                 </div>
 
-                <p className="text-gray-700 mt-3">{exp.description}</p>
+                {exp.points && exp.points.length > 0 && (
+                  <ul className="list-disc list-inside text-gray-600 mt-2 space-y-1">
+                    {exp.points.map((point, i) => (
+                      <li key={i}>{point}</li>
+                    ))}
+                  </ul>
+                )}
               </div>
             ))}
           </div>
