@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaArrowLeft, FaArrowRight, FaPlus } from "react-icons/fa";
 import CP1 from "./../assets/CP1.png";
+import { motion, useInView } from "framer-motion";
 
 function CoverLetter() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -12,7 +13,6 @@ function CoverLetter() {
     };
   }, []);
 
-  // ✅ FIXED scrollContainer FUNCTION
   const scrollContainer = (direction) => {
     const container = document.getElementById("template-scroll");
     if (container) {
@@ -21,24 +21,33 @@ function CoverLetter() {
     }
   };
 
+  const sectionRef1 = useRef();
+  const isInview1 = useInView(sectionRef1, { once: true, margin: "-100px" });
+
+  const sectionRef2 = useRef();
+  const isInview2 = useInView(sectionRef2, { once: true, margin: "-100px" });
+
   return (
-    <div className="overflow-x-hidden">
-      {/* Header Section */}
-      <div className="md:px-16 md:py-12 p-8 bg-[#D0F6FE] rounded-b-3xl shadow-md">
+    <div className="overflow-x-hidden" ref={sectionRef1}>
+      <motion.div
+        initial={{ opacity: 0, x: -60 }}
+        animate={isInview1 ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.7 }}
+        className="md:px-16 md:py-12 p-8 bg-[#D0F6FE] rounded-b-3xl shadow-md"
+      >
         <h1 className="font-bold text-3xl md:text-5xl tracking-wide font-[Hanuman] text-[#1E293B]">
           Create Your Cover Letter
         </h1>
         <p className="mt-3 text-gray-600 md:text-lg max-w-2xl">
-          Stand out from the crowd with a professionally designed cover letter tailored to your industry.
+          Stand out from the crowd with a professionally designed cover letter
+          tailored to your industry.
         </p>
 
-        {/* Template Scroller */}
         <div className="md:my-10 my-8 relative">
           <h2 className="font-semibold text-xl text-[#1E293B] mb-4">
             Recent Templates
           </h2>
 
-          {/* Scroll Buttons */}
           <div className="hidden md:flex absolute right-0 top-0 gap-2">
             <button
               onClick={() => scrollContainer("left")}
@@ -56,12 +65,13 @@ function CoverLetter() {
             </button>
           </div>
 
-          {/* Horizontal Template Scroll */}
-          <div
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={isInview1 ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.4 }}
             id="template-scroll"
             className="flex gap-6 p-10 overflow-x-auto scrollbar-thin scrollbar-thumb pb-4 scroll-smooth"
           >
-            {/* Create New Template Card */}
             <div className="flex-shrink-0 hover:cursor-pointer transform transition-transform hover:scale-105">
               <div className="w-[220px] h-[300px] mb-3 bg-white p-4 flex border-dashed flex-col gap-3 justify-center items-center border-[3px] border-[#406B98] shadow-lg rounded-lg hover:shadow-xl transition-all">
                 <div className="bg-[#ecf7fd] p-4 rounded-full">
@@ -74,7 +84,6 @@ function CoverLetter() {
               </h2>
             </div>
 
-            {/* Render Recent Templates */}
             {[...Array(5)].map((_, idx) => (
               <div
                 className="flex-shrink-0 transform transition-transform hover:scale-105 hover:cursor-pointer"
@@ -104,19 +113,30 @@ function CoverLetter() {
                 </h2>
               </div>
             ))}
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* All Templates Grid */}
-      <div className="min-h-screen md:px-12 md:py-16 px-6 py-10">
-        <h1 className="text-3xl md:text-5xl font-bold font-[Hanuman] tracking-wide text-[#1E293B] mb-1">
+      <motion.div
+        ref={sectionRef2}
+        initial={{ opacity: 0, x: 60 }}
+        animate={isInview2 ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.7 }}
+        className="min-h-screen md:px-12 md:py-16 px-6 py-10"
+      >
+        <h1 className="font-bold text-3xl md:text-5xl tracking-wide font-[Hanuman] text-[#1E293B]">
           Cover Letter Templates
         </h1>
-        <h2 className="text-lg md:text-2xl font-medium tracking-wide text-gray-700">
+        <h2 className="mt-3 text-gray-600 md:text-lg max-w-2xl">
           Choose a template that suits your style.
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mt-4 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={isInview2 ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="grid grid-cols-1 sm:grid-cols-2 mt-10 md:grid-cols-3 mt-4 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+        >
           {[...Array(10)].map((_, idx) => (
             <div className="cursor-pointer" key={idx}>
               <div className="w-full h-[280px] mb-2 flex flex-col gap-2 justify-center items-center rounded-md shadow-md bg-white">
@@ -131,8 +151,8 @@ function CoverLetter() {
               </h2>
             </div>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }
