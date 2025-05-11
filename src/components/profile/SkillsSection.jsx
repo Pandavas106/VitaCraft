@@ -1,8 +1,10 @@
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { defaultResumeData } from "../../context/Resume_Data";
+import { db } from "../../../firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
-const SkillsSection = ({ isActive, setActiveSection }) => {
+const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
   // Skills State
   const [skills, setSkills] = useState(defaultResumeData.skills);
   const [newTechnicalSkill, setNewTechnicalSkill] = useState("");
@@ -165,6 +167,29 @@ const SkillsSection = ({ isActive, setActiveSection }) => {
   };
 
   if (!isActive) return null;
+  const handleUpdate = async () => {
+    if (!authUser) {
+      console.error("No authenticated user found");
+      return;
+    }
+
+    try {
+      await updateDoc(doc(db, "users", authUser.uid), {
+        skills: skills,
+        certificates: certificates,
+        organizations: organizations,
+      });
+      console.log(
+        "Skills, certificates, and organizations updated successfully!"
+      );
+      setIsUpdating(false);
+      setActiveSection("Projects"); // Navigate to the next section after successful update
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      setIsUpdating(false);
+      // You might want to show an error message to the user
+    }
+  };
 
   return (
     <motion.div
@@ -609,7 +634,10 @@ const SkillsSection = ({ isActive, setActiveSection }) => {
         )}
         <div className="mt-6 flex justify-end">
           <button
-            onClick={() => setActiveSession("Experience")}
+            onClick={() => {
+              handleUpdate(); // 🔧 Actually call the function
+              setActiveSession("Experience");
+            }}
             className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
           >
             Update
