@@ -58,7 +58,7 @@ const SkillsSection = ({ isActive, setActiveSection }) => {
   // Skills Handlers
   const handleAddTechnicalSkill = () => {
     if (newTechnicalSkill.trim() === "") return;
-    
+
     if (editingTechnicalIndex !== null) {
       const updatedTechnical = [...skills.technical];
       updatedTechnical[editingTechnicalIndex] = newTechnicalSkill;
@@ -75,7 +75,7 @@ const SkillsSection = ({ isActive, setActiveSection }) => {
 
   const handleAddSoftSkill = () => {
     if (newSoftSkill.trim() === "") return;
-    
+
     if (editingSoftIndex !== null) {
       const updatedSoft = [...skills.soft];
       updatedSoft[editingSoftIndex] = newSoftSkill;
@@ -113,7 +113,7 @@ const SkillsSection = ({ isActive, setActiveSection }) => {
   // Certificate Handlers
   const handleAddCertificate = () => {
     if (newCertificate.trim() === "") return;
-    
+
     if (editingCertificateIndex !== null) {
       const updatedCertificates = [...certificates];
       updatedCertificates[editingCertificateIndex] = newCertificate;
@@ -146,7 +146,7 @@ const SkillsSection = ({ isActive, setActiveSection }) => {
 
   const handleAddOrg = () => {
     if (newOrg.name.trim() === "" || newOrg.position.trim() === "") return;
-    
+
     const orgWithId = {
       ...newOrg,
       id: Date.now(),
@@ -227,12 +227,14 @@ const SkillsSection = ({ isActive, setActiveSection }) => {
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
             {skills.technical.length === 0 ? (
-              <p className="text-gray-500 text-center">No technical skills added yet.</p>
+              <p className="text-gray-500 text-center">
+                No technical skills added yet.
+              </p>
             ) : (
               <ul className="space-y-2">
                 {skills.technical.map((skill, index) => (
-                  <li 
-                    key={index} 
+                  <li
+                    key={index}
                     className="flex justify-between items-center group bg-white p-3 rounded-md shadow-sm"
                   >
                     <span>{skill}</span>
@@ -281,6 +283,14 @@ const SkillsSection = ({ isActive, setActiveSection }) => {
               </ul>
             )}
           </div>
+          {/* <div className="mt-6 flex justify-end">
+            <button
+              onClick={() => setActiveSession("Experience")}
+              className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
+            >
+              Update
+            </button>
+          </div> */}
         </div>
 
         {/* Soft Skills */}
@@ -307,12 +317,14 @@ const SkillsSection = ({ isActive, setActiveSection }) => {
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
             {skills.soft.length === 0 ? (
-              <p className="text-gray-500 text-center">No soft skills added yet.</p>
+              <p className="text-gray-500 text-center">
+                No soft skills added yet.
+              </p>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {skills.soft.map((skill, index) => (
-                  <div 
-                    key={index} 
+                  <div
+                    key={index}
                     className="bg-white px-3 py-2 rounded-md shadow-sm flex items-center group"
                   >
                     <span>{skill}</span>
@@ -362,6 +374,14 @@ const SkillsSection = ({ isActive, setActiveSection }) => {
             )}
           </div>
         </div>
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={() => setActiveSession("Experience")}
+            className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
+          >
+            Update
+          </button>
+        </div>
       </div>
 
       {/* Certificates Section */}
@@ -389,12 +409,14 @@ const SkillsSection = ({ isActive, setActiveSection }) => {
 
         <div className="bg-gray-50 p-4 rounded-lg">
           {certificates.length === 0 ? (
-            <p className="text-gray-500 text-center">No certificates added yet.</p>
+            <p className="text-gray-500 text-center">
+              No certificates added yet.
+            </p>
           ) : (
             <ul className="space-y-2">
               {certificates.map((certificate, index) => (
-                <li 
-                  key={index} 
+                <li
+                  key={index}
                   className="flex justify-between items-center group bg-white p-3 rounded-md shadow-sm"
                 >
                   <span>{certificate}</span>
@@ -442,6 +464,14 @@ const SkillsSection = ({ isActive, setActiveSection }) => {
               ))}
             </ul>
           )}
+        </div>
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={() => setActiveSession("Experience")}
+            className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
+          >
+            Update
+          </button>
         </div>
       </div>
 
@@ -600,6 +630,14 @@ const SkillsSection = ({ isActive, setActiveSection }) => {
             ))}
           </div>
         )}
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={() => setActiveSession("Experience")}
+            className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
+          >
+            Update
+          </button>
+        </div>
       </div>
 
       <div className="mt-6 flex justify-between">

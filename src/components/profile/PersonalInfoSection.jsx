@@ -340,6 +340,14 @@ const PersonalInfoSection = ({
             </div>
           )}
         </div>
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={() => setActiveSession("Experience")}
+            className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
+          >
+            Update
+          </button>
+        </div>
       </div>
 
       {!isEditing && (

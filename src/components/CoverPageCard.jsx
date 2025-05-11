@@ -15,7 +15,7 @@ function CoverPageCard() {
 
   return (
     <div className="relative">
-      {/* Scroll Buttons (Only visible on md+ screens) */}
+      
       <div className="hidden md:flex absolute top-[-45px] right-4 z-10 gap-2">
         <button
           onClick={() => scroll("left")}
