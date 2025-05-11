@@ -234,3 +234,4 @@ const AchievementsSection = ({ isActive, setActiveSection }) => {
 };
 
 export default AchievementsSection;
+

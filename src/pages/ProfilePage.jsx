@@ -9,10 +9,12 @@ import AchievementsSection from "../components/profile/AchievementsSection";
 import { defaultResumeData } from "../context/Resume_Data";
 import { useAuth } from "../context/auth_context";
 
+
 const ProfilePage = () => {
   // Active section state
   const [activeSection, setActiveSection] = useState("Personal Info");
   const { authUser } = useAuth();
+
 
   // Personal info states
   const [isEditing, setIsEditing] = useState(false);
@@ -44,6 +46,7 @@ const ProfilePage = () => {
     "Projects",
     "Achievements",
   ];
+
 
   // Function to navigate between sections
   const handleNavigate = (section) => {

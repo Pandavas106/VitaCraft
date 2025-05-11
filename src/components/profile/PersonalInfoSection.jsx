@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+
 import { motion, useInView } from "framer-motion";
 import { defaultResumeData } from "../../context/Resume_Data";
 import { db } from "../../../firebase";
@@ -385,3 +386,4 @@ const PersonalInfoSection = ({
 };
 
 export default PersonalInfoSection;
+

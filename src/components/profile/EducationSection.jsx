@@ -69,9 +69,11 @@ const EducationSection = ({ isActive, setActiveSection }) => {
     setIsAddingEducation(false);
   };
 
+
   const handleDeleteEducation = (id) => {
     setEducations(educations.filter((edu) => edu.id !== id));
   };
+
 
   if (!isActive) return null;
 
@@ -208,12 +210,14 @@ const EducationSection = ({ isActive, setActiveSection }) => {
               </div>
             </div>
           </div>
+
         ) : educations.length === 0 ? (
           <div className="bg-gray-50 p-8 rounded-lg text-center">
             <p className="text-gray-500">No education details added yet.</p>
             <button
               onClick={() => setIsAddingEducation(true)}
               className="mt-4 text-[#406B98] underline hover:text-[#335680]"
+
             >
               Add your first education details
             </button>
@@ -285,6 +289,7 @@ const EducationSection = ({ isActive, setActiveSection }) => {
 
                 <p className="text-gray-700 mt-3">{edu.score}</p>
               </div>
+
             ))}
           </div>
         )}
@@ -317,3 +322,4 @@ const EducationSection = ({ isActive, setActiveSection }) => {
 };
 
 export default EducationSection;
+
