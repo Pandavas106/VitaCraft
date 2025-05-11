@@ -78,7 +78,7 @@ const EducationSection = ({ isActive, setActiveSection, authUser }) => {
   if (!isActive) return null;
   const handleUpdate = async () => {
     try {
-      const userId = authUser.uid; // or use authUser.uid if from context
+      const userId = authUser.uid;
       if (!userId) throw new Error("User not authenticated");
 
       await updateDoc(doc(db, "users", userId), {
@@ -308,7 +308,7 @@ const EducationSection = ({ isActive, setActiveSection, authUser }) => {
         <div className="mt-6 flex justify-end">
           <button
             onClick={() => {
-              handleUpdate(); // 🔧 Actually call the function
+              handleUpdate(); 
               setActiveSession("Experience");
             }}
             className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
