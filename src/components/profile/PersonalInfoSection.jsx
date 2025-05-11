@@ -1,266 +1,361 @@
-import { useState, useRef } from 'react'
-import { useResume } from '../../context/ResumeContext'
 
-const PersonalInfoSection = () => {
-  const { resumeData, updateProfile } = useResume()
-  const { profile } = resumeData
-  const fileInputRef = useRef(null)
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 
-  const [formData, setFormData] = useState({
-    firstName: profile.firstName || '',
-    lastName: profile.lastName || '',
-    title: profile.title || '',
-    email: profile.email || '',
-    phone: profile.phone || '',
-    location: profile.location || '',
-    LinkedIn: profile.LinkedIn || '',
-    summary: profile.summary || '',
-  })
+const PersonalInfoSection = ({
+  isEditing,
+  setIsEditing,
+  formData,
+  handleInputChange,
+  profileImage,
+  fileInputRef,
+  isActive,
+  setActiveSession,
+}) => {
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true });
 
-  const [profileImage, setProfileImage] = useState(profile.profilePicture || null)
-  const [isEditing, setIsEditing] = useState(false)
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setProfileImage(reader.result)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handleRemoveImage = () => {
-    setProfileImage(null)
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    updateProfile({
-      ...formData,
-      profilePicture: profileImage
-    })
-    setIsEditing(false)
-  }
+  if (!isActive) return null;
 
   return (
-    <div >
-      <div>
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
+    <motion.div
+      ref={sectionRef}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay: 0.3 }}
+      className="w-full"
+    >
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold font-[Hanuman] mb-6 text-[#406B98]">
           Personal Information
         </h2>
-      </div>
-      {!isEditing ? (
-  <div className="text-center space-y-10 px-4 sm:px-6 lg:px-8">
-    <div className="w-40 h-40 mx-auto relative rounded-full overflow-hidden border-4 border-indigo-500 shadow-xl transition-transform hover:scale-105 duration-300">
-      {profileImage ? (
-        <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
-      ) : (
-        <div className="w-full h-full flex items-center justify-center bg-gray-200 text-6xl text-gray-400">👤</div>
-      )}
-    </div>
 
-    <h1 className="text-3xl font-bold text-gray-900">{profile.firstName ? `${profile.firstName} ${profile.lastName}` : 'Your Name'}</h1>
-    <p className="text-indigo-600 text-lg font-medium tracking-wide">{profile.title || 'Professional Title'}</p>
-
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-md border border-gray-200">
-      <div>
-        <label className="block text-sm text-gray-500 uppercase tracking-wider mb-1">Email</label>
-        <p className="text-base text-gray-800 font-semibold">{profile.email || 'Not specified'}</p>
-      </div>
-      <div>
-        <label className="block text-sm text-gray-500 uppercase tracking-wider mb-1">Phone</label>
-        <p className="text-base text-gray-800 font-semibold">{profile.phone || 'Not specified'}</p>
-      </div>
-      <div>
-        <label className="block text-sm text-gray-500 uppercase tracking-wider mb-1">Location</label>
-        <p className="text-base text-gray-800 font-semibold">{profile.location || 'Not specified'}</p>
-      </div>
-      <div>
-        <label className="block text-sm text-gray-500 uppercase tracking-wider mb-1">LinkedIn</label>
-        <p className="text-base text-gray-800 font-semibold break-words">{profile.LinkedIn || 'Not specified'}</p>
-      </div>
-    </div>
-
-    <div className="max-w-4xl mx-auto mt-8 text-left bg-white p-6 rounded-xl shadow-md border border-gray-200">
-      <label className="block text-sm text-gray-500 uppercase tracking-wider mb-2">Professional Summary</label>
-      <p className="text-base text-gray-700 leading-relaxed whitespace-pre-line">{profile.summary || 'No summary provided yet.'}</p>
-    </div>
-
-    <button
-      onClick={() => setIsEditing(true)}
-      className="mt-8 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-3 rounded-full shadow-md hover:shadow-lg transition-transform transform hover:scale-105 duration-300"
-    >
-      Edit Profile
-    </button>
-  </div>
-) : (
-        <form onSubmit={handleSubmit}>
-          <div className="text-center mb-8">
-            <div className="w-36 h-36 mx-auto relative">
+        {/* Profile Image + Name + Title */}
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8">
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#406B98] shadow-lg cursor-pointer"
+              onClick={() => fileInputRef.current?.click()}
+            >
               {profileImage ? (
-                <img src={profileImage} alt="Profile" className="w-full h-full rounded-full object-cover border-4 border-indigo-600" />
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
               ) : (
-                <div className="w-full h-full rounded-full bg-gray-100 flex items-center justify-center text-gray-400 text-4xl border-4 border-indigo-600">
-                  👤
+                <div className="w-full h-full bg-gray-100 text-gray-400 flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-12 w-12"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
                 </div>
               )}
-              <input
-                type="file"
-                ref={fileInputRef}
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
-              <div className="mt-4 flex justify-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current.click()}
-                  className="text-indigo-600 text-sm cursor-pointer"
-                >
-                  Upload Photo
-                </button>
-                {profileImage && (
-                  <button
-                    type="button"
-                    onClick={handleRemoveImage}
-                    className="text-red-500 text-sm cursor-pointer"
+            </div>
+
+            {isEditing && (
+              <p className="mt-2 text-xs text-gray-500">
+                Click avatar to change
+              </p>
+            )}
+          </div>
+
+          <div className="flex-1 text-center sm:text-left">
+            <h1 className="text-2xl font-bold text-[#406B98]">
+              {formData.shortName}
+            </h1>
+            <p className="text-lg font-medium text-gray-600 mb-3">
+              {formData.title}
+            </p>
+
+            {!isEditing && (
+              <div className="flex flex-wrap gap-3 text-sm">
+                <span className="inline-flex items-center text-gray-600">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    Remove
-                  </button>
-                )}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                  {formData.email}
+                </span>
+                <span className="inline-flex items-center text-gray-600">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                    />
+                  </svg>
+                  {formData.phone}
+                </span>
+                <span className="inline-flex items-center text-gray-600">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                  {formData.location}
+                </span>
+              </div>
+            )}
+
+            {!isEditing && (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="mt-4 text-sm px-4 py-2 bg-[#406B98] text-white rounded hover:bg-[#335680] transition-colors"
+              >
+                Edit Profile
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Details Section */}
+        <div className="mt-6 space-y-4 text-left text-gray-700">
+          {isEditing ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
+                  Display Name
+                </label>
+                <input
+                  type="text"
+                  name="shortName"
+                  value={formData.shortName}
+                  onChange={handleInputChange}
+                  className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleInputChange}
+                  className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
+                  Phone
+                </label>
+                <input
+                  type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
+                  LinkedIn
+                </label>
+                <input
+                  type="text"
+                  name="linkedIn"
+                  value={formData.linkedIn}
+                  onChange={handleInputChange}
+                  className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
+                  LinkedIn URL
+                </label>
+                <input
+                  type="text"
+                  name="website"
+                  value={formData.website}
+                  onChange={handleInputChange}
+                  className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-semibold text-gray-600">
+                  Professional Summary
+                </label>
+                <textarea
+                  name="summary"
+                  value={formData.summary}
+                  onChange={handleInputChange}
+                  rows="4"
+                  className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
+                  placeholder="Tell employers about your professional background and strengths..."
+                />
+              </div>
+              <div className="md:col-span-2 flex justify-end gap-4 mt-2">
+                <button
+                  onClick={() => setIsEditing(false)}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => setIsEditing(false)}
+                  className="px-6 py-2 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
+                >
+                  Save Changes
+                </button>
               </div>
             </div>
-          </div>
+          ) : (
+            <div>
+              <div className="bg-gray-50 p-6 rounded-lg mb-6">
+                <h3 className="text-lg font-semibold text-[#406B98] mb-3">
+                  Professional Summary
+                </h3>
+                <p className="text-gray-700">{formData.summary}</p>
+              </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="mb-6">
-              <label className="block mb-2 text-sm font-medium text-gray-600">First Name</label>
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                className="w-full p-3 rounded-lg border-2 border-gray-200 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Enter your first name"
-              />
+              <div className="bg-gray-50 p-6 rounded-lg">
+                <h3 className="text-lg font-semibold text-[#406B98] mb-3">
+                  Contact Details
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="text-sm text-gray-500 uppercase tracking-wider mb-1">
+                      Full Name
+                    </h4>
+                    <p>{formData.firstName}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm text-gray-500 uppercase tracking-wider mb-1">
+                      Email
+                    </h4>
+                    <p className="text-[#406B98]">{formData.email}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm text-gray-500 uppercase tracking-wider mb-1">
+                      Phone
+                    </h4>
+                    <p>{formData.phone}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm text-gray-500 uppercase tracking-wider mb-1">
+                      Location
+                    </h4>
+                    <p>{formData.location}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm text-gray-500 uppercase tracking-wider mb-1">
+                      LinkedIn
+                    </h4>
+                    <p>{formData.linkedIn}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm text-gray-500 uppercase tracking-wider mb-1">
+                      LinkedIn URL
+                    </h4>
+                    <a
+                      href={formData.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#406B98] hover:underline"
+                    >
+                      {formData.website}
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
+          )}
+        </div>
+      </div>
 
-            <div className="mb-6">
-              <label className="block mb-2 text-sm font-medium text-gray-600">Last Name</label>
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                className="w-full p-3 rounded-lg border-2 border-gray-200 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Enter your last name"
-              />
-            </div>
-
-            <div className="mb-6">
-              <label className="block mb-2 text-sm font-medium text-gray-600">Professional Title</label>
-              <input
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                className="w-full p-3 rounded-lg border-2 border-gray-200 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="e.g., Software Engineer"
-              />
-            </div>
-
-            <div className="mb-6">
-              <label className="block mb-2 text-sm font-medium text-gray-600">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full p-3 rounded-lg border-2 border-gray-200 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Enter your email"
-              />
-            </div>
-
-            <div className="mb-6">
-              <label className="block mb-2 text-sm font-medium text-gray-600">Phone</label>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="w-full p-3 rounded-lg border-2 border-gray-200 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Enter your phone number"
-              />
-            </div>
-
-            <div className="mb-6">
-              <label className="block mb-2 text-sm font-medium text-gray-600">Location</label>
-              <input
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                className="w-full p-3 rounded-lg border-2 border-gray-200 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="City, Country"
-              />
-            </div>
-
-            <div className="mb-6 col-span-2">
-              <label className="block mb-2 text-sm font-medium text-gray-600">LinkedIn</label>
-              <input
-                type="text"
-                name="LinkedIn"
-                value={formData.LinkedIn}
-                onChange={handleChange}
-                className="w-full p-3 rounded-lg border-2 border-gray-200 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="LinkedIn profile link"
-              />
-            </div>
-
-            <div className="mb-6 col-span-2">
-              <label className="block mb-2 text-sm font-medium text-gray-600">Professional Summary</label>
-              <textarea
-                name="summary"
-                value={formData.summary}
-                onChange={handleChange}
-                className="w-full p-3 rounded-lg border-2 border-gray-200 text-base min-h-[120px] resize-y focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Brief summary about yourself"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-end mt-4">
-            <button
-              type="button"
-              onClick={() => setIsEditing(false)}
-              className="bg-white border-2 border-indigo-600 text-indigo-600 px-6 py-2 rounded-lg text-base mr-4 transition duration-300 hover:bg-indigo-50"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-indigo-600 text-white px-6 py-2 rounded-lg text-base transition duration-300 hover:bg-indigo-700"
-            >
-              Save
-            </button>
-          </div>
-        </form>
+      {!isEditing && (
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={() => setActiveSession("Experience")}
+            className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
+          >
+            Next: Experience
+          </button>
+        </div>
       )}
-    </div>
-  )
-}
+    </motion.div>
+  );
+};
 
-export default PersonalInfoSection
+export default PersonalInfoSection;
+

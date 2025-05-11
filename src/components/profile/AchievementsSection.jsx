@@ -1,162 +1,232 @@
-import { useState } from 'react'
-import { useResume } from '../../context/ResumeContext'
+import React, { useState, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 
-const AchievementsSection = () => {
-  const { resumeData, updateResumeData } = useResume()
-  const achievements = resumeData?.achievements || [] // Default to an empty array if achievements is undefined
+const AchievementsSection = ({ isActive, setActiveSection }) => {
+  const [achievements, setAchievements] = useState([
+    "Finalist in the Internal Hackathon of SIH at VITB, where I developed a solution to a practical problem, creating a working prototype.",
+    "Finalist in the Spark Tank Competition at college, where I designed a solution and presented it to industry experts, receiving valuable feedback.",
+    "Top 50 team in the DEMUX 24-Hour Hackathon at BVRIT Narsapur, where my team developed the AGRO-GENSIS app, collaborating to meet deadlines and deliver a functional prototype.",
+  ]);
+  const [isAddingAchievement, setIsAddingAchievement] = useState(false);
+  const [isEditing, setIsEditing] = useState(null);
+  const [newAchievement, setNewAchievement] = useState("");
+  const [hasChanges, setHasChanges] = useState(false);
 
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    date: '',
-    link: '',
-  })
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true });
 
-  const [isEditing, setIsEditing] = useState(false)
+  const handleInputChange = (e) => {
+    setNewAchievement(e.target.value);
+    setHasChanges(true);
+  };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    const newAchievement = {
-      ...formData,
-      date: new Date(formData.date),
+  const handleAddAchievement = () => {
+    if (newAchievement.trim()) {
+      setAchievements([...achievements, newAchievement]);
+      setNewAchievement("");
+      setIsAddingAchievement(false);
+      setHasChanges(false);
     }
-    updateResumeData({
-      ...resumeData,
-      achievements: [...achievements, newAchievement],
-    })
-    setIsEditing(false)
-  }
+  };
 
-  const handleRemoveAchievement = (index) => {
-    const updatedAchievements = achievements.filter((_, i) => i !== index)
-    updateResumeData({
-      ...resumeData,
-      achievements: updatedAchievements,
-    })
-  }
+  const handleEditAchievement = (index) => {
+    setNewAchievement(achievements[index]);
+    setIsEditing(index);
+    setIsAddingAchievement(true);
+    setHasChanges(false);
+  };
+
+  const handleUpdateAchievement = () => {
+    if (newAchievement.trim()) {
+      const updatedAchievements = [...achievements];
+      updatedAchievements[isEditing] = newAchievement;
+      setAchievements(updatedAchievements);
+      setNewAchievement("");
+      setIsEditing(null);
+      setIsAddingAchievement(false);
+      setHasChanges(false);
+    }
+  };
+
+  const handleDeleteAchievement = (index) => {
+    const updatedAchievements = achievements.filter((_, i) => i !== index);
+    setAchievements(updatedAchievements);
+  };
+
+  if (!isActive) return null;
 
   return (
-    <div>
-      <div>
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
-          Achievements
-        </h2>
-      </div>
-      {!isEditing ? (
-        <div className="space-y-8">
-          {achievements.length === 0 ? (
-            <p className="text-center text-gray-500">No achievements added yet.</p>
-          ) : (
-            achievements.map((achievement, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
-                <h3 className="text-xl font-semibold text-gray-900">{achievement.title}</h3>
-                <p className="text-gray-700 mt-2">{achievement.description}</p>
-                <p className="text-gray-600 mt-2">
-                  Achieved on: {new Date(achievement.date).toLocaleDateString()}
-                </p>
-                {achievement.link && (
-                  <div className="mt-2">
-                    <a
-                      href={achievement.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-indigo-600 hover:text-indigo-700"
-                    >
-                      View Achievement Details
-                    </a>
-                  </div>
-                )}
+    <motion.div
+      ref={sectionRef}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay: 0.3 }}
+      className="w-full"
+    >
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold font-[Hanuman] text-[#406B98]">
+            Achievements
+          </h2>
+          {!isAddingAchievement && (
+            <button
+              onClick={() => setIsAddingAchievement(true)}
+              className="text-sm px-4 py-2 bg-[#406B98] text-white rounded hover:bg-[#335680] transition-colors"
+            >
+              Add Achievement
+            </button>
+          )}
+        </div>
+
+        {isAddingAchievement ? (
+          <div className="bg-gray-50 p-6 rounded-lg mb-6">
+            <h3 className="text-lg font-semibold text-[#406B98] mb-4">
+              {isEditing !== null ? "Edit Achievement" : "Add New Achievement"}
+            </h3>
+            <div className="space-y-5">
+              <div>
+                <label className="block text-sm font-semibold text-gray-600 mb-2">
+                  Achievement Description
+                </label>
+                <textarea
+                  value={newAchievement}
+                  onChange={handleInputChange}
+                  className="w-full border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98] resize-y"
+                  rows="4"
+                  placeholder="Describe your achievement, award, recognition or competition result..."
+                />
+              </div>
+
+              <div className="flex justify-end gap-4 mt-4">
                 <button
-                  onClick={() => handleRemoveAchievement(index)}
-                  className="text-red-500 text-sm mt-4"
+                  onClick={() => {
+                    setIsAddingAchievement(false);
+                    setIsEditing(null);
+                    setNewAchievement("");
+                    setHasChanges(false);
+                  }}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
                 >
-                  Remove Achievement
+                  Cancel
+                </button>
+                <button
+                  onClick={
+                    isEditing !== null
+                      ? handleUpdateAchievement
+                      : handleAddAchievement
+                  }
+                  disabled={!newAchievement.trim()}
+                  className={`px-6 py-2 bg-[#406B98] text-white rounded font-medium transition-colors ${
+                    !newAchievement.trim()
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:bg-[#335680]"
+                  }`}
+                >
+                  {isEditing !== null ? "Update" : "Save"}
                 </button>
               </div>
-            ))
-          )}
-          <button
-            onClick={() => setIsEditing(true)}
-            className="mt-8 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-3 rounded-full shadow-md hover:shadow-lg transition-transform transform hover:scale-105 duration-300"
-          >
-            Add New Achievement
-          </button>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="mb-6">
-            <label className="block mb-2 text-sm font-medium text-gray-600">Achievement Title</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full p-3 rounded-lg border-2 border-gray-200 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter achievement title"
-            />
-          </div>
 
-          <div className="mb-6">
-            <label className="block mb-2 text-sm font-medium text-gray-600">Description</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className="w-full p-3 rounded-lg border-2 border-gray-200 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter a brief description of your achievement"
-            />
+              {isEditing !== null && hasChanges && (
+                <div className="mt-2 text-sm text-green-600 font-medium">
+                  Changes detected. Don't forget to update!
+                </div>
+              )}
+            </div>
           </div>
-
-          <div className="mb-6">
-            <label className="block mb-2 text-sm font-medium text-gray-600">Achievement Date</label>
-            <input
-              type="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              className="w-full p-3 rounded-lg border-2 border-gray-200 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          <div className="mb-6">
-            <label className="block mb-2 text-sm font-medium text-gray-600">Achievement Link (Optional)</label>
-            <input
-              type="url"
-              name="link"
-              value={formData.link}
-              onChange={handleChange}
-              className="w-full p-3 rounded-lg border-2 border-gray-200 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Provide a link to the achievement (if applicable)"
-            />
-          </div>
-
-          <div className="flex justify-end mt-4">
+        ) : achievements.length === 0 ? (
+          <div className="bg-gray-50 p-8 rounded-lg text-center">
+            <p className="text-gray-500">No achievements added yet.</p>
             <button
-              type="button"
-              onClick={() => setIsEditing(false)}
-              className="bg-white border-2 border-indigo-600 text-indigo-600 px-6 py-2 rounded-lg text-base mr-4 transition duration-300 hover:bg-indigo-50"
+              onClick={() => setIsAddingAchievement(true)}
+              className="mt-4 text-[#406B98] underline hover:text-[#335680]"
             >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-indigo-600 text-white px-6 py-2 rounded-lg text-base transition duration-300 hover:bg-indigo-700"
-            >
-              Save Achievement
+              Add your first achievement
             </button>
           </div>
-        </form>
-      )}
-    </div>
-  )
-}
+        ) : (
+          <div className="space-y-4">
+            {achievements.map((achievement, index) => (
+              <div
+                key={index}
+                className="bg-gray-50 p-4 rounded-lg relative group"
+              >
+                <div className="absolute right-4 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex space-x-2">
+                  <button
+                    onClick={() => handleEditAchievement(index)}
+                    className="p-1 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => handleDeleteAchievement(index)}
+                    className="p-1 bg-red-100 rounded-full hover:bg-red-200 text-red-600 transition-colors"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
+                </div>
 
-export default AchievementsSection
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 mr-3 mt-1">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 text-yellow-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                      />
+                    </svg>
+                  </div>
+                  <p className="text-gray-700">{achievement}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="mt-6 flex justify-between">
+        <button
+          onClick={() => setActiveSection("Certifications")}
+          className="px-6 py-3 bg-gray-200 text-gray-700 rounded font-medium hover:bg-gray-300 transition-colors"
+        >
+          Back: Certifications
+        </button>
+      </div>
+    </motion.div>
+  );
+};
+
+export default AchievementsSection;
+
