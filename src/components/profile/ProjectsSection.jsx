@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { defaultResumeData } from "../../context/Resume_Data";
@@ -379,3 +380,4 @@ const ProjectsSection = ({ isActive, setActiveSection }) => {
 };
 
 export default ProjectsSection;
+

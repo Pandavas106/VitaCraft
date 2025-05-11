@@ -1,3 +1,4 @@
+
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { defaultResumeData } from "../../context/Resume_Data";
@@ -366,3 +367,4 @@ const PersonalInfoSection = ({
 };
 
 export default PersonalInfoSection;
+
