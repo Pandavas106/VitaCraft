@@ -23,6 +23,10 @@ export function AuthProvider({ children }) {
 
   async function signup(email, password, name = "") {
     const res = await createUserWithEmailAndPassword(auth, email, password);
+
+    await updateProfile(res.user, {
+      displayName: name,
+    });
     await setDoc(doc(db, "users", res.user.uid), {
       email,
       name,
@@ -60,15 +64,11 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider value={value}>
       {loading ? (
         <div className="flex justify-center items-center h-screen backdrop-blur-sm bg-white/30">
-        <div className="relative w-16 h-16">
-          <div className="absolute inset-0 border-4 border-transparent border-t-blue-500 rounded-full animate-spin"></div>
-          <div className="absolute inset-0 border-4 border-transparent border-b-blue-500 rounded-full animate-spin delay-200"></div>
+          <div className="relative w-16 h-16">
+            <div className="absolute inset-0 border-4 border-transparent border-t-blue-500 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 border-4 border-transparent border-b-blue-500 rounded-full animate-spin delay-200"></div>
+          </div>
         </div>
-        
-      </div>
-      
-      
-      
       ) : (
         children
       )}

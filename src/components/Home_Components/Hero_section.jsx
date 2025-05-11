@@ -46,7 +46,7 @@ const HeroSection = () => {
           needed
         </p>
         <button className="bg-[#406B98] text-white px-6 py-3 rounded text-base md:text-lg font-semibold">
-          Create My Resume
+          Get Started
         </button>
         <div className="flex flex-col sm:flex-row gap-10 items-center justify-center lg:justify-start mt-6">
           <div className="flex items-center gap-4">
@@ -70,6 +70,7 @@ const HeroSection = () => {
             </p>
           </div>
         </div>
+        <div  className="text-xl font-bold">Note: Complete your Profile before Get Started</div>
       </motion.div>
       <motion.img
         initial={{ opacity: 0, x: 60 }}
