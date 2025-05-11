@@ -1,7 +1,9 @@
+import React, { useRef, useState } from "react";
 
-import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { defaultResumeData } from "../../context/Resume_Data";
+import { db } from "../../../firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
 const PersonalInfoSection = ({
   isEditing,
@@ -12,12 +14,35 @@ const PersonalInfoSection = ({
   fileInputRef,
   isActive,
   setActiveSession,
+  authUser,
 }) => {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true });
   const summary = defaultResumeData.profile;
+  const [isUpdating, setIsUpdating] = useState(false);
 
   if (!isActive) return null;
+
+  async function handleUpdate() {
+    try {
+      await updateDoc(doc(db, "users", authUser.uid), {
+        personalInfo: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          shortName: formData.shortName,
+          linkedIn: formData.linkedIn,
+          role: formData.role,
+          linkedInURL: formData.linkedInURL,
+          location: formData.location,
+        },
+        profile: summary,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <motion.div
@@ -76,7 +101,7 @@ const PersonalInfoSection = ({
               {formData.shortName}
             </h1>
             <p className="text-lg font-medium text-gray-600 mb-3">
-              {formData.title}
+              {formData.role}
             </p>
 
             {!isEditing && (
@@ -152,7 +177,6 @@ const PersonalInfoSection = ({
           </div>
         </div>
 
-        {/* Details Section */}
         <div className="mt-6 space-y-4 text-left text-gray-700">
           {isEditing ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -182,12 +206,12 @@ const PersonalInfoSection = ({
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-600">
-                  Title
+                  Role
                 </label>
                 <input
                   type="text"
-                  name="title"
-                  value={formData.title}
+                  name="role"
+                  value={formData.role}
                   onChange={handleInputChange}
                   className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
                 />
@@ -273,7 +297,10 @@ const PersonalInfoSection = ({
                   Cancel
                 </button>
                 <button
-                  onClick={() => setIsEditing(false)}
+                  onClick={async () => {
+                    await handleUpdate();
+                    setIsEditing(false);
+                  }}
                   className="px-6 py-2 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
                 >
                   Save Changes
@@ -342,14 +369,6 @@ const PersonalInfoSection = ({
             </div>
           )}
         </div>
-        <div className="mt-6 flex justify-end">
-          <button
-            onClick={() => setActiveSession("Experience")}
-            className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
-          >
-            Update
-          </button>
-        </div>
       </div>
 
       {!isEditing && (
@@ -367,4 +386,3 @@ const PersonalInfoSection = ({
 };
 
 export default PersonalInfoSection;
-

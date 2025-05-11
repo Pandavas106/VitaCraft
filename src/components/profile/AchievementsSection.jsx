@@ -1,9 +1,13 @@
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { defaultResumeData } from "../../context/Resume_Data";
+import { db } from "../../../firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
-const AchievementsSection = ({ isActive, setActiveSection }) => {
-  const [achievements, setAchievements] = useState(defaultResumeData.achievements);
+const AchievementsSection = ({ isActive, setActiveSection, authUser }) => {
+  const [achievements, setAchievements] = useState(
+    defaultResumeData.achievements
+  );
   const [isAddingAchievement, setIsAddingAchievement] = useState(false);
   const [isEditing, setIsEditing] = useState(null);
   const [newAchievement, setNewAchievement] = useState("");
@@ -51,6 +55,16 @@ const AchievementsSection = ({ isActive, setActiveSection }) => {
   };
 
   if (!isActive) return null;
+  const handleUpdate = async () => {
+    try {
+      await updateDoc(doc(db, "users", authUser.uid), {
+        achievements: achievements, // <- this uses current state
+      });
+      console.log("Achievements updated successfully!");
+    } catch (error) {
+      console.error("Failed to update achievements:", error);
+    }
+  };
 
   return (
     <motion.div
@@ -213,10 +227,13 @@ const AchievementsSection = ({ isActive, setActiveSection }) => {
         )}
         <div className="mt-6 flex justify-end">
           <button
-            onClick={() => setActiveSession("Experience")}
+            onClick={() => {
+              handleUpdate(); // 🔧 Actually call the function
+              setActiveSession("Experience");
+            }}
             className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
           >
-            Update
+            update
           </button>
         </div>
       </div>
@@ -234,4 +251,3 @@ const AchievementsSection = ({ isActive, setActiveSection }) => {
 };
 
 export default AchievementsSection;
-

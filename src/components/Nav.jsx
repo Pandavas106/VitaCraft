@@ -22,7 +22,9 @@ function Nav({ setShowPopup, setIsSignUp }) {
   const prevScrollRef = useRef(0);
   const location = useLocation();
 
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
   const handleAuthPopup = (isSignup) => {
     setShowPopup(true);
@@ -76,7 +78,9 @@ function Nav({ setShowPopup, setIsSignUp }) {
           <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             <Link to="/" className="flex items-center gap-2 ml-[-10px]">
               <img src={Logo} alt="Logo" className="h-10" />
-              <span className="text-xl font-bold text-[#406B98]">VitaCraft</span>
+              <span className="text-xl font-bold text-[#406B98]">
+                VitaCraft
+              </span>
             </Link>
 
             <div className="hidden md:flex gap-8 items-center pl-4">
