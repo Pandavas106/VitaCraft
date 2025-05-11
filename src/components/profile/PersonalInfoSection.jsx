@@ -1,3 +1,4 @@
+
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
@@ -357,3 +358,4 @@ const PersonalInfoSection = ({
 };
 
 export default PersonalInfoSection;
+

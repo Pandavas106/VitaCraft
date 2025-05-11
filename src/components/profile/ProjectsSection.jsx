@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
@@ -408,3 +409,4 @@ const ProjectsSection = ({ isActive, setActiveSection }) => {
 };
 
 export default ProjectsSection;
+

@@ -7,9 +7,11 @@ import SkillsSection from "../components/profile/SkillsSection";
 import ProjectsSection from "../components/profile/ProjectsSection";
 import AchievementsSection from "../components/profile/AchievementsSection";
 
+
 const ProfilePage = () => {
   // Active section state
   const [activeSection, setActiveSection] = useState("Personal Info");
+
 
   // Personal info states
   const [isEditing, setIsEditing] = useState(false);
@@ -52,6 +54,7 @@ const ProfilePage = () => {
     "Projects",
     "Achievements",
   ];
+
 
   // Function to navigate between sections
   const handleNavigate = (section) => {
