@@ -6,6 +6,7 @@ import EducationSection from "../components/profile/EducationSection";
 import SkillsSection from "../components/profile/SkillsSection";
 import ProjectsSection from "../components/profile/ProjectsSection";
 import AchievementsSection from "../components/profile/AchievementsSection";
+import { defaultResumeData } from "../context/Resume_Data";
 
 
 const ProfilePage = () => {
@@ -15,18 +16,7 @@ const ProfilePage = () => {
 
   // Personal info states
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: "Nelavalli Venkata Bhaskara Devi Phanindra",
-    shortName: "Nelavalli Phanindra",
-    title: "FrontEnd Developer",
-    email: "nelavalliphanindra4@gmail.com",
-    phone: "9989494236",
-    location: "Intur,Guntur,AP-522341",
-    website: "https://www.linkedin.com/in/phanindra-nelavalli-b074a8255/",
-    summary:
-      "Enthusiastic Computer Science Engineering student with a solid understanding of software development, web, and mobile application development. Interested in exploring new technologies, especially Machine Learning (ML) and Artificial Intelligence (AI). Looking for opportunities to apply skills in projects that contribute to technological progress and solve real-world problems.",
-    linkedIn: "Phanindra-Nelavalli",
-  });
+  const [formData, setFormData] = useState(defaultResumeData.personalInfo);
   const [profileImage, setProfileImage] = useState(null);
   const fileInputRef = useRef(null);
   const sectionRef = useRef(null);

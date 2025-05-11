@@ -1,36 +1,9 @@
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { defaultResumeData } from "../../context/Resume_Data";
 
 const EducationSection = ({ isActive, setActiveSection }) => {
-  const [educations, setEducations] = useState([
-    {
-      id: 1,
-      degree: "Bachelor of Technology (B.Tech) in Computer Science Engineering",
-      institution: "Vishnu Institute of Technology",
-      score: "CGPA - 9.42",
-      location: "Bhimavarm, India",
-      startYear: "2022",
-      endYear: "present",
-    },
-    {
-      id: 2,
-      degree: "Intermediate",
-      institution: "K.V.S.R.T Junior College",
-      score: "Percentage - 97.6%",
-      location: "Chilumuru, India",
-      startYear: "2020",
-      endYear: "2022",
-    },
-    {
-      id: 3,
-      degree: "SSC",
-      institution: "K.Z.P High School",
-      score: "Percentage - 99%",
-      location: "Intur, India",
-      startYear: "2019",
-      endYear: "2020",
-    },
-  ]);
+  const [educations, setEducations] = useState(defaultResumeData.education);
   const [isAddingEducation, setIsAddingEducation] = useState(false);
   const [isEditing, setIsEditing] = useState(null);
   const [newEducation, setNewEducation] = useState({
@@ -302,7 +275,9 @@ const EducationSection = ({ isActive, setActiveSection }) => {
                     <h3 className="text-lg font-semibold text-[#406B98]">
                       {edu.degree}
                     </h3>
-                    <p className="text-gray-700 font-medium">{edu.institution}</p>
+                    <p className="text-gray-700 font-medium">
+                      {edu.institution}
+                    </p>
                   </div>
                   <div className="text-gray-500 text-sm mt-2 md:mt-0 md:text-right">
                     <div>
@@ -335,7 +310,7 @@ const EducationSection = ({ isActive, setActiveSection }) => {
         >
           Back: Experience
         </button>
-        <button 
+        <button
           onClick={() => setActiveSection("Skills")}
           className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
         >
@@ -346,5 +321,5 @@ const EducationSection = ({ isActive, setActiveSection }) => {
   );
 };
 
-
 export default EducationSection;
+

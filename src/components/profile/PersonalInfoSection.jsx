@@ -1,6 +1,7 @@
 
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { defaultResumeData } from "../../context/Resume_Data";
 
 const PersonalInfoSection = ({
   isEditing,
@@ -14,6 +15,7 @@ const PersonalInfoSection = ({
 }) => {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true });
+  const summary = defaultResumeData.profile;
 
   if (!isActive) return null;
 
@@ -30,7 +32,6 @@ const PersonalInfoSection = ({
           Personal Information
         </h2>
 
-        {/* Profile Image + Name + Title */}
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8">
           <div className="flex flex-col items-center">
             <div
@@ -161,8 +162,8 @@ const PersonalInfoSection = ({
                 </label>
                 <input
                   type="text"
-                  name="firstName"
-                  value={formData.firstName}
+                  name="name"
+                  value={formData.name}
                   onChange={handleInputChange}
                   className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
                 />
@@ -245,8 +246,8 @@ const PersonalInfoSection = ({
                 </label>
                 <input
                   type="text"
-                  name="website"
-                  value={formData.website}
+                  name="linkedInURL"
+                  value={formData.linkedInURL}
                   onChange={handleInputChange}
                   className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
                 />
@@ -257,7 +258,7 @@ const PersonalInfoSection = ({
                 </label>
                 <textarea
                   name="summary"
-                  value={formData.summary}
+                  value={summary}
                   onChange={handleInputChange}
                   rows="4"
                   className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
@@ -285,7 +286,7 @@ const PersonalInfoSection = ({
                 <h3 className="text-lg font-semibold text-[#406B98] mb-3">
                   Professional Summary
                 </h3>
-                <p className="text-gray-700">{formData.summary}</p>
+                <p className="text-gray-700">{summary}</p>
               </div>
 
               <div className="bg-gray-50 p-6 rounded-lg">
@@ -297,7 +298,7 @@ const PersonalInfoSection = ({
                     <h4 className="text-sm text-gray-500 uppercase tracking-wider mb-1">
                       Full Name
                     </h4>
-                    <p>{formData.firstName}</p>
+                    <p>{formData.name}</p>
                   </div>
                   <div>
                     <h4 className="text-sm text-gray-500 uppercase tracking-wider mb-1">
@@ -328,12 +329,12 @@ const PersonalInfoSection = ({
                       LinkedIn URL
                     </h4>
                     <a
-                      href={formData.website}
+                      href={formData.linkedInURL}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-[#406B98] hover:underline"
                     >
-                      {formData.website}
+                      {formData.linkedInURL}
                     </a>
                   </div>
                 </div>
