@@ -1,8 +1,10 @@
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { defaultResumeData } from "../../context/Resume_Data";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../../../firebase";
 
-const ExperienceSection = ({ isActive, setActiveSection }) => {
+const ExperienceSection = ({ isActive, setActiveSection, authUser }) => {
   const [experiences, setExperiences] = useState(defaultResumeData.experience);
   const [isAddingExperience, setIsAddingExperience] = useState(false);
   const [isEditing, setIsEditing] = useState(null);
@@ -76,6 +78,18 @@ const ExperienceSection = ({ isActive, setActiveSection }) => {
     setIsEditing(id);
     setIsAddingExperience(true);
   };
+
+  async function handleUpdate() {
+    try {
+      await updateDoc(doc(db, "users", authUser.uid), {
+        experiences: experiences,
+      });
+      alert("Successfully Updated");
+    } catch (error) {
+      console.log(error);
+      alert("Error in Updating");
+    }
+  }
 
   const handleUpdateExperience = () => {
     setExperiences(
@@ -365,7 +379,7 @@ const ExperienceSection = ({ isActive, setActiveSection }) => {
         )}
         <div className="mt-6 flex justify-end">
           <button
-            onClick={() => setActiveSession("Experience")}
+            onClick={() => handleUpdate()}
             className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
           >
             Update

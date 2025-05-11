@@ -1,9 +1,10 @@
-
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { defaultResumeData } from "../../context/Resume_Data";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../../../firebase";
 
-const ProjectsSection = ({ isActive, setActiveSection }) => {
+const ProjectsSection = ({ isActive, setActiveSection, authUser }) => {
   const [projects, setProjects] = useState(defaultResumeData.projects);
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [isEditing, setIsEditing] = useState(null);
@@ -54,8 +55,19 @@ const ProjectsSection = ({ isActive, setActiveSection }) => {
     }
   };
 
+  async function handleUpdate() {
+    try {
+      await updateDoc(doc(db, "users", authUser.uid), {
+        projects: projects,
+      });
+      alert("Successfully Updated");
+    } catch (error) {
+      console.log(error);
+      alert("Error in Updating");
+    }
+  }
+
   const handleAddProject = () => {
-    // Filter out empty points
     const filteredPoints = newProject.points.filter(
       (point) => point.trim() !== ""
     );
@@ -88,7 +100,6 @@ const ProjectsSection = ({ isActive, setActiveSection }) => {
   };
 
   const handleUpdateProject = () => {
-    // Filter out empty points
     const filteredPoints = newProject.points.filter(
       (point) => point.trim() !== ""
     );
@@ -353,7 +364,7 @@ const ProjectsSection = ({ isActive, setActiveSection }) => {
         )}
         <div className="mt-6 flex justify-end">
           <button
-            onClick={() => setActiveSession("Experience")}
+            onClick={() => handleUpdate()}
             className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
           >
             Update
@@ -380,4 +391,3 @@ const ProjectsSection = ({ isActive, setActiveSection }) => {
 };
 
 export default ProjectsSection;
-
