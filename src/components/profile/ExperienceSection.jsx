@@ -1,10 +1,11 @@
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { defaultResumeData } from "../../context/Resume_Data";
+import { useResumeData } from "../../context/Resume_Data";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 
 const ExperienceSection = ({ isActive, setActiveSection, authUser }) => {
+  const defaultResumeData =useResumeData();
   const [experiences, setExperiences] = useState(defaultResumeData.experience);
   const [isAddingExperience, setIsAddingExperience] = useState(false);
   const [isEditing, setIsEditing] = useState(null);

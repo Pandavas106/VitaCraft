@@ -1,10 +1,11 @@
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { defaultResumeData } from "../../context/Resume_Data";
+import {  useResumeData } from "../../context/Resume_Data";
 import { db } from "../../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
 
 const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
+  const defaultResumeData =useResumeData();
   // Skills State
   const [skills, setSkills] = useState(defaultResumeData.skills);
   const [newTechnicalSkill, setNewTechnicalSkill] = useState("");

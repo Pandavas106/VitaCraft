@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { defaultResumeData } from "../context/Resume_Data";
+import {  useResumeData } from "../context/Resume_Data";
 import Resume1 from "../components/Resume_Templates/Resume1";
 import PersonalData from "../components/LivePreview_Components/Personal_Data";
 import EducationData from "../components/LivePreview_Components/Education_Data";
@@ -19,6 +19,7 @@ import Resume7 from "../components/Resume_Templates/Resume7";
 import { useLocation } from "react-router-dom";
 
 export default function LivePreview() {
+  const defaultResumeData =useResumeData();
   const location = useLocation();
   const { idx } = location.state || {};
   const [resumeData, setResumeData] = useState(defaultResumeData);
