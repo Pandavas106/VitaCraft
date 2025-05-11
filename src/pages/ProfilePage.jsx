@@ -7,10 +7,12 @@ import SkillsSection from "../components/profile/SkillsSection";
 import ProjectsSection from "../components/profile/ProjectsSection";
 import AchievementsSection from "../components/profile/AchievementsSection";
 import { defaultResumeData } from "../context/Resume_Data";
+import { useAuth } from "../context/auth_context";
 
 const ProfilePage = () => {
   // Active section state
   const [activeSection, setActiveSection] = useState("Personal Info");
+  const { authUser } = useAuth();
 
   // Personal info states
   const [isEditing, setIsEditing] = useState(false);
@@ -122,6 +124,7 @@ const ProfilePage = () => {
                 fileInputRef={fileInputRef}
                 isActive={activeSection == "Personal Info"}
                 setActiveSession={setActiveSection}
+                authUser ={authUser}
               />
             )}
 
@@ -129,6 +132,7 @@ const ProfilePage = () => {
               <ExperienceSection
                 isActive={activeSection == "Experience"}
                 setActiveSection={setActiveSection}
+                authUser ={authUser}
               />
             )}
 
@@ -136,24 +140,28 @@ const ProfilePage = () => {
               <EducationSection
                 isActive={activeSection == "Education"}
                 setActiveSection={setActiveSection}
+                authUser ={authUser}
               />
             )}
             {activeSection === "Skills" && (
               <SkillsSection
                 isActive={activeSection == "Skills"}
                 setActiveSection={setActiveSection}
+                authUser ={authUser}
               />
             )}
             {activeSection === "Projects" && (
               <ProjectsSection
                 isActive={activeSection == "Projects"}
                 setActiveSection={setActiveSection}
+                authUser ={authUser}
               />
             )}
             {activeSection === "Achievements" && (
               <AchievementsSection
                 isActive={activeSection == "Achievements"}
                 setActiveSection={setActiveSection}
+                authUser ={authUser}
               />
             )}
           </div>
