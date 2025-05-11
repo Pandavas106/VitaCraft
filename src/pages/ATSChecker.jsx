@@ -97,6 +97,7 @@ const ATSCheckerPage = () => {
     "suggestions": ["..."]
   }
   
+  
   Job Description: """${jobDescription}"""
   Resume: """${resumeText}"""
       `;
