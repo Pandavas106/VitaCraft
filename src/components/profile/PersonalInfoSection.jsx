@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 
 import { motion, useInView } from "framer-motion";
-import { defaultResumeData } from "../../context/Resume_Data";
+import { useResumeData } from "../../context/Resume_Data";
 import { db } from "../../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
 
@@ -16,10 +16,12 @@ const PersonalInfoSection = ({
   setActiveSession,
   authUser,
 }) => {
+  const defaultResumeData =useResumeData();
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true });
   const summary = defaultResumeData.profile;
-  const [isUpdating, setIsUpdating] = useState(false);
+  
+  
 
   if (!isActive) return null;
 
