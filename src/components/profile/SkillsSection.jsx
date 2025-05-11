@@ -1,257 +1,623 @@
-import { useState } from 'react'
-import { useResume } from '../../context/ResumeContext'
-import { v4 as uuidv4 } from 'uuid'
+import React, { useState, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 
-const SkillsSection = () => {
-  const { resumeData, updateSkills } = useResume()
-  const { skills } = resumeData
+const SkillsSection = ({ isActive, setActiveSection }) => {
+  // Skills State
+  const [skills, setSkills] = useState({
+    technical: [
+      "Programming Languages : Python, SQL, JavaScript",
+      "Frontend Technologies : HTML, CSS, React.js",
+      "Backend Technologies : Node.js, Express.js",
+      "Android Development : Flutter, React Native(Basics)",
+      "Data Analysis Tools : Pandas, NumPy",
+      "Designing Tools : Figma",
+    ],
+    soft: [
+      "Communication",
+      "Team Collaboration",
+      "Problem Resolution",
+      "Time Organization",
+      "Building Professional Relationships",
+      "Logical Analysis",
+    ],
+  });
+  const [newTechnicalSkill, setNewTechnicalSkill] = useState("");
+  const [newSoftSkill, setNewSoftSkill] = useState("");
+  const [editingTechnicalIndex, setEditingTechnicalIndex] = useState(null);
+  const [editingSoftIndex, setEditingSoftIndex] = useState(null);
 
-  const [isAddingNew, setIsAddingNew] = useState(false)
-  const [editingId, setEditingId] = useState(null)
-  
-  const skillCategories = [
-    'Technical',
-    'Soft Skills',
-    'Languages',
-    'Tools',
-    'Frameworks',
-    'Other'
-  ]
-  
-  const emptySkill = {
-    id: '',
-    name: '',
-    category: 'Technical',
-    level: 3
-  }
-  
-  const [formData, setFormData] = useState(emptySkill)
+  // Certificates State
+  const [certificates, setCertificates] = useState([
+    "Google Foundations of CyberSercurity in Coursera",
+    "Paloalto CyberScurity",
+    "AWS Academy Cloud Foundations",
+  ]);
+  const [newCertificate, setNewCertificate] = useState("");
+  const [editingCertificateIndex, setEditingCertificateIndex] = useState(null);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'level' ? parseInt(value, 10) : value
-    }))
-  }
+  // Organizations State
+  const [organizations, setOrganizations] = useState([
+    {
+      id: 1,
+      name: "E-CELL VITB",
+      position: "Technical Lead",
+      location: "Bhimavaram, India",
+    },
+  ]);
+  const [isAddingOrg, setIsAddingOrg] = useState(false);
+  const [editingOrgId, setEditingOrgId] = useState(null);
+  const [newOrg, setNewOrg] = useState({
+    name: "",
+    position: "",
+    location: "",
+  });
 
-  const handleAddNew = () => {
-    setFormData(emptySkill)
-    setIsAddingNew(true)
-    setEditingId(null)
-  }
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true });
 
-  const handleEdit = (id) => {
-    const skillItem = skills.find(item => item.id === id)
-    setFormData(skillItem)
-    setEditingId(id)
-    setIsAddingNew(false)
-  }
-
-  const handleDelete = (id) => {
-    const updatedSkills = skills.filter(item => item.id !== id)
-    updateSkills(updatedSkills)
-  }
-
-  const handleCancel = () => {
-    setIsAddingNew(false)
-    setEditingId(null)
-    setFormData(emptySkill)
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  // Skills Handlers
+  const handleAddTechnicalSkill = () => {
+    if (newTechnicalSkill.trim() === "") return;
     
-    let updatedSkills
-    
-    if (isAddingNew) {
-      updatedSkills = [
-        ...skills,
-        { ...formData, id: uuidv4() }
-      ]
+    if (editingTechnicalIndex !== null) {
+      const updatedTechnical = [...skills.technical];
+      updatedTechnical[editingTechnicalIndex] = newTechnicalSkill;
+      setSkills({ ...skills, technical: updatedTechnical });
+      setEditingTechnicalIndex(null);
     } else {
-      updatedSkills = skills.map(item => 
-        item.id === editingId ? formData : item
-      )
+      setSkills({
+        ...skills,
+        technical: [...skills.technical, newTechnicalSkill],
+      });
     }
+    setNewTechnicalSkill("");
+  };
+
+  const handleAddSoftSkill = () => {
+    if (newSoftSkill.trim() === "") return;
     
-    updateSkills(updatedSkills)
-    handleCancel()
-  }
-  
-  // Group skills by category
-  const groupedSkills = skills.reduce((acc, skill) => {
-    if (!acc[skill.category]) {
-      acc[skill.category] = []
+    if (editingSoftIndex !== null) {
+      const updatedSoft = [...skills.soft];
+      updatedSoft[editingSoftIndex] = newSoftSkill;
+      setSkills({ ...skills, soft: updatedSoft });
+      setEditingSoftIndex(null);
+    } else {
+      setSkills({
+        ...skills,
+        soft: [...skills.soft, newSoftSkill],
+      });
     }
-    acc[skill.category].push(skill)
-    return acc
-  }, {})
+    setNewSoftSkill("");
+  };
+
+  const handleEditTechnicalSkill = (index) => {
+    setNewTechnicalSkill(skills.technical[index]);
+    setEditingTechnicalIndex(index);
+  };
+
+  const handleEditSoftSkill = (index) => {
+    setNewSoftSkill(skills.soft[index]);
+    setEditingSoftIndex(index);
+  };
+
+  const handleDeleteTechnicalSkill = (index) => {
+    const updatedTechnical = skills.technical.filter((_, i) => i !== index);
+    setSkills({ ...skills, technical: updatedTechnical });
+  };
+
+  const handleDeleteSoftSkill = (index) => {
+    const updatedSoft = skills.soft.filter((_, i) => i !== index);
+    setSkills({ ...skills, soft: updatedSoft });
+  };
+
+  // Certificate Handlers
+  const handleAddCertificate = () => {
+    if (newCertificate.trim() === "") return;
+    
+    if (editingCertificateIndex !== null) {
+      const updatedCertificates = [...certificates];
+      updatedCertificates[editingCertificateIndex] = newCertificate;
+      setCertificates(updatedCertificates);
+      setEditingCertificateIndex(null);
+    } else {
+      setCertificates([...certificates, newCertificate]);
+    }
+    setNewCertificate("");
+  };
+
+  const handleEditCertificate = (index) => {
+    setNewCertificate(certificates[index]);
+    setEditingCertificateIndex(index);
+  };
+
+  const handleDeleteCertificate = (index) => {
+    const updatedCertificates = certificates.filter((_, i) => i !== index);
+    setCertificates(updatedCertificates);
+  };
+
+  // Organization Handlers
+  const handleOrgInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewOrg((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleAddOrg = () => {
+    if (newOrg.name.trim() === "" || newOrg.position.trim() === "") return;
+    
+    const orgWithId = {
+      ...newOrg,
+      id: Date.now(),
+    };
+
+    setOrganizations([...organizations, orgWithId]);
+    setNewOrg({
+      name: "",
+      position: "",
+      location: "",
+    });
+    setIsAddingOrg(false);
+  };
+
+  const handleEditOrg = (id) => {
+    const orgToEdit = organizations.find((org) => org.id === id);
+    setNewOrg(orgToEdit);
+    setEditingOrgId(id);
+    setIsAddingOrg(true);
+  };
+
+  const handleUpdateOrg = () => {
+    setOrganizations(
+      organizations.map((org) =>
+        org.id === editingOrgId ? { ...newOrg, id: editingOrgId } : org
+      )
+    );
+    setNewOrg({
+      name: "",
+      position: "",
+      location: "",
+    });
+    setEditingOrgId(null);
+    setIsAddingOrg(false);
+  };
+
+  const handleDeleteOrg = (id) => {
+    setOrganizations(organizations.filter((org) => org.id !== id));
+  };
+
+  if (!isActive) return null;
 
   return (
-    <div className="animate-fade-in">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-neutral-900">Skills</h2>
-        {!isAddingNew && editingId === null && (
-          <button 
-            className="btn-primary flex items-center"
-            onClick={handleAddNew}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
-            </svg>
-            Add Skill
-          </button>
-        )}
-      </div>
+    <motion.div
+      ref={sectionRef}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay: 0.3 }}
+      className="w-full"
+    >
+      {/* Skills Section */}
+      <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
+        <h2 className="text-2xl font-bold font-[Hanuman] text-[#406B98] mb-6">
+          Skills
+        </h2>
 
-      {/* Form for adding/editing */}
-      {(isAddingNew || editingId !== null) && (
-        <form onSubmit={handleSubmit} className="mb-8 bg-neutral-50 p-6 rounded-lg border border-neutral-200 animate-slide-up">
-          <h3 className="text-lg font-medium text-neutral-900 mb-4">
-            {isAddingNew ? 'Add New Skill' : 'Edit Skill'}
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-neutral-700 mb-1">
-                Skill Name*
-              </label>
+        {/* Technical Skills */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-[#406B98]">
+              Technical Skills
+            </h3>
+            <div className="flex space-x-2">
               <input
                 type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="input-field"
-                placeholder="e.g., JavaScript, Teamwork, Spanish"
-                required
+                value={newTechnicalSkill}
+                onChange={(e) => setNewTechnicalSkill(e.target.value)}
+                placeholder="Add technical skill"
+                className="border px-3 py-1 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
               />
-            </div>
-            
-            <div>
-              <label htmlFor="category" className="block text-sm font-medium text-neutral-700 mb-1">
-                Category
-              </label>
-              <select
-                id="category"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                className="input-field"
+              <button
+                onClick={handleAddTechnicalSkill}
+                className="px-3 py-1 bg-[#406B98] text-white rounded hover:bg-[#335680] transition-colors"
               >
-                {skillCategories.map(category => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-neutral-700 mb-1">
-                Proficiency Level: {formData.level}/5
-              </label>
-              <input
-                type="range"
-                id="level"
-                name="level"
-                min="1"
-                max="5"
-                value={formData.level}
-                onChange={handleChange}
-                className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer"
-              />
-              <div className="flex justify-between text-xs text-neutral-500 mt-1">
-                <span>Beginner</span>
-                <span>Intermediate</span>
-                <span>Expert</span>
-              </div>
+                {editingTechnicalIndex !== null ? "Update" : "Add"}
+              </button>
             </div>
           </div>
-          
-          <div className="flex gap-4">
-            <button 
-              type="button" 
-              className="btn-secondary"
-              onClick={handleCancel}
-            >
-              Cancel
-            </button>
-            <button 
-              type="submit" 
-              className="btn-primary"
-            >
-              {isAddingNew ? 'Add Skill' : 'Save Changes'}
-            </button>
-          </div>
-        </form>
-      )}
-
-      {/* List of skill entries */}
-      {skills.length > 0 ? (
-        <div>
-          {Object.entries(groupedSkills).map(([category, categorySkills]) => (
-            <div key={category} className="mb-6">
-              <h3 className="text-md font-medium text-neutral-700 mb-3">{category}</h3>
-              <div className="flex flex-wrap gap-2">
-                {categorySkills.map(skill => (
-                  <div 
-                    key={skill.id} 
-                    className="bg-white px-4 py-2 rounded-lg border border-neutral-200 flex items-center gap-2 group hover:shadow-sm transition-shadow duration-200"
+          <div className="bg-gray-50 p-4 rounded-lg">
+            {skills.technical.length === 0 ? (
+              <p className="text-gray-500 text-center">No technical skills added yet.</p>
+            ) : (
+              <ul className="space-y-2">
+                {skills.technical.map((skill, index) => (
+                  <li 
+                    key={index} 
+                    className="flex justify-between items-center group bg-white p-3 rounded-md shadow-sm"
                   >
-                    <span className="font-medium">{skill.name}</span>
-                    <div className="flex gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <div
-                          key={i}
-                          className={`h-1.5 w-1.5 rounded-full ${
-                            i < skill.level ? 'bg-primary-600' : 'bg-neutral-300'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <div className="hidden group-hover:flex gap-1 ml-2">
-                      <button 
-                        className="text-neutral-400 hover:text-neutral-700 transition-colors duration-200"
-                        onClick={() => handleEdit(skill.id)}
+                    <span>{skill}</span>
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity flex space-x-2">
+                      <button
+                        onClick={() => handleEditTechnicalSkill(index)}
+                        className="p-1 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                          />
                         </svg>
                       </button>
-                      <button 
-                        className="text-neutral-400 hover:text-error-600 transition-colors duration-200"
-                        onClick={() => handleDelete(skill.id)}
+                      <button
+                        onClick={() => handleDeleteTechnicalSkill(index)}
+                        className="p-1 bg-red-100 rounded-full hover:bg-red-200 text-red-600 transition-colors"
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+
+        {/* Soft Skills */}
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-[#406B98]">
+              Soft Skills
+            </h3>
+            <div className="flex space-x-2">
+              <input
+                type="text"
+                value={newSoftSkill}
+                onChange={(e) => setNewSoftSkill(e.target.value)}
+                placeholder="Add soft skill"
+                className="border px-3 py-1 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
+              />
+              <button
+                onClick={handleAddSoftSkill}
+                className="px-3 py-1 bg-[#406B98] text-white rounded hover:bg-[#335680] transition-colors"
+              >
+                {editingSoftIndex !== null ? "Update" : "Add"}
+              </button>
+            </div>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            {skills.soft.length === 0 ? (
+              <p className="text-gray-500 text-center">No soft skills added yet.</p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {skills.soft.map((skill, index) => (
+                  <div 
+                    key={index} 
+                    className="bg-white px-3 py-2 rounded-md shadow-sm flex items-center group"
+                  >
+                    <span>{skill}</span>
+                    <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex space-x-1">
+                      <button
+                        onClick={() => handleEditSoftSkill(index)}
+                        className="p-1 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3 w-3"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteSoftSkill(index)}
+                        className="p-1 bg-red-100 rounded-full hover:bg-red-200 text-red-600 transition-colors"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3 w-3"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
                         </svg>
                       </button>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
-          ))}
+            )}
+          </div>
         </div>
-      ) : (
-        <div className="text-center py-8 text-neutral-500">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-neutral-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-          </svg>
-          <p className="text-lg">No skills added yet</p>
-          <p className="text-sm mb-4">Add your skills to highlight your expertise</p>
-          <button 
-            className="btn-primary"
-            onClick={handleAddNew}
-          >
-            Add Skills
-          </button>
-        </div>
-      )}
-    </div>
-  )
-}
+      </div>
 
-export default SkillsSection
+      {/* Certificates Section */}
+      <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold font-[Hanuman] text-[#406B98]">
+            Certificates
+          </h2>
+          <div className="flex space-x-2">
+            <input
+              type="text"
+              value={newCertificate}
+              onChange={(e) => setNewCertificate(e.target.value)}
+              placeholder="Add certificate"
+              className="border px-3 py-1 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
+            />
+            <button
+              onClick={handleAddCertificate}
+              className="px-3 py-1 bg-[#406B98] text-white rounded hover:bg-[#335680] transition-colors"
+            >
+              {editingCertificateIndex !== null ? "Update" : "Add"}
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-gray-50 p-4 rounded-lg">
+          {certificates.length === 0 ? (
+            <p className="text-gray-500 text-center">No certificates added yet.</p>
+          ) : (
+            <ul className="space-y-2">
+              {certificates.map((certificate, index) => (
+                <li 
+                  key={index} 
+                  className="flex justify-between items-center group bg-white p-3 rounded-md shadow-sm"
+                >
+                  <span>{certificate}</span>
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity flex space-x-2">
+                    <button
+                      onClick={() => handleEditCertificate(index)}
+                      className="p-1 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCertificate(index)}
+                      className="p-1 bg-red-100 rounded-full hover:bg-red-200 text-red-600 transition-colors"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+
+      {/* Organizations Section */}
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold font-[Hanuman] text-[#406B98]">
+            Organizations
+          </h2>
+          {!isAddingOrg && (
+            <button
+              onClick={() => setIsAddingOrg(true)}
+              className="text-sm px-4 py-2 bg-[#406B98] text-white rounded hover:bg-[#335680] transition-colors"
+            >
+              Add Organization
+            </button>
+          )}
+        </div>
+
+        {isAddingOrg ? (
+          <div className="bg-gray-50 p-6 rounded-lg mb-6">
+            <h3 className="text-lg font-semibold text-[#406B98] mb-4">
+              {editingOrgId ? "Edit Organization" : "Add New Organization"}
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
+                  Organization Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={newOrg.name}
+                  onChange={handleOrgInputChange}
+                  className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
+                  Position
+                </label>
+                <input
+                  type="text"
+                  name="position"
+                  value={newOrg.position}
+                  onChange={handleOrgInputChange}
+                  className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  name="location"
+                  value={newOrg.location}
+                  onChange={handleOrgInputChange}
+                  className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
+                />
+              </div>
+              <div className="md:col-span-2 flex justify-end gap-4 mt-4">
+                <button
+                  onClick={() => {
+                    setIsAddingOrg(false);
+                    setEditingOrgId(null);
+                    setNewOrg({
+                      name: "",
+                      position: "",
+                      location: "",
+                    });
+                  }}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={editingOrgId ? handleUpdateOrg : handleAddOrg}
+                  className="px-6 py-2 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
+                >
+                  {editingOrgId ? "Update" : "Save"}
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : organizations.length === 0 ? (
+          <div className="bg-gray-50 p-8 rounded-lg text-center">
+            <p className="text-gray-500">No organizations added yet.</p>
+            <button
+              onClick={() => setIsAddingOrg(true)}
+              className="mt-4 text-[#406B98] underline hover:text-[#335680]"
+            >
+              Add your first organization
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {organizations.map((org) => (
+              <div
+                key={org.id}
+                className="bg-gray-50 p-4 rounded-lg relative group"
+              >
+                <div className="absolute right-4 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex space-x-2">
+                  <button
+                    onClick={() => handleEditOrg(org.id)}
+                    className="p-1 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => handleDeleteOrg(org.id)}
+                    className="p-1 bg-red-100 rounded-full hover:bg-red-200 text-red-600 transition-colors"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                <div className="flex flex-col md:flex-row md:justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-[#406B98]">
+                      {org.name}
+                    </h3>
+                    <p className="text-gray-700 font-medium">{org.position}</p>
+                  </div>
+                  <div className="text-gray-500 text-sm mt-2 md:mt-0 md:text-right">
+                    <div>{org.location}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="mt-6 flex justify-between">
+        <button
+          onClick={() => setActiveSection("Education")}
+          className="px-6 py-3 bg-gray-200 text-gray-700 rounded font-medium hover:bg-gray-300 transition-colors"
+        >
+          Back: Education
+        </button>
+        <button
+          onClick={() => setActiveSection("Projects")}
+          className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
+        >
+          Next: Projects
+        </button>
+      </div>
+    </motion.div>
+  );
+};
+
+export default SkillsSection;
