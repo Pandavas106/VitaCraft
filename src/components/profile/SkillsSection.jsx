@@ -153,7 +153,6 @@ const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
       organizations.map((org) =>
         org.id === editingOrgId ? { ...newOrg, id: editingOrgId } : org
       )
-      
     );
     setNewOrg({
       name: "",
@@ -184,12 +183,12 @@ const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
       console.log(
         "Skills, certificates, and organizations updated successfully!"
       );
-      setIsUpdating(false);
+
       setActiveSection("Projects");
       alert("Successfully Updated"); // Navigate to the next section after successful update
     } catch (error) {
       console.error("Error updating profile:", error);
-      setIsUpdating(false);
+
       // You might want to show an error message to the user
     }
   };
@@ -623,7 +622,6 @@ const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
           <button
             onClick={() => {
               handleUpdate();
-              setActiveSession("Experience");
             }}
             className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
           >
