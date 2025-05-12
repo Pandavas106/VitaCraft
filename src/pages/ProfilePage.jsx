@@ -24,12 +24,18 @@ const ProfilePage = () => {
   const isInView = useInView(sectionRef, { once: true });
 
   const [formData, setFormData] = useState({});
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
-    if (defaultResumeData.personalInfo) {
-      setFormData(defaultResumeData.personalInfo);
+    if (!isDataLoaded && defaultResumeData.personalInfo) {
+      setFormData((prev) => ({
+        ...prev,
+        ...defaultResumeData.personalInfo,
+        summary: defaultResumeData.profile || "",
+      }));
+      setIsDataLoaded(true);
     }
-  }, [defaultResumeData.personalInfo]);
+  }, [defaultResumeData.personalInfo, defaultResumeData.profile, isDataLoaded]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

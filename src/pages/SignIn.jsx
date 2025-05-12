@@ -5,6 +5,8 @@ import { signInWithPopup } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db, provider } from "./../../firebase";
 import { useAuth } from "../context/auth_context";
+import { Eye, EyeOff } from "lucide-react";
+import { div } from "framer-motion/client";
 
 function SignIn({ setShowPopup, isSignUp, setIsSignUp }) {
   const { signup, login } = useAuth();
@@ -13,6 +15,8 @@ function SignIn({ setShowPopup, isSignUp, setIsSignUp }) {
   const [password, setPassword] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,24 +93,32 @@ function SignIn({ setShowPopup, isSignUp, setIsSignUp }) {
             required
           />
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#406B98]"
-            required
-          />
-
-          {isSignUp && (
+          <div className="relative w-full">
             <input
               type="password"
-              placeholder="Confirm Password"
-              value={confirmPass}
-              onChange={(e) => setConfirmPass(e.target.value)}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#406B98]"
               required
             />
+          </div>
+
+          {isSignUp && (
+            <div className="relative w-full">
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                value={confirmPass}
+                onChange={(e) => setConfirmPass(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#406B98]"
+                required
+              />
+
+              {password != confirmPass && confirmPass.length != 0 && (
+                <p className="text-red-500 text-sm">Password Mismatch</p>
+              )}
+            </div>
           )}
 
           <button
