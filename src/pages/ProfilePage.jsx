@@ -23,7 +23,17 @@ const ProfilePage = () => {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true });
 
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    name: "",
+    shortName: "",
+    email: "",
+    phone: "",
+    address: "",
+    location: "",
+    role: "",
+    linkedIn: "",
+    linkedInURL: "",
+  });
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
@@ -31,7 +41,6 @@ const ProfilePage = () => {
       setFormData((prev) => ({
         ...prev,
         ...defaultResumeData.personalInfo,
-        summary: defaultResumeData.profile || "",
       }));
       setIsDataLoaded(true);
     }
@@ -135,8 +144,8 @@ const ProfilePage = () => {
               <PersonalInfoSection
                 isEditing={isEditing}
                 setIsEditing={setIsEditing}
-                formData={formData}
-                handleInputChange={handleInputChange}
+                // formData={formData}
+                // handleInputChange={handleInputChange}
                 profileImage={profileImage}
                 fileInputRef={fileInputRef}
                 isActive={activeSection == "Personal Info"}

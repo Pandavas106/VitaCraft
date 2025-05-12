@@ -2,9 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaArrowLeft, FaArrowRight, FaPlus } from "react-icons/fa";
 import CP1 from "./../assets/CP1.png";
 import { motion, useInView } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 function CoverLetter() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const navigator = useNavigate();
 
   useEffect(() => {
     document.documentElement.style.overflowX = "hidden";
@@ -19,6 +21,10 @@ function CoverLetter() {
       const scrollAmount = direction === "left" ? -300 : 300;
       container.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
+  };
+
+  const navigateToCoverLetterGen = () => {
+    navigator("/coverLetterGenerator");
   };
 
   const sectionRef1 = useRef();
@@ -88,7 +94,10 @@ function CoverLetter() {
               <div
                 className="flex-shrink-0 transform transition-transform hover:scale-105 hover:cursor-pointer"
                 key={idx}
-                onClick={() => setSelectedTemplate(idx)}
+                onClick={() => {
+                  setSelectedTemplate(idx);
+                  navigateToCoverLetterGen();
+                }}
               >
                 <div
                   className={`w-[220px] h-[300px] mb-3 flex flex-col gap-2 justify-center items-center rounded-lg shadow-lg ${
@@ -117,7 +126,6 @@ function CoverLetter() {
         </div>
       </motion.div>
 
-      {/* All Templates Grid */}
       <motion.div
         ref={sectionRef2}
         initial={{ opacity: 0, x: 60 }}

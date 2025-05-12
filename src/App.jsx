@@ -13,6 +13,7 @@ import CoverLetter from "./pages/CoverLetter.jsx";
 import ATSCheckerPage from "./pages/ATSChecker.jsx";
 import React from "react";
 import LivePreview from "./pages/LivePreview.jsx";
+import CoverLetterGenerator from "./pages/CoverLetterGenerator.jsx";
 function App() {
   const [showPopup, setShowPopup] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
@@ -40,6 +41,10 @@ function App() {
                 <Route path="/coverpage" element={<CoverLetter />} />
                 <Route path="/ats" element={<ATSCheckerPage />} />
                 <Route path="/livepreview" element={<LivePreview />} />
+                <Route
+                  path="/coverLetterGenerator"
+                  element={<CoverLetterGenerator />}
+                />
               </Routes>
             </div>
           </Router>
