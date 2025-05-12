@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 
 import { motion, useInView } from "framer-motion";
 import { useResumeData } from "../../context/Resume_Data";
@@ -8,29 +8,73 @@ import { doc, updateDoc } from "firebase/firestore";
 const PersonalInfoSection = ({
   isEditing,
   setIsEditing,
-  formData,
-  handleInputChange,
   profileImage,
   fileInputRef,
   isActive,
   setActiveSession,
   authUser,
 }) => {
-  const defaultResumeData = useResumeData();
+  const { personalInfo: defaultPersonalInfo, profile: defaultProfile } = useResumeData();
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true });
-  const [summary, setSummary] = useState(defaultResumeData.profile);
 
-  if (!isActive) return null;
+  const defaultFormData = {
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    shortName: '',
+    linkedIn: '',
+    role: '',
+    linkedInURL: '',
+    location: '',
+  };
 
-  async function handleUpdate() {
+  // Use useMemo to create initial state only when dependencies change
+  const initialFormData = useMemo(() => {
+    return defaultPersonalInfo 
+      ? { ...defaultFormData, ...defaultPersonalInfo }
+      : defaultFormData;
+  }, [defaultPersonalInfo]);
+
+  // State management with default values
+  const [summary, setSummary] = useState(defaultProfile || "");
+  const [formData, setFormData] = useState(initialFormData);
+
+  // Update form data when context data changes
+  useEffect(() => {
+    if (defaultPersonalInfo) {
+      setFormData(prev => ({
+        ...prev,
+        ...defaultPersonalInfo
+      }));
+      setSummary(defaultProfile || "");
+    }
+  }, [defaultPersonalInfo, defaultProfile]);
+
+  // Memoized input change handler
+  const handleInputChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  }, []);
+
+  // Memoized update function with improved error handling
+  const handleUpdate = useCallback(async () => {
     try {
+      if (!authUser || !authUser.uid) {
+        console.error("No authenticated user found");
+        return;
+      }
+
       await updateDoc(doc(db, "users", authUser.uid), {
         personalInfo: {
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
-          address: formData.address,
+          address: formData.address || '',
           shortName: formData.shortName,
           linkedIn: formData.linkedIn,
           role: formData.role,
@@ -39,10 +83,19 @@ const PersonalInfoSection = ({
         },
         profile: summary,
       });
+
+      // Optional: Add success feedback
+      console.log("Personal info updated successfully");
+      alert("Successfully Updated");
     } catch (error) {
-      console.log(error);
+      console.error("Error updating personal info:", error);
+      // Optional: Add user-friendly error handling
+      alert("Failed to update personal information. Please try again.");
     }
-  }
+  }, [formData, summary, authUser]);
+
+  // Early return if section is not active
+  if (!isActive) return null;
 
   return (
     <motion.div
@@ -52,6 +105,7 @@ const PersonalInfoSection = ({
       transition={{ duration: 0.7, delay: 0.3 }}
       className="w-full"
     >
+      {/* Rest of the component remains largely the same as the original */}
       <div className="bg-white p-6 rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold font-[Hanuman] mb-6 text-[#406B98]">
           Personal Information

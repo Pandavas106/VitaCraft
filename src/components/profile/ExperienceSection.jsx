@@ -5,7 +5,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 
 const ExperienceSection = ({ isActive, setActiveSection, authUser }) => {
-  const defaultResumeData =useResumeData();
+  const defaultResumeData = useResumeData();
   const [experiences, setExperiences] = useState(defaultResumeData.experience);
   const [isAddingExperience, setIsAddingExperience] = useState(false);
   const [isEditing, setIsEditing] = useState(null);
@@ -17,6 +17,7 @@ const ExperienceSection = ({ isActive, setActiveSection, authUser }) => {
     endDate: "",
     current: false,
     description: "",
+    points: [""],
   });
 
   const handlePointChange = (index, value) => {
@@ -69,6 +70,7 @@ const ExperienceSection = ({ isActive, setActiveSection, authUser }) => {
       endDate: "",
       current: false,
       description: "",
+      points: [""],
     });
     setIsAddingExperience(false);
   };
@@ -106,6 +108,7 @@ const ExperienceSection = ({ isActive, setActiveSection, authUser }) => {
       endDate: "",
       current: false,
       description: "",
+      points: [""],
     });
     setIsEditing(null);
     setIsAddingExperience(false);

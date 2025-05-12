@@ -1,11 +1,11 @@
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import {  useResumeData } from "../../context/Resume_Data";
+import { useResumeData } from "../../context/Resume_Data";
 import { db } from "../../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
 
 const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
-  const defaultResumeData =useResumeData();
+  const defaultResumeData = useResumeData();
   // Skills State
   const [skills, setSkills] = useState(defaultResumeData.skills);
   const [newTechnicalSkill, setNewTechnicalSkill] = useState("");
@@ -153,6 +153,7 @@ const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
       organizations.map((org) =>
         org.id === editingOrgId ? { ...newOrg, id: editingOrgId } : org
       )
+      
     );
     setNewOrg({
       name: "",
@@ -184,7 +185,8 @@ const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
         "Skills, certificates, and organizations updated successfully!"
       );
       setIsUpdating(false);
-      setActiveSection("Projects"); // Navigate to the next section after successful update
+      setActiveSection("Projects");
+      alert("Successfully Updated"); // Navigate to the next section after successful update
     } catch (error) {
       console.error("Error updating profile:", error);
       setIsUpdating(false);
@@ -377,14 +379,6 @@ const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
             )}
           </div>
         </div>
-        <div className="mt-6 flex justify-end">
-          <button
-            onClick={() => setActiveSession("Experience")}
-            className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
-          >
-            Update
-          </button>
-        </div>
       </div>
 
       {/* Certificates Section */}
@@ -467,14 +461,6 @@ const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
               ))}
             </ul>
           )}
-        </div>
-        <div className="mt-6 flex justify-end">
-          <button
-            onClick={() => setActiveSession("Experience")}
-            className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"
-          >
-            Update
-          </button>
         </div>
       </div>
 
@@ -636,7 +622,7 @@ const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
         <div className="mt-6 flex justify-end">
           <button
             onClick={() => {
-              handleUpdate(); // 🔧 Actually call the function
+              handleUpdate();
               setActiveSession("Experience");
             }}
             className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"

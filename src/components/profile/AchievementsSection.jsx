@@ -5,7 +5,7 @@ import { db } from "../../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
 
 const AchievementsSection = ({ isActive, setActiveSection, authUser }) => {
-  const defaultResumeData =useResumeData();
+  const defaultResumeData = useResumeData();
   const [achievements, setAchievements] = useState(
     defaultResumeData.achievements
   );
@@ -62,6 +62,7 @@ const AchievementsSection = ({ isActive, setActiveSection, authUser }) => {
         achievements: achievements, // <- this uses current state
       });
       console.log("Achievements updated successfully!");
+      alert("Successfully Updated");
     } catch (error) {
       console.error("Failed to update achievements:", error);
     }
