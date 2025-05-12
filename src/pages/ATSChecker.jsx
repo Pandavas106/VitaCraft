@@ -5,7 +5,9 @@ import Resume from "../components/Resume";
 import mammoth from "mammoth";
 // utils/pdfUtils.js
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
-import pdfjsWorker from 'pdfjs-dist/build/pdf.worker?url'; // 👈 this is important
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker?url'; 
+import jsPDF from "jspdf";
+
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
@@ -140,6 +142,33 @@ setResults(result);
       setIsAnalyzing(false);
     }
   };
+
+  const handleDownloadPDF = () => {
+  const doc = new jsPDF();
+  doc.setFontSize(16);
+  doc.text("ATS Resume Analysis Report", 20, 20);
+  doc.setFontSize(12);
+
+  doc.text(`Overall ATS Score: ${results.score}%`, 20, 40);
+  doc.text(`Keyword Match: ${results.keywordMatch}%`, 20, 50);
+  doc.text(`Section Headings: ${results.sectionHeadings}%`, 20, 60);
+  doc.text(`File Compatibility: ${results.fileCompatibility}%`, 20, 70);
+  doc.text(`Readability: ${results.readability}%`, 20, 80);
+
+  doc.text("Missing Keywords:", 20, 100);
+  results.missingKeywords.forEach((keyword, idx) => {
+    doc.text(`- ${keyword}`, 25, 110 + idx * 10);
+  });
+
+  const suggestionsStartY = 110 + results.missingKeywords.length * 10 + 10;
+  doc.text("Suggestions to Improve:", 20, suggestionsStartY);
+  results.suggestions.forEach((suggestion, idx) => {
+    doc.text(`- ${suggestion}`, 25, suggestionsStartY + 10 + idx * 10);
+  });
+
+  doc.save("ATS_Report.pdf");
+};
+
 
   const handleReset = () => {
     setFile(null);
@@ -330,7 +359,8 @@ setResults(result);
                 </div>
 
                 <div className="mt-6 pt-6 border-t border-gray-200">
-                  <button className="bg-[#406B98] text-white px-6 py-3 rounded text-lg font-semibold hover:bg-[#335680] transition-colors w-full">
+                  <button onClick={handleDownloadPDF}
+                    className="bg-[#406B98] text-white px-6 py-3 rounded text-lg font-semibold hover:bg-[#335680] transition-colors w-full">
                     Download Detailed Report
                   </button>
                 </div>
