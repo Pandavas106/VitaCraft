@@ -53,14 +53,14 @@ CANDIDATE INFORMATION:
 - Name: ${userData.personalInfo.name}
 - Role: ${userData.personalInfo.role}
 - Personal Info: ${userData.personalInfo}
-- Profile: ${userData.personalInfo.profile}
+- Profile: ${userData.profile}
 - Education: ${userData.education
         .map(
           (edu) =>
             `${edu.degree} at ${edu.institution} (${edu.startYear}-${edu.endYear})`
         )
         .join(", ")}
-- Experience: ${userData.experiences
+- Experience: ${userData.experience
         .map(
           (exp) =>
             `${exp.role} at ${exp.company} (${exp.startDate}-${exp.endDate})`
