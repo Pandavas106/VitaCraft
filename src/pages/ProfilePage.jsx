@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import PersonalInfoSection from "../components/profile/PersonalInfoSection";
 import ExperienceSection from "../components/profile/ExperienceSection";
@@ -6,23 +6,36 @@ import EducationSection from "../components/profile/EducationSection";
 import SkillsSection from "../components/profile/SkillsSection";
 import ProjectsSection from "../components/profile/ProjectsSection";
 import AchievementsSection from "../components/profile/AchievementsSection";
-import { defaultResumeData } from "../context/Resume_Data";
+import { useResumeData } from "../context/Resume_Data";
 import { useAuth } from "../context/auth_context";
-
 
 const ProfilePage = () => {
   // Active section state
   const [activeSection, setActiveSection] = useState("Personal Info");
   const { authUser } = useAuth();
 
-
+  const defaultResumeData = useResumeData();
   // Personal info states
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState(defaultResumeData.personalInfo);
+
   const [profileImage, setProfileImage] = useState(null);
   const fileInputRef = useRef(null);
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true });
+
+  const [formData, setFormData] = useState({});
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!isDataLoaded && defaultResumeData.personalInfo) {
+      setFormData((prev) => ({
+        ...prev,
+        ...defaultResumeData.personalInfo,
+        summary: defaultResumeData.profile || "",
+      }));
+      setIsDataLoaded(true);
+    }
+  }, [defaultResumeData.personalInfo, defaultResumeData.profile, isDataLoaded]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -47,10 +60,11 @@ const ProfilePage = () => {
     "Achievements",
   ];
 
-
   // Function to navigate between sections
   const handleNavigate = (section) => {
     setActiveSection(section);
+    console.log(formData);
+    console.log(defaultResumeData.personalInfo);
   };
 
   return (
@@ -127,7 +141,7 @@ const ProfilePage = () => {
                 fileInputRef={fileInputRef}
                 isActive={activeSection == "Personal Info"}
                 setActiveSession={setActiveSection}
-                authUser ={authUser}
+                authUser={authUser}
               />
             )}
 
@@ -135,7 +149,7 @@ const ProfilePage = () => {
               <ExperienceSection
                 isActive={activeSection == "Experience"}
                 setActiveSection={setActiveSection}
-                authUser ={authUser}
+                authUser={authUser}
               />
             )}
 
@@ -143,28 +157,28 @@ const ProfilePage = () => {
               <EducationSection
                 isActive={activeSection == "Education"}
                 setActiveSection={setActiveSection}
-                authUser ={authUser}
+                authUser={authUser}
               />
             )}
             {activeSection === "Skills" && (
               <SkillsSection
                 isActive={activeSection == "Skills"}
                 setActiveSection={setActiveSection}
-                authUser ={authUser}
+                authUser={authUser}
               />
             )}
             {activeSection === "Projects" && (
               <ProjectsSection
                 isActive={activeSection == "Projects"}
                 setActiveSection={setActiveSection}
-                authUser ={authUser}
+                authUser={authUser}
               />
             )}
             {activeSection === "Achievements" && (
               <AchievementsSection
                 isActive={activeSection == "Achievements"}
                 setActiveSection={setActiveSection}
-                authUser ={authUser}
+                authUser={authUser}
               />
             )}
           </div>

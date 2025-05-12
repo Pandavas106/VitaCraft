@@ -1,10 +1,11 @@
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { defaultResumeData } from "../../context/Resume_Data";
+import { useResumeData } from "../../context/Resume_Data";
 import { db } from "../../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
 
 const EducationSection = ({ isActive, setActiveSection, authUser }) => {
+  const defaultResumeData =useResumeData();
   const [educations, setEducations] = useState(defaultResumeData.education);
   const [isAddingEducation, setIsAddingEducation] = useState(false);
   const [isEditing, setIsEditing] = useState(null);
@@ -78,7 +79,7 @@ const EducationSection = ({ isActive, setActiveSection, authUser }) => {
   if (!isActive) return null;
   const handleUpdate = async () => {
     try {
-      const userId = authUser.uid; // or use authUser.uid if from context
+      const userId = authUser.uid;
       if (!userId) throw new Error("User not authenticated");
 
       await updateDoc(doc(db, "users", userId), {
@@ -308,7 +309,7 @@ const EducationSection = ({ isActive, setActiveSection, authUser }) => {
         <div className="mt-6 flex justify-end">
           <button
             onClick={() => {
-              handleUpdate(); // 🔧 Actually call the function
+              handleUpdate(); 
               setActiveSession("Experience");
             }}
             className="px-6 py-3 bg-[#406B98] text-white rounded font-medium hover:bg-[#335680] transition-colors"

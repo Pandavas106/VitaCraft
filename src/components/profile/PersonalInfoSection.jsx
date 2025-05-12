@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 
 import { motion, useInView } from "framer-motion";
-import { defaultResumeData } from "../../context/Resume_Data";
+import { useResumeData } from "../../context/Resume_Data";
 import { db } from "../../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
 
@@ -16,10 +16,10 @@ const PersonalInfoSection = ({
   setActiveSession,
   authUser,
 }) => {
+  const defaultResumeData = useResumeData();
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true });
-  const summary = defaultResumeData.profile;
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [summary, setSummary] = useState(defaultResumeData.profile);
 
   if (!isActive) return null;
 
@@ -283,7 +283,7 @@ const PersonalInfoSection = ({
                 <textarea
                   name="summary"
                   value={summary}
-                  onChange={handleInputChange}
+                  onChange={(e) => setSummary(e.target.value)}
                   rows="4"
                   className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
                   placeholder="Tell employers about your professional background and strengths..."

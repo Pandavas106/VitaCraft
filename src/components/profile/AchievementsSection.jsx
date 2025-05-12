@@ -1,10 +1,11 @@
 import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { defaultResumeData } from "../../context/Resume_Data";
+import { useResumeData } from "../../context/Resume_Data";
 import { db } from "../../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
 
 const AchievementsSection = ({ isActive, setActiveSection, authUser }) => {
+  const defaultResumeData =useResumeData();
   const [achievements, setAchievements] = useState(
     defaultResumeData.achievements
   );
