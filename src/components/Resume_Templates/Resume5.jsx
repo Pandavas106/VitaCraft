@@ -34,11 +34,12 @@ const Resume5 = ({ resumeData }) => {
         <div className="flex flex-col md:flex-row">
           <div className="md:w-2/5 bg-purple-900 text-white p-6">
             <h1 className="text-3xl font-light">
-              {resumeData.personalInfo.shortName.split(" ")[0]}
+              {resumeData.personalInfo.shortName?.split(" ")[0] || "Display"}
               <span className="block font-bold text-4xl">
-                {resumeData.personalInfo.shortName.split(" ")[1]}
+                {resumeData.personalInfo.shortName?.split(" ")[1] || "Name"}
               </span>
             </h1>
+
             <p className="mt-2 text-purple-200">
               {resumeData.personalInfo.role}
             </p>

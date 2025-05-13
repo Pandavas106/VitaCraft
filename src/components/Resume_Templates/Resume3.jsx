@@ -164,6 +164,20 @@ const Resume3 = ({ resumeData }) => {
                 ))}
               </ul>
             </div>
+            {resumeData.organizations.length > 0 && (
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h2 className="text-xl font-bold text-green-700 mb-3">
+                  ORGANIZATIONS
+                </h2>
+                {resumeData.organizations.map((org) => (
+                  <div key={org.id} className="mb-2">
+                    <div className="font-bold text-gray-800">{org.name}</div>
+                    <div className="text-sm text-gray-600">{org.position}</div>
+                    <div className="text-sm text-gray-600">{org.location}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Right column - 1/3 width */}
@@ -245,20 +259,6 @@ const Resume3 = ({ resumeData }) => {
             </div>
 
             {/* Organizations */}
-            {resumeData.organizations.length > 0 && (
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h2 className="text-xl font-bold text-green-700 mb-3">
-                  ORGANIZATIONS
-                </h2>
-                {resumeData.organizations.map((org) => (
-                  <div key={org.id} className="mb-2">
-                    <div className="font-bold text-gray-800">{org.name}</div>
-                    <div className="text-sm text-gray-600">{org.position}</div>
-                    <div className="text-sm text-gray-600">{org.location}</div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -319,7 +319,7 @@ const Resume3 = ({ resumeData }) => {
           .mb-4 {
             margin-bottom: 8px !important;
           }
-          
+
           .mb-3 {
             margin-bottom: 6px !important;
           }
@@ -335,11 +335,11 @@ const Resume3 = ({ resumeData }) => {
           .mb-1 {
             margin-bottom: 2px !important;
           }
-          
+
           .gap-2 {
             gap: 4px !important;
           }
-          
+
           .space-y-2 > * + * {
             margin-top: 4px !important;
           }
@@ -373,7 +373,7 @@ const Resume3 = ({ resumeData }) => {
           .md\\:w-1\\/3 {
             width: 33.333333% !important;
           }
-          
+
           .md\\:pr-6 {
             padding-right: 0.75rem !important;
           }
@@ -388,7 +388,7 @@ const Resume3 = ({ resumeData }) => {
           .md\\:text-right {
             text-align: right !important;
           }
-          
+
           .md\\:justify-end {
             justify-content: flex-end !important;
           }
@@ -408,11 +408,11 @@ const Resume3 = ({ resumeData }) => {
           .bg-gray-50 {
             background-color: #f9fafb !important;
           }
-          
+
           .bg-green-100 {
             background-color: #d1fae5 !important;
           }
-          
+
           .bg-gray-200 {
             background-color: #e5e7eb !important;
           }
@@ -421,7 +421,7 @@ const Resume3 = ({ resumeData }) => {
           .text-green-700 {
             color: #047857 !important;
           }
-          
+
           .text-green-800 {
             color: #065f46 !important;
           }
@@ -450,7 +450,7 @@ const Resume3 = ({ resumeData }) => {
           .border-b-2.border-green-200 {
             border-bottom: 2px solid #a7f3d0 !important;
           }
-          
+
           .border-gray-200 {
             border-color: #e5e7eb !important;
           }
@@ -459,7 +459,7 @@ const Resume3 = ({ resumeData }) => {
           .rounded-lg {
             border-radius: 0.5rem !important;
           }
-          
+
           .rounded {
             border-radius: 0.25rem !important;
           }
@@ -468,13 +468,13 @@ const Resume3 = ({ resumeData }) => {
           button {
             display: none !important;
           }
-          
+
           /* Fix skills tags spacing */
           .flex.flex-wrap.gap-2 {
             display: flex !important;
             flex-wrap: wrap !important;
           }
-          
+
           /* Fix certificate list items */
           .flex.items-start {
             display: flex !important;

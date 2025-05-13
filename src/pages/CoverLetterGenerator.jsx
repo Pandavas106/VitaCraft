@@ -3,6 +3,9 @@ import { useResumeData } from "../context/Resume_Data";
 import CoverLetter1 from "../components/CoverLetter_Templates/CoverLetter1";
 import { useAuth } from "../context/auth_context";
 import CoverLetter2 from "../components/CoverLetter_Templates/coverLetter2";
+import CoverLetter3 from "../components/CoverLetter_Templates/coverLetter3";
+import { useParams } from "react-router-dom";
+import CoverLetter4 from "../components/CoverLetter_Templates/coverLetter4";
 
 export default function CoverLetterGenerator() {
   const [jobDetails, setJobDetails] = useState({
@@ -22,6 +25,28 @@ export default function CoverLetterGenerator() {
   const [streamedContent, setStreamedContent] = useState("");
   const [showLivePreview, setShowLivePreview] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState("template1");
+  const { idx } = useParams();
+  const index = parseInt(idx, 10);
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      // Show warning if user is editing or has typed job details
+      const hasUnsavedChanges =
+        isEditing ||
+        coverLetter !== "" ||
+        Object.values(jobDetails).some((val) => val.trim() !== "");
+
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = ""; // For most browsers
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isEditing, coverLetter, jobDetails]);
 
   // Gemini API key from environment variables
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
@@ -35,7 +60,7 @@ export default function CoverLetterGenerator() {
       ...prev,
       [name]: value,
     }));
-    console.log();
+    console.log(idx);
   };
 
   // Create a robust placeholder replacement system
@@ -513,20 +538,65 @@ Thank you for considering my application. I look forward to the opportunity to d
 
   // Function to render the selected template
   const renderSelectedTemplate = () => {
-    
     return (
-      <CoverLetter2
-        coverLetterContent={
-          generationInProgress ? streamedContent : coverLetter
-        }
-        userData={userData}
-        jobDetails={jobDetails}
-        isEditing={isEditing}
-        setIsEditing={setIsEditing}
-        editableCoverLetter={editableCoverLetter}
-        setEditableCoverLetter={setEditableCoverLetter}
-        isLoading={isLoading}
-      />
+      <>
+        {index == 0 && (
+          <CoverLetter1
+            coverLetterContent={
+              generationInProgress ? streamedContent : coverLetter
+            }
+            userData={userData}
+            jobDetails={jobDetails}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            editableCoverLetter={editableCoverLetter}
+            setEditableCoverLetter={setEditableCoverLetter}
+            isLoading={isLoading}
+          />
+        )}
+        {index == 1 && (
+          <CoverLetter2
+            coverLetterContent={
+              generationInProgress ? streamedContent : coverLetter
+            }
+            userData={userData}
+            jobDetails={jobDetails}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            editableCoverLetter={editableCoverLetter}
+            setEditableCoverLetter={setEditableCoverLetter}
+            isLoading={isLoading}
+          />
+        )}
+        {index == 2 && (
+          <CoverLetter4
+            coverLetterContent={
+              generationInProgress ? streamedContent : coverLetter
+            }
+            userData={userData}
+            jobDetails={jobDetails}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            editableCoverLetter={editableCoverLetter}
+            setEditableCoverLetter={setEditableCoverLetter}
+            isLoading={isLoading}
+          />
+        )}
+        {index == 3 && (
+          <CoverLetter3
+            coverLetterContent={
+              generationInProgress ? streamedContent : coverLetter
+            }
+            userData={userData}
+            jobDetails={jobDetails}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            editableCoverLetter={editableCoverLetter}
+            setEditableCoverLetter={setEditableCoverLetter}
+            isLoading={isLoading}
+          />
+        )}
+      </>
     );
   };
 

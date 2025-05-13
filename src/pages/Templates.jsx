@@ -36,7 +36,7 @@ function Templates() {
 
   const navigateToLivePreview = (idx) => {
     setSelectedTemplate(idx);
-    navigator("/livepreview", { state: { idx: idx } });
+    navigator(`/livepreview/${idx}`);
   };
 
   const sectionRef1 = useRef();

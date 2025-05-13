@@ -1,5 +1,5 @@
-import { useState } from "react";
-import {  useResumeData } from "../context/Resume_Data";
+import { useEffect, useState } from "react";
+import { useResumeData } from "../context/Resume_Data";
 import Resume1 from "../components/Resume_Templates/Resume1";
 import PersonalData from "../components/LivePreview_Components/Personal_Data";
 import EducationData from "../components/LivePreview_Components/Education_Data";
@@ -16,12 +16,11 @@ import Resume4 from "../components/Resume_Templates/Resume4";
 import Resume5 from "../components/Resume_Templates/Resume5";
 import Resume6 from "../components/Resume_Templates/Resume6";
 import Resume7 from "../components/Resume_Templates/Resume7";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 export default function LivePreview() {
-  const defaultResumeData =useResumeData();
-  const location = useLocation();
-  const { idx } = location.state || {};
+  const defaultResumeData = useResumeData();
+  const { idx } = useParams();
   const [resumeData, setResumeData] = useState(defaultResumeData);
   const [openSections, setOpenSections] = useState({
     personalInfo: true,
@@ -41,6 +40,17 @@ export default function LivePreview() {
     });
     console.log(idx);
   };
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("resumeData");
+    if (storedData) {
+      setResumeData(JSON.parse(storedData));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("resumeData", JSON.stringify(resumeData));
+  }, [resumeData]);
 
   return (
     <div className="min-h-screen  p-5 bg-[#D0F6FE] py-8">
