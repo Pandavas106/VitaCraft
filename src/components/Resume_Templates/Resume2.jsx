@@ -200,6 +200,20 @@ const Resume2 = ({ resumeData }) => {
                 ))}
               </ul>
             </div>
+            {resumeData.organizations.length > 0 && (
+              <div className="mb-6 bg-gray-50 p-3 rounded-lg">
+                <h2 className="text-lg font-bold text-blue-700 mb-2 uppercase">
+                  Organizations
+                </h2>
+                {resumeData.organizations.map((org) => (
+                  <div key={org.id} className="mb-2">
+                    <div className="font-bold text-sm">{org.name}</div>
+                    <div className="text-sm">{org.position}</div>
+                    <div className="text-sm text-gray-600">{org.location}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Right column (1/3 width) */}
@@ -277,20 +291,6 @@ const Resume2 = ({ resumeData }) => {
             </div>
 
             {/* Organizations */}
-            {resumeData.organizations.length > 0 && (
-              <div className="mb-6 bg-gray-50 p-3 rounded-lg">
-                <h2 className="text-lg font-bold text-blue-700 mb-2 uppercase">
-                  Organizations
-                </h2>
-                {resumeData.organizations.map((org) => (
-                  <div key={org.id} className="mb-2">
-                    <div className="font-bold text-sm">{org.name}</div>
-                    <div className="text-sm">{org.position}</div>
-                    <div className="text-sm text-gray-600">{org.location}</div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </div>
       </div>

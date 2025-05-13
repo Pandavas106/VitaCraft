@@ -4,6 +4,10 @@ import CP1 from "./../assets/CP1.png";
 import { motion, useInView } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth_context";
+import CL1 from "./../assets/Cover_Letters/CL1.jpg";
+import CL2 from "./../assets/Cover_Letters/CL2.jpg";
+import CL3 from "./../assets/Cover_Letters/CL3.jpg";
+import CL4 from "./../assets/Cover_Letters/CL4.jpg";
 
 function CoverLetter() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -24,10 +28,11 @@ function CoverLetter() {
     }
   };
 
-  const navigateToCoverLetterGen = () => {
-    navigator("/coverLetterGenerator");
+  const navigateToCoverLetterGen = (idx) => {
+    navigator(`/coverLetterGenerator/${idx}`);
   };
-
+  const coverLetter = [CL1, CL2, CL3];
+  const coverLetters = [CL1, CL2, CL3,CL4];
   const sectionRef1 = useRef();
   const isInview1 = useInView(sectionRef1, { once: true, margin: "-100px" });
 
@@ -91,13 +96,13 @@ function CoverLetter() {
               </h2>
             </div>
 
-            {[...Array(5)].map((_, idx) => (
+            {coverLetter.map((_, idx) => (
               <div
                 className="flex-shrink-0 transform transition-transform hover:scale-105 hover:cursor-pointer"
                 key={idx}
                 onClick={() => {
                   setSelectedTemplate(idx);
-                  navigateToCoverLetterGen();
+                  navigateToCoverLetterGen(idx);
                 }}
               >
                 <div
@@ -108,7 +113,7 @@ function CoverLetter() {
                   } transition-all`}
                 >
                   <img
-                    src={CP1}
+                    src={coverLetter[idx]}
                     alt={`Cover Letter ${idx + 1}`}
                     className="object-fill w-full h-full rounded-lg"
                   />
@@ -146,11 +151,15 @@ function CoverLetter() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="grid grid-cols-1 sm:grid-cols-2 mt-10 md:grid-cols-3 mt-4 lg:grid-cols-4 xl:grid-cols-5 gap-6"
         >
-          {[...Array(10)].map((_, idx) => (
-            <div className="cursor-pointer" key={idx}>
-              <div className="w-full h-[280px] mb-2 flex flex-col gap-2 justify-center items-center rounded-md shadow-md bg-white">
+          {
+          coverLetters.map((_, idx) => (
+            <div onClick={() => {
+                  setSelectedTemplate(idx);
+                  navigateToCoverLetterGen(idx);
+                }} className="cursor-pointer transform transition-transform hover:scale-105" key={idx}>
+              <div className="w-full h-full mb-2 flex flex-col  gap-2 justify-center items-center rounded-md shadow-md bg-white">
                 <img
-                  src={CP1}
+                  src={coverLetters[idx]}
                   alt={`Cover Letter Template ${idx + 1}`}
                   className="w-full h-full object-fill rounded"
                 />

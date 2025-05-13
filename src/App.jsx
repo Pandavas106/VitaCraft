@@ -40,9 +40,9 @@ function App() {
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/coverpage" element={<CoverLetter />} />
                 <Route path="/ats" element={<ATSCheckerPage />} />
-                <Route path="/livepreview" element={<LivePreview />} />
+                <Route path="/livepreview/:idx" element={<LivePreview />} />
                 <Route
-                  path="/coverLetterGenerator"
+                  path="/coverLetterGenerator/:idx"
                   element={<CoverLetterGenerator />}
                 />
               </Routes>

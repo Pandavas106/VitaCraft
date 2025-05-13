@@ -1,6 +1,6 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
-export default function CoverLetter2({
+export default function CoverLetter3({
   coverLetterContent,
   userData,
   jobDetails,
@@ -11,6 +11,7 @@ export default function CoverLetter2({
   isLoading,
 }) {
   const letterRef = useRef(null);
+  const [previewMode, setPreviewMode] = useState("modern"); // "modern" or "classic"
 
   // Format the current date in a professional format
   const formattedDate = new Date().toLocaleDateString("en-US", {
@@ -23,8 +24,12 @@ export default function CoverLetter2({
   const personalInfo = userData?.personalInfo || {};
   const name = personalInfo.name || "Your Name";
   const address = personalInfo.address || "Your Address";
+  const city = personalInfo.city || "City";
+  const state = personalInfo.state || "State";
+  const zip = personalInfo.zip || "ZIP";
   const phone = personalInfo.phone || "Your Phone";
   const email = personalInfo.email || "Your Email";
+  const linkedin = personalInfo.linkedin || "";
   const role = personalInfo.role || "Professional";
 
   // Extract skills with fallbacks
@@ -48,7 +53,7 @@ export default function CoverLetter2({
   // Generate a fallback cover letter that uses actual user data instead of placeholders
   const generateFallbackContent = () => {
     return `I am writing to express my interest in the ${
-      jobDetails?.position || ""
+      jobDetails?.position || "Position"
     } position at ${
       jobDetails?.company || "Company Name"
     }. With my background as a ${role} and expertise in ${displayTechnicalSkills}, I am confident in my ability to make valuable contributions to your team.
@@ -79,7 +84,6 @@ Thank you for considering my application. I look forward to the possibility of d
 
   // Handle saving changes
   const handleSaveChanges = () => {
-    console.log(userData);
     setIsEditing(false);
   };
 
@@ -88,7 +92,7 @@ Thank you for considering my application. I look forward to the possibility of d
     if (isLoading) {
       return (
         <div className="flex flex-col items-center justify-center py-16">
-          <div className="w-16 h-16 border-4 border-t-indigo-600 border-r-transparent border-b-indigo-600 border-l-transparent rounded-full animate-spin mb-4"></div>
+          <div className="w-16 h-16 border-4 border-t-blue-600 border-r-transparent border-b-blue-600 border-l-transparent rounded-full animate-spin mb-4"></div>
           <p className="text-gray-600 font-medium">
             Generating your cover letter...
           </p>
@@ -102,7 +106,7 @@ Thank you for considering my application. I look forward to the possibility of d
         <textarea
           value={editableCoverLetter}
           onChange={(e) => setEditableCoverLetter(e.target.value)}
-          className="w-full bg-gray-50 p-4 rounded-md border border-gray-200 min-h-64 whitespace-pre-wrap font-sans text-base leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          className="w-full bg-white p-6 rounded-md border border-gray-200 min-h-64 whitespace-pre-wrap font-serif text-base leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       );
     } else {
@@ -123,9 +127,9 @@ Thank you for considering my application. I look forward to the possibility of d
           : generateFallbackContent();
 
       return (
-        <div className="space-y-4 whitespace-pre-wrap">
+        <div className="space-y-6 whitespace-pre-wrap">
           {contentToDisplay.split("\n\n").map((paragraph, index) => (
-            <p key={index} className="text-gray-800">
+            <p key={index} className="text-gray-800 leading-relaxed">
               {paragraph.trim()}
             </p>
           ))}
@@ -135,75 +139,162 @@ Thank you for considering my application. I look forward to the possibility of d
   };
 
   return (
-    <div className="bg-white print-area max-w-4xl mx-auto shadow-lg rounded-lg overflow-hidden">
-      {/* Header bar */}
-      <div className="bg-gradient-to-r from-indigo-700 to-indigo-900 text-white p-6 print:hidden">
-        <h2 className="text-xl font-sans font-bold">{name}</h2>
-        <p className="text-indigo-100 font-sans">{role}</p>
+    <div className="bg-white max-w-4xl mx-auto shadow-lg rounded-lg overflow-hidden print:shadow-none">
+      {/* View toggle - not shown in print */}
+      <div className="bg-gray-50 p-4 border-b border-gray-200 flex justify-between items-center print:hidden">
+        <h2 className="font-medium text-gray-700">Cover Letter</h2>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => setPreviewMode("modern")}
+            className={`px-3 py-1 rounded-md text-sm ${
+              previewMode === "modern"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-700"
+            }`}
+          >
+            Modern
+          </button>
+          <button
+            onClick={() => setPreviewMode("classic")}
+            className={`px-3 py-1 rounded-md text-sm ${
+              previewMode === "classic"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-700"
+            }`}
+          >
+            Classic
+          </button>
+        </div>
       </div>
 
-      <div
-        className="p-8 font-sans text-base leading-relaxed print:p-0"
-        id="printable-content"
-        ref={letterRef}
-      >
-        {/* Dedicated header for print version only */}
-        <div className="hidden print:block print:mb-6">
-          <div className="bg-indigo-800 p-6 text-white w-full">
-            <h2 className="font-bold text-xl">{name}</h2>
-            <p className="text-indigo-100">{role}</p>
+      {/* Modern Layout - only shows when modern is selected */}
+      {previewMode === "modern" && (
+        <div 
+          className="print-area w-full" 
+          id="printable-content" 
+          ref={letterRef}
+        >
+          {/* Modern Header with Accent */}
+          <div className="bg-gradient-to-r from-blue-700 to-blue-900 text-white py-8 px-8 print:py-6">
+            <div className="max-w-3xl mx-auto">
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">{name}</h1>
+              <p className="text-blue-100 mt-1">{role}</p>
+              
+              {/* Contact info row */}
+              <div className="flex flex-wrap items-center mt-4 text-sm space-x-4">
+                <span className="flex items-center text-blue-50">
+                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  </svg>
+                  {email}
+                </span>
+                <span className="flex items-center text-blue-50">
+                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                  </svg>
+                  {phone}
+                </span>
+                {linkedin && (
+                  <span className="flex items-center text-blue-50">
+                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                    LinkedIn
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="p-8 font-serif text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
+            {/* Date */}
+            <div className="mb-6 text-right text-gray-600">
+              <p>{formattedDate}</p>
+            </div>
+
+            {/* Recipient Details */}
+            <div className="mb-6">
+              <p className="font-medium">Hiring Manager</p>
+              <p>{jobDetails?.company || "Company Name"}</p>
+              <p>{jobDetails?.companyAddress || "Company Address"}</p>
+            </div>
+
+            {/* Greeting */}
+            <div className="mb-6">
+              <p className="font-medium text-gray-800">
+                Subject: Application for {jobDetails?.position || "Position"} Position
+              </p>
+              {/* <p className="mt-4">Dear Hiring Manager,</p> */}
+            </div>
+
+            {/* Cover Letter Content */}
+            <div className="mb-8">
+              {renderContent()}
+            </div>
+
+            {/* Signature */}
+            {!isLoading && (
+              <div className="mt-8 border-t pt-4 border-gray-200">
+                <p>Sincerely,</p>
+                <p className="font-bold mt-4">{name}</p>
+                <p className="text-gray-600">{role}</p>
+              </div>
+            )}
           </div>
         </div>
+      )}
 
-        {/* Contact Information Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 print:grid-cols-2">
-          <div className="bg-gray-50 p-4 rounded-lg border-l-4 border-indigo-600">
-            <h3 className="font-bold text-indigo-800 mb-2 text-sm uppercase tracking-wider">
-              Applicant Details
-            </h3>
-            <p>{address}</p>
-            <p>{phone}</p>
-            <p className="text-indigo-600">{email}</p>
-          </div>
+      {/* Classic Layout - only shows when classic is selected */}
+      {previewMode === "classic" && (
+        <div 
+          className="print-area w-full" 
+          id="printable-content" 
+          ref={letterRef}
+        >
+          <div className="p-8 font-serif max-w-3xl mx-auto">
+            {/* Header */}
+            <div className="text-center mb-8 pb-4 border-b border-gray-300">
+              <h1 className="text-2xl font-bold mb-1">{name}</h1>
+              <p className="text-gray-600">{role}</p>
+              <div className="flex justify-center flex-wrap gap-x-6 mt-2 text-sm text-gray-700">
+                <span>{address}, {city}, {state} {zip}</span>
+                <span>{phone}</span>
+                <span>{email}</span>
+              </div>
+            </div>
 
-          <div className="bg-gray-50 p-4 rounded-lg border-l-4 border-indigo-600">
-            <h3 className="font-bold text-indigo-800 mb-2 text-sm uppercase tracking-wider">
-              Position Details
-            </h3>
-            <p>Hiring Manager</p>
-            <p className="font-medium">
-              {jobDetails?.position || "Position Title"}
-            </p>
-            <p>{jobDetails?.company || "Company Name"}</p>
-            <p>{jobDetails?.companyAddress || ""}</p>
+            {/* Date */}
+            <div className="mb-6 text-gray-600">
+              <p>{formattedDate}</p>
+            </div>
+
+            {/* Recipient Details */}
+            <div className="mb-6">
+              <p className="font-medium">Hiring Manager</p>
+              <p>{jobDetails?.company || "Company Name"}</p>
+              <p>{jobDetails?.companyAddress || "Company Address"}</p>
+            </div>
+
+            {/* Greeting */}
+            <div className="mb-6">
+              {/* <p>Dear Hiring Manager,</p> */}
+            </div>
+
+            {/* Cover Letter Content */}
+            <div className="mb-8 text-gray-800 leading-relaxed">
+              {renderContent()}
+            </div>
+
+            {/* Signature */}
+            {!isLoading && (
+              <div className="mt-8">
+                <p>Sincerely,</p>
+                <p className="font-bold mt-4">{name}</p>
+              </div>
+            )}
           </div>
         </div>
-
-        {/* Date */}
-        <div className="mb-6 text-right text-gray-600">
-          <p>{formattedDate}</p>
-        </div>
-
-        {/* Letter Header */}
-        <div className="mb-6">
-          <p className="font-medium text-indigo-800">
-            Subject: Application for {jobDetails?.position || "Position"}{" "}
-            Position
-          </p>
-          <p className="mt-4">Dear Hiring Manager,</p>
-        </div>
-
-        {/* Cover Letter Content */}
-        <div className="mb-8">{renderContent()}</div>
-
-        {/* Signature */}
-        {!isLoading && (
-          <div className="mt-8 border-t pt-4 border-gray-200">
-            <p>Sincerely,</p>
-            <p className="font-bold mt-4">{name}</p>
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Control Buttons */}
       <div className="bg-gray-50 p-4 flex flex-wrap justify-end gap-3 print:hidden">
@@ -231,7 +322,7 @@ Thank you for considering my application. I look forward to the possibility of d
           !isLoading && (
             <button
               onClick={() => setIsEditing(true)}
-              className="py-2 px-4 bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 font-medium flex items-center gap-1 transition-colors"
+              className="py-2 px-4 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 font-medium flex items-center gap-1 transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -255,7 +346,7 @@ Thank you for considering my application. I look forward to the possibility of d
           <>
             <button
               onClick={handlePrint}
-              className="py-2 px-4 bg-indigo-600 no-print text-white rounded-md hover:bg-indigo-700 font-medium flex items-center gap-1 transition-colors"
+              className="py-2 px-4 bg-blue-600 no-print text-white rounded-md hover:bg-blue-700 font-medium flex items-center gap-1 transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -321,31 +412,24 @@ Thank you for considering my application. I look forward to the possibility of d
       {/* Print-specific styles */}
       <style jsx global>{`
         @media print {
-          .no-print {
-            display: none !important;
-          }
-
           @page {
-            margin: 5mm 12mm;
+            size: A4;
+            margin:7mm;
           }
 
-          body {
+          html, body {
+            width: 100%;
+            height: 100%;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
           }
 
           .print-area {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: start;
-            flex-direction: column;
+            box-shadow: none !important;
           }
 
-          .print-content {
-            width: 100%;
-            max-width: 100%;
+          .no-print, .no-print * {
+            display: none !important;
           }
 
           body * {
@@ -362,14 +446,34 @@ Thank you for considering my application. I look forward to the possibility of d
             left: 0;
             top: 0;
             width: 100%;
-            padding: 0;
           }
-
+          
           /* Ensure backgrounds print */
           * {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
             color-adjust: exact !important;
+          }
+          
+          /* Improve text readability when printed */
+          p, span, div {
+            color: black !important;
+            font-size: 12pt !important;
+            line-height: 1.5 !important;
+          }
+          
+          h1 {
+            font-size: 18pt !important;
+          }
+          
+          /* Keep blue header color in modern layout */
+          .bg-gradient-to-r {
+            background: #1e40af !important; /* fallback if gradient doesn't print */
+          }
+          
+          /* Ensure white text remains visible on blue backgrounds */
+          .bg-gradient-to-r * {
+            color: white !important;
           }
         }
       `}</style>

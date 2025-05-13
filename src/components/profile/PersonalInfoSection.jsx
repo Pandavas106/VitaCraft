@@ -1,9 +1,16 @@
-import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 
 import { motion, useInView } from "framer-motion";
 import { useResumeData } from "../../context/Resume_Data";
 import { db } from "../../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
+import { address } from "framer-motion/client";
 
 const PersonalInfoSection = ({
   isEditing,
@@ -14,25 +21,25 @@ const PersonalInfoSection = ({
   setActiveSession,
   authUser,
 }) => {
-  const { personalInfo: defaultPersonalInfo, profile: defaultProfile } = useResumeData();
+  const { personalInfo: defaultPersonalInfo, profile: defaultProfile } =
+    useResumeData();
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true });
 
   const defaultFormData = {
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    shortName: '',
-    linkedIn: '',
-    role: '',
-    linkedInURL: '',
-    location: '',
+    name: "",
+    email: "",
+    phone: "",
+    shortName: "",
+    linkedIn: "",
+    role: "",
+    linkedInURL: "",
+    address: "",
   };
 
   // Use useMemo to create initial state only when dependencies change
   const initialFormData = useMemo(() => {
-    return defaultPersonalInfo 
+    return defaultPersonalInfo
       ? { ...defaultFormData, ...defaultPersonalInfo }
       : defaultFormData;
   }, [defaultPersonalInfo]);
@@ -44,9 +51,9 @@ const PersonalInfoSection = ({
   // Update form data when context data changes
   useEffect(() => {
     if (defaultPersonalInfo) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        ...defaultPersonalInfo
+        ...defaultPersonalInfo,
       }));
       setSummary(defaultProfile || "");
     }
@@ -55,9 +62,9 @@ const PersonalInfoSection = ({
   // Memoized input change handler
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   }, []);
 
@@ -74,12 +81,11 @@ const PersonalInfoSection = ({
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
-          address: formData.address || '',
           shortName: formData.shortName,
           linkedIn: formData.linkedIn,
           role: formData.role,
           linkedInURL: formData.linkedInURL,
-          location: formData.location,
+          address: formData.address,
         },
         profile: summary,
       });
@@ -215,7 +221,7 @@ const PersonalInfoSection = ({
                       d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                     />
                   </svg>
-                  {formData.location}
+                  {formData.address}
                 </span>
               </div>
             )}
@@ -296,12 +302,12 @@ const PersonalInfoSection = ({
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-600">
-                  Location
+                  Address
                 </label>
                 <input
                   type="text"
-                  name="location"
-                  value={formData.location}
+                  name="address"
+                  value={formData.address}
                   onChange={handleInputChange}
                   className="w-full mt-1 border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#406B98]"
                 />
@@ -395,9 +401,9 @@ const PersonalInfoSection = ({
                   </div>
                   <div>
                     <h4 className="text-sm text-gray-500 uppercase tracking-wider mb-1">
-                      Location
+                      Address
                     </h4>
-                    <p>{formData.location}</p>
+                    <p>{formData.address}</p>
                   </div>
                   <div>
                     <h4 className="text-sm text-gray-500 uppercase tracking-wider mb-1">
