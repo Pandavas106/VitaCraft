@@ -56,7 +56,7 @@ function SignIn({ setShowPopup, isSignUp, setIsSignUp }) {
   };
 
   return (
-    <div className="fixed inset-0 mt-19 flex items-center justify-center z-[999] backdrop-blur-sm bg-black/40">
+    <div className="fixed inset-0 flex items-center justify-center z-[999] backdrop-blur-sm bg-black/40">
       <div className="relative bg-white p-8 rounded-2xl shadow-2xl w-96">
         <button
           onClick={() => setShowPopup(false)}

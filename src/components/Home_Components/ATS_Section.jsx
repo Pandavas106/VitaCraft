@@ -1,10 +1,12 @@
 import React, { useRef } from "react";
 import ATS from "../../assets/ATS.png";
 import { useInView, motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const ATSScoreSection = () => {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const navigator = useNavigate();
   return (
     <div
       ref={sectionRef}
@@ -45,7 +47,10 @@ const ATSScoreSection = () => {
             structured for easy ATS scanning.
           </li>
         </ul>
-        <button className="bg-[#406B98] hover:bg-[#305377] transition-colors text-white px-8 py-4 rounded-lg text-lg font-semibold mt-6 shadow-md">
+        <button
+          onClick={() => navigator("/ats")}
+          className="bg-[#406B98] hover:bg-[#305377] transition-colors text-white px-8 py-4 rounded-lg text-lg font-semibold mt-6 shadow-md"
+        >
           Check ATS Score
         </button>
       </motion.div>

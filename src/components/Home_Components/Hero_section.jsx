@@ -5,10 +5,24 @@ import ATS_Score from "../../assets/ATS_Score.png";
 import CatTemp from "../../assets/CatTemp.png";
 import D1 from "../../assets/D1.png";
 import D2 from "../../assets/D2.png";
+import { useAuth } from "../../context/auth_context";
+import { useNavigate } from "react-router-dom";
 
-const HeroSection = () => {
+const HeroSection = ({ setShowPopup, setIsSignUp }) => {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const { isLoggedIn } = useAuth();
+  const navigator = useNavigate();
+
+  const getStarted = () => {
+    if (!isLoggedIn) {
+      setShowPopup(true);
+      setIsSignUp(false);
+      setIsOpen(false);
+    } else {
+      navigator("/profile");
+    }
+  };
 
   return (
     <div
@@ -45,7 +59,10 @@ const HeroSection = () => {
           Design a professional resume that stands out with ease — no experience
           needed
         </p>
-        <button className="bg-[#406B98] text-white px-6 py-3 rounded text-base md:text-lg font-semibold">
+        <button
+          onClick={() => getStarted()}
+          className="bg-[#406B98] hover:bg-[#305377] text-white px-6 py-3 rounded text-base md:text-lg font-semibold"
+        >
           Get Started
         </button>
         <div className="flex flex-col sm:flex-row gap-10 items-center justify-center lg:justify-start mt-6">
@@ -70,7 +87,9 @@ const HeroSection = () => {
             </p>
           </div>
         </div>
-        <div  className="text-xl font-bold">Note: Complete your Profile before Get Started</div>
+        <div className="text-xl font-bold">
+          Note: Complete your Profile before Get Started
+        </div>
       </motion.div>
       <motion.img
         initial={{ opacity: 0, x: 60 }}

@@ -1,8 +1,10 @@
 import React, { useRef } from "react";
 import Templates from "../../assets/Templates.png";
 import { useInView, motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 function TemplateSection() {
+  const navigator = useNavigate();
   const sectionRef = useRef();
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   return (
@@ -29,7 +31,10 @@ function TemplateSection() {
           Stand out with a resume that speaks for you! Choose from our sleek,
           modern, and professional templates to land your dream job.
         </p>
-        <button className="bg-[#406B98] text-white px-6 py-3 rounded text-base md:text-lg font-semibold">
+        <button
+          onClick={() => navigator("/templates")}
+          className="bg-[#406B98] hover:bg-[#305377] text-white px-6 py-3 rounded text-base md:text-lg font-semibold"
+        >
           Browse Templates
         </button>
       </motion.div>
