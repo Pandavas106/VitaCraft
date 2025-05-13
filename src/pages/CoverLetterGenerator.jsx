@@ -6,6 +6,9 @@ import CoverLetter2 from "../components/CoverLetter_Templates/coverLetter2";
 import CoverLetter3 from "../components/CoverLetter_Templates/coverLetter3";
 import { useParams } from "react-router-dom";
 import CoverLetter4 from "../components/CoverLetter_Templates/coverLetter4";
+import CoverLetter5 from "../components/CoverLetter_Templates/coverLetter5";
+import CoverLetter6 from "../components/CoverLetter_Templates/coverLetter6";
+import CoverLetter7 from "../components/CoverLetter_Templates/coverLetter7";
 
 export default function CoverLetterGenerator() {
   const [jobDetails, setJobDetails] = useState({
@@ -596,14 +599,56 @@ Thank you for considering my application. I look forward to the opportunity to d
             isLoading={isLoading}
           />
         )}
+        {index == 4 && (
+          <CoverLetter5
+            coverLetterContent={
+              generationInProgress ? streamedContent : coverLetter
+            }
+            userData={userData}
+            jobDetails={jobDetails}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            editableCoverLetter={editableCoverLetter}
+            setEditableCoverLetter={setEditableCoverLetter}
+            isLoading={isLoading}
+          />
+        )}
+        {index == 5 && (
+          <CoverLetter6
+            coverLetterContent={
+              generationInProgress ? streamedContent : coverLetter
+            }
+            userData={userData}
+            jobDetails={jobDetails}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            editableCoverLetter={editableCoverLetter}
+            setEditableCoverLetter={setEditableCoverLetter}
+            isLoading={isLoading}
+          />
+        )}
+        {index == 6 && (
+          <CoverLetter7
+            coverLetterContent={
+              generationInProgress ? streamedContent : coverLetter
+            }
+            userData={userData}
+            jobDetails={jobDetails}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            editableCoverLetter={editableCoverLetter}
+            setEditableCoverLetter={setEditableCoverLetter}
+            isLoading={isLoading}
+          />
+        )}
       </>
     );
   };
 
   return (
-    <div className="flex bg-[#D0F6FE] flex-col md:flex-row gap-6 w-full mx-auto p-4">
+    <div className="flex bg-[#D0F6FE] h-screen flex-col md:flex-row gap-6 w-full mx-auto p-12">
       {/* Form Section */}
-      <div className="w-full md:w-1/3 bg-white rounded-lg shadow-md p-6">
+      <div className="w-full md:w-1/2 bg-white overflow-y-auto rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">
           Cover Letter Generator
         </h2>
@@ -794,7 +839,7 @@ Thank you for considering my application. I look forward to the opportunity to d
       </div>
 
       {/* Preview Section */}
-      <div className="w-full md:w-2/3">{renderSelectedTemplate()}</div>
+      <div className="w-full overflow-y-auto md:w-2/3">{renderSelectedTemplate()}</div>
     </div>
   );
 }
