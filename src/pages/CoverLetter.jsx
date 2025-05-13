@@ -8,6 +8,9 @@ import CL1 from "./../assets/Cover_Letters/CL1.jpg";
 import CL2 from "./../assets/Cover_Letters/CL2.jpg";
 import CL3 from "./../assets/Cover_Letters/CL3.jpg";
 import CL4 from "./../assets/Cover_Letters/CL4.jpg";
+import CL5 from "./../assets/Cover_Letters/CL5.jpg";
+import CL6 from "./../assets/Cover_Letters/CL6.jpg";
+import CL7 from "./../assets/Cover_Letters/CL7.jpg";
 
 function CoverLetter() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -32,7 +35,7 @@ function CoverLetter() {
     navigator(`/coverLetterGenerator/${idx}`);
   };
   const coverLetter = [CL1, CL2, CL3];
-  const coverLetters = [CL1, CL2, CL3,CL4];
+  const coverLetters = [CL1, CL2, CL3, CL4, CL5, CL6, CL7];
   const sectionRef1 = useRef();
   const isInview1 = useInView(sectionRef1, { once: true, margin: "-100px" });
 
@@ -149,14 +152,17 @@ function CoverLetter() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={isInview2 ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="grid grid-cols-1 sm:grid-cols-2 mt-10 md:grid-cols-3 mt-4 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 mt-10 md:grid-cols-3 mt-4 lg:grid-cols-4 xl:grid-cols-5 gap-14"
         >
-          {
-          coverLetters.map((_, idx) => (
-            <div onClick={() => {
-                  setSelectedTemplate(idx);
-                  navigateToCoverLetterGen(idx);
-                }} className="cursor-pointer transform transition-transform hover:scale-105" key={idx}>
+          {coverLetters.map((_, idx) => (
+            <div
+              onClick={() => {
+                setSelectedTemplate(idx);
+                navigateToCoverLetterGen(idx);
+              }}
+              className="cursor-pointer transform transition-transform hover:scale-105"
+              key={idx}
+            >
               <div className="w-full h-full mb-2 flex flex-col  gap-2 justify-center items-center rounded-md shadow-md bg-white">
                 <img
                   src={coverLetters[idx]}
