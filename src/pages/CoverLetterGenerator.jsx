@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import { useResumeData } from "../context/Resume_Data";
+import CoverLetter1 from "../components/CoverLetter_Templates/CoverLetter1";
+import { useAuth } from "../context/auth_context";
+import CoverLetter2 from "../components/CoverLetter_Templates/coverLetter2";
 
 export default function CoverLetterGenerator() {
   const [jobDetails, setJobDetails] = useState({
@@ -7,7 +10,9 @@ export default function CoverLetterGenerator() {
     position: "",
     requirements: "",
     notes: "",
+    companyAddress: "",
   });
+  const { isLoggedIn } = useAuth();
   const [coverLetter, setCoverLetter] = useState("");
   const [editableCoverLetter, setEditableCoverLetter] = useState("");
   const [isEditing, setIsEditing] = useState(false);
@@ -16,6 +21,7 @@ export default function CoverLetterGenerator() {
   const [generationInProgress, setGenerationInProgress] = useState(false);
   const [streamedContent, setStreamedContent] = useState("");
   const [showLivePreview, setShowLivePreview] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState("template1");
 
   // Gemini API key from environment variables
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
@@ -29,10 +35,53 @@ export default function CoverLetterGenerator() {
       ...prev,
       [name]: value,
     }));
+    console.log();
   };
 
-  // Fixed function to stream response from Gemini API
-  const attemptStreamGenerateCoverLetter = async () => {
+  // Create a robust placeholder replacement system
+  const createDetailedUserProfile = (userData) => {
+    if (!userData) return null;
+
+    return {
+      name: userData.personalInfo?.name || "",
+      role: userData.personalInfo?.role || "",
+      profile: userData.profile || "",
+      personalInfo: userData?.personalInfo || {},
+      education:
+        userData.education?.map((edu) => ({
+          degree: edu.degree || "",
+          institution: edu.institution || "",
+          period: `${edu.startYear || ""}-${edu.endYear || ""}`,
+          complete: !!(edu.degree && edu.institution),
+        })) || [],
+      experience:
+        userData.experience?.map((exp) => ({
+          role: exp.role || "",
+          company: exp.company || "",
+          period: `${exp.startDate || ""}-${exp.endDate || ""}`,
+          description: exp.description || "",
+          complete: !!(exp.role && exp.company),
+        })) || [],
+      projects:
+        userData.projects?.map((proj) => ({
+          title: proj.title || "",
+          description: proj.description || "",
+          complete: !!proj.title,
+        })) || [],
+      skills: {
+        technical: userData.skills?.technical || [],
+        soft: userData.skills?.soft || [],
+      },
+      achievements: userData.achievements || [],
+    };
+  };
+
+  // Function to stream response from Gemini API
+  const generateCoverLetter = async () => {
+    if (!isLoggedIn) {
+      alert("Login to generate CoverLetter");
+      return;
+    }
     if (!userData || !apiKey) {
       setError("User data or API key missing");
       return;
@@ -45,41 +94,83 @@ export default function CoverLetterGenerator() {
     setStreamedContent("");
 
     try {
-      // Create the prompt for the Gemini API
+      // Create a detailed profile to ensure we have all needed data
+      const profile = createDetailedUserProfile(userData);
+      if (!profile) {
+        throw new Error("Could not process user data");
+      }
+
+      // Extract key details from userData to create a more focused prompt
+      const latestEducation =
+        profile.education.length > 0 ? profile.education[0] : null;
+      const latestExperience = profile.experience;
+      const topProjects = profile.projects;
+      const keyTechnicalSkills = profile.skills.technical;
+      const keySoftSkills = profile.skills.soft;
+      const topAchievements = profile.achievements;
+
+      // Create the prompt for the Gemini API with specific examples to avoid placeholders
       const prompt = `
 Generate a professional cover letter for a job application with the following details:
 
 CANDIDATE INFORMATION:
-- Name: ${userData.personalInfo.name}
-- Role: ${userData.personalInfo.role}
-- Personal Info: ${userData.personalInfo}
-- Profile: ${userData.profile}
-- Education: ${userData.education
-        .map(
-          (edu) =>
-            `${edu.degree} at ${edu.institution} (${edu.startYear}-${edu.endYear})`
-        )
-        .join(", ")}
-- Experience: ${userData.experience
-        .map(
-          (exp) =>
-            `${exp.role} at ${exp.company} (${exp.startDate}-${exp.endDate})`
-        )
-        .join(", ")}
-- Key projects: ${userData.projects.map((proj) => proj.title).join(", ")}
-- Technical Skills: ${userData.skills.technical.join(", ")}
-- Soft Skills: ${userData.skills.soft.join(", ")}
-- Achievements: ${userData.achievements.join(", ")}
+- Name: ${profile.name || "Professional candidate"}
+- Current Role: ${profile.role || "Professional"}
+- Profile Summary: ${
+        profile.profile || "Experienced professional with technical expertise."
+      }
+- Most Recent Education: ${
+        latestEducation
+          ? `${latestEducation.degree} at ${latestEducation.institution} (${latestEducation.period})`
+          : "Higher education background"
+      }
+- Most Recent Experience: ${
+        latestExperience
+          ? `${latestExperience.role} at ${latestExperience.company} (${latestExperience.period})`
+          : "Professional experience in the field"
+      }
+- Notable Experience Description: ${latestExperience?.description || ""}
+- Key Projects: ${
+        topProjects
+          .map(
+            (proj) =>
+              `"${proj.title}" - ${proj.description || "innovative solution"}`
+          )
+          .join("; ") ||
+        "Professional projects demonstrating technical expertise"
+      }
+- Key Technical Skills: ${
+        keyTechnicalSkills.join(", ") || "Relevant technical skills"
+      }
+- Key Soft Skills: ${keySoftSkills.join(", ") || "Professional soft skills"}
+- Notable Achievements: ${
+        topAchievements.join("; ") ||
+        "Professional achievements demonstrating expertise"
+      }
 
 JOB DETAILS:
-- Company: ${jobDetails.company}
-- Position: ${jobDetails.position}
+- Company: ${jobDetails.company || "Target company"}
+- Position: ${jobDetails.position || "Target position"}
 - Key Requirements: ${jobDetails.requirements || "Not specified"}
 - Additional Notes: ${jobDetails.notes || "None"}
 
-Please format the letter professionally with proper date, salutation, body paragraphs that highlight relevant skills and experiences, and a closing. Focus on making connections between the candidate's background and the job requirements. The tone should be confident but not arrogant, enthusiastic but professional.
-
-Format the letter with the current date, formal structure, and proper spacing and max upto 200 words and replcae the [] with values if available.
+INSTRUCTIONS:
+1. Write a professional cover letter in first person that specifically connects the candidate's actual experience, projects, and skills to the job requirements.
+2. Make specific references to at least 2-3 of the candidate's skills, experiences, or projects that are most relevant to the position - use ACTUAL examples from the data provided, not placeholders.
+3. If specific requirements are provided, directly address how the candidate meets these requirements with concrete examples.
+4. Maintain a confident but professional tone.
+5. Structure with 3-4 concise paragraphs:
+   - Introduction stating interest in the position and brief overview of qualifications
+   - 1-2 paragraphs highlighting specific relevant experience, projects, or skills
+   - Closing paragraph expressing interest in the company and desire for an interview
+6. Maximum 250 words, concise and impactful.
+7. DO NOT include date, header information, or signature as these will be handled by the template.
+8. DO NOT use placeholders or template phrases like "I would bring my experience in [skill]" - ALWAYS use the actual information provided.
+9. Include specific metrics or achievements when available.
+10. If any information is missing, craft natural language around what IS available rather than using placeholders.
+11. Focus on the top 2-3 most relevant skills/experiences for this specific job position.
+12. If requirements are provided, explicitly connect skills and experiences to those requirements.
+13. Mention some important skills,achievements,..etc necessary in cover letter to the job role and necessary achievetsb= and remaing which are necessary
 `;
 
       try {
@@ -109,7 +200,7 @@ Format the letter with the current date, formal structure, and proper spacing an
           );
         }
 
-        // Process the stream using a better JSON parsing approach
+        // Process the stream
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
         let buffer = ""; // Buffer to hold partial chunks
@@ -151,7 +242,6 @@ Format the letter with the current date, formal structure, and proper spacing an
                 }
               } catch (jsonError) {
                 console.warn("Skipping invalid JSON line:", line);
-                // Continue processing other lines even if one fails
               }
             }
           } catch (err) {
@@ -179,8 +269,12 @@ Format the letter with the current date, formal structure, and proper spacing an
 
         // Set the final cover letter
         if (accumulatedContent) {
-          setCoverLetter(accumulatedContent);
-          setEditableCoverLetter(accumulatedContent);
+          // Check for any remaining placeholders and replace them
+          let finalContent = accumulatedContent;
+          finalContent = sanitizeContent(finalContent, profile);
+
+          setCoverLetter(finalContent);
+          setEditableCoverLetter(finalContent);
         } else {
           throw new Error("No content received from streaming API");
         }
@@ -226,9 +320,13 @@ Format the letter with the current date, formal structure, and proper spacing an
         }
 
         const generatedContent = data.candidates[0].content.parts[0].text;
-        setCoverLetter(generatedContent);
-        setEditableCoverLetter(generatedContent);
-        setStreamedContent(generatedContent);
+
+        // Check for any remaining placeholders and replace them
+        const finalContent = sanitizeContent(generatedContent, profile);
+
+        setCoverLetter(finalContent);
+        setEditableCoverLetter(finalContent);
+        setStreamedContent(finalContent);
       }
     } catch (err) {
       console.error("All API attempts failed:", err);
@@ -244,58 +342,198 @@ Format the letter with the current date, formal structure, and proper spacing an
     }
   };
 
+  // Advanced function to sanitize content and remove any placeholder patterns
+  const sanitizeContent = (text, profile) => {
+    if (!text) return "";
+
+    // Detect placeholder patterns with regex
+    const placeholderPatterns = [
+      /\[([^\]]+)\]/g, // [placeholder]
+      /{([^}]+)}/g, // {placeholder}
+      /\(([^)]+)\)/g, // (placeholder)
+      /mention\s+([a-zA-Z\s]+)/gi, // mention xyz
+      /insert\s+([a-zA-Z\s]+)/gi, // insert xyz
+      /your\s+(experience|skill|project|achievement)/gi, // your xyz
+    ];
+
+    let result = text;
+
+    // Define replacement mapping for common placeholders
+    const replacementMap = {
+      // Skills
+      "technical skill": profile.skills.technical[0] || "technical expertise",
+      "soft skill": profile.skills.soft[0] || "communication",
+      "key skill": profile.skills.technical[0] || "core professional skill",
+      skill: profile.skills.technical[0] || "professional skill",
+
+      // Experience
+      experience:
+        profile.experience.length > 0
+          ? `${profile.experience[0].role} work at ${profile.experience[0].company}`
+          : "professional experience",
+
+      // Projects
+      project:
+        profile.projects.length > 0
+          ? profile.projects[0].title
+          : "relevant project work",
+
+      // Achievements
+      achievement:
+        profile.achievements.length > 0
+          ? profile.achievements[0]
+          : "professional accomplishment",
+    };
+
+    // Apply each placeholder pattern
+    for (const pattern of placeholderPatterns) {
+      result = result.replace(pattern, (match, placeholder) => {
+        // Try to find a match in our replacementMap
+        for (const [key, value] of Object.entries(replacementMap)) {
+          if (placeholder.toLowerCase().includes(key.toLowerCase())) {
+            return value;
+          }
+        }
+
+        // If no specific match is found, use a general fallback based on context
+        if (placeholder.toLowerCase().includes("project")) {
+          return profile.projects.length > 0
+            ? profile.projects[0].title
+            : "project experience";
+        } else if (
+          placeholder.toLowerCase().includes("skill") ||
+          placeholder.toLowerCase().includes("expertise")
+        ) {
+          return profile.skills.technical.length > 0
+            ? profile.skills.technical[0]
+            : "technical expertise";
+        } else if (
+          placeholder.toLowerCase().includes("achievement") ||
+          placeholder.toLowerCase().includes("accomplishment")
+        ) {
+          return profile.achievements.length > 0
+            ? profile.achievements[0]
+            : "professional achievement";
+        } else {
+          // General fallback - remove brackets and return content
+          return placeholder;
+        }
+      });
+    }
+
+    return result;
+  };
+
   // Fallback method if the API call fails
   const generateFallbackLetter = () => {
-    const currentDate = new Date().toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    // Create a profile to ensure we have all needed data
+    const profile = createDetailedUserProfile(userData);
 
-    return `${currentDate}
+    // Extract key information
+    const latestEducation =
+      profile.education.length > 0 ? profile.education[0] : null;
+    const latestExperience =
+      profile.experience.length > 0 ? profile.experience[0] : null;
+    const topProjects = profile.projects.slice(0, 2);
+    const keyTechnicalSkills = profile.skills.technical.slice(0, 5);
+    const keySoftSkills = profile.skills.soft.slice(0, 3);
 
-${userData.personalInfo.name}
-${userData.personalInfo.email}
-${userData.personalInfo.phone}
+    // Create a template using actual user data
+    return `I am writing to express my interest in the ${
+      jobDetails.position || "position"
+    } position at ${jobDetails.company || "your company"}. As ${
+      profile.role ? `a ${profile.role}` : "a professional"
+    } with expertise in ${
+      keyTechnicalSkills.slice(0, 3).join(", ") || "relevant technical areas"
+    }, I am excited about the opportunity to contribute my skills to your team.
 
-Hiring Manager
-${jobDetails.company}
-${jobDetails.company} Headquarters
+${
+  latestExperience
+    ? `At ${latestExperience.company}, as a ${latestExperience.role}, I ${
+        latestExperience.description ||
+        `developed my expertise in ${keyTechnicalSkills[0] || "my field"}`
+      }. `
+    : ""
+}${
+      latestEducation
+        ? `My educational background in ${latestEducation.degree} from ${
+            latestEducation.institution
+          } has provided me with a strong foundation in ${
+            keyTechnicalSkills.slice(0, 2).join(" and ") || "this field"
+          }.`
+        : ""
+    }
 
-Subject: Application for ${jobDetails.position} Position
-
-Dear Hiring Manager,
-
-I am writing to express my interest in the ${jobDetails.position} position at ${
-      jobDetails.company
-    }. As a Computer Science Engineering student with a CGPA of 9.42 and practical experience in frontend development, I am excited about the opportunity to contribute to your innovative team.
-
-With experience in React.js, Tailwind CSS, and Node.js, I have successfully delivered projects that enhance user engagement and optimize performance. At TechCorp Inc., I led a UI redesign that improved user engagement by 30% while maintaining strong collaboration with backend developers to ensure seamless API integration.
-
-My project "Sign Bridge" demonstrates my ability to work with cross-platform technologies and implement machine learning models to solve real-world accessibility problems. The application served over 100 users in testing phase with a 99% reliability rate. Additionally, my work on "Lexica AR" showcases my skills in creating immersive educational experiences that significantly improved student comprehension.
+${
+  topProjects.length > 0
+    ? `My project "${topProjects[0].title}" demonstrates my ability to ${
+        topProjects[0].description ||
+        `apply ${keyTechnicalSkills[0] || "technical skills"} effectively`
+      }. ${
+        topProjects.length > 1
+          ? `Additionally, through "${topProjects[1].title}", I ${
+              topProjects[1].description ||
+              `showcased my expertise in ${
+                keyTechnicalSkills[1] ||
+                keyTechnicalSkills[0] ||
+                "relevant areas"
+              }`
+            }.`
+          : ""
+      }`
+    : ""
+}
 
 ${
   jobDetails.requirements
-    ? `I believe my skills in ${jobDetails.requirements} align perfectly with the requirements for this position. My background in Computer Science Engineering has provided me with a strong foundation in these technologies, and I am eager to apply these skills to the challenges at ${jobDetails.company}.`
-    : "I believe my technical skills in frontend development and mobile application development, combined with my collaborative approach and problem-solving abilities, would make me a valuable addition to your team."
-}
+    ? `The ${jobDetails.position || "role"} requires expertise in ${
+        jobDetails.requirements
+      }, which aligns with my experience in ${
+        keyTechnicalSkills
+          .filter((skill) =>
+            jobDetails.requirements.toLowerCase().includes(skill.toLowerCase())
+          )
+          .join(", ") ||
+        keyTechnicalSkills.slice(0, 2).join(", ") ||
+        "relevant areas"
+      }. `
+    : ""
+}I am particularly drawn to ${
+      jobDetails.company || "your company"
+    } because of its reputation for innovation${
+      jobDetails.notes ? ` and ${jobDetails.notes}` : ""
+    }. My ${
+      keySoftSkills.join(", ") || "interpersonal skills"
+    } would enable me to collaborate effectively within your team.
 
-${jobDetails.notes ? `Additional note: ${jobDetails.notes}` : ""}
+Thank you for considering my application. I look forward to the opportunity to discuss how my background and enthusiasm would make me a valuable addition to ${
+      jobDetails.company || "your company"
+    }.`;
+  };
 
-I am particularly drawn to ${
-      jobDetails.company
-    } because of its innovative approach to technology solutions. As a finalist in both the Internal Hackathon of SIH and the Spark Tank Competition, I have demonstrated my ability to develop solutions to practical problems and present them effectively to industry experts.
-
-Thank you for considering my application. I look forward to the possibility of discussing how my background, technical skills, and enthusiasm would make me a strong addition to your team.
-
-Sincerely,
-${userData.personalInfo.shortName}`;
+  // Function to render the selected template
+  const renderSelectedTemplate = () => {
+    
+    return (
+      <CoverLetter2
+        coverLetterContent={
+          generationInProgress ? streamedContent : coverLetter
+        }
+        userData={userData}
+        jobDetails={jobDetails}
+        isEditing={isEditing}
+        setIsEditing={setIsEditing}
+        editableCoverLetter={editableCoverLetter}
+        setEditableCoverLetter={setEditableCoverLetter}
+        isLoading={isLoading}
+      />
+    );
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 w-full max-w-6xl mx-auto p-4">
+    <div className="flex bg-[#D0F6FE] flex-col md:flex-row gap-6 w-full mx-auto p-4">
       {/* Form Section */}
-      <div className="w-full md:w-1/2 bg-white rounded-lg shadow-md p-6">
+      <div className="w-full md:w-1/3 bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">
           Cover Letter Generator
         </h2>
@@ -341,6 +579,20 @@ ${userData.personalInfo.shortName}`;
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Company Address (optional)
+                  </label>
+                  <input
+                    type="text"
+                    name="companyAddress"
+                    value={jobDetails.companyAddress}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="e.g., 1600 Amphitheatre Parkway"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Key Requirements (optional)
                   </label>
                   <textarea
@@ -369,15 +621,35 @@ ${userData.personalInfo.shortName}`;
               </div>
             </div>
 
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2 text-gray-700">
+                Template
+              </h3>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  id="template1"
+                  name="template"
+                  value="template1"
+                  checked={selectedTemplate === "template1"}
+                  onChange={() => setSelectedTemplate("template1")}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                />
+                <label htmlFor="template1" className="text-gray-700">
+                  Professional Template
+                </label>
+              </div>
+            </div>
+
             <button
-              onClick={attemptStreamGenerateCoverLetter}
+              onClick={generateCoverLetter}
               disabled={
                 isLoading ||
                 !jobDetails.company ||
                 !jobDetails.position ||
                 !apiKey
               }
-              className={`w-full py-2 px-4 rounded-md font-medium ${
+              className={`w-full py-2 px-4 rounded-md font-medium flex justify-center items-center ${
                 isLoading ||
                 !jobDetails.company ||
                 !jobDetails.position ||
@@ -386,7 +658,33 @@ ${userData.personalInfo.shortName}`;
                   : "bg-blue-600 text-white hover:bg-blue-700"
               }`}
             >
-              {isLoading ? "Generating..." : "Generate Cover Letter"}
+              {isLoading ? (
+                <>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Generating...
+                </>
+              ) : (
+                "Generate Cover Letter"
+              )}
             </button>
 
             {error && (
@@ -426,138 +724,7 @@ ${userData.personalInfo.shortName}`;
       </div>
 
       {/* Preview Section */}
-      <div className="w-full md:w-1/2 bg-white rounded-lg shadow-md p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">
-            {generationInProgress ? "Live Preview" : "Cover Letter"}
-          </h2>
-          {coverLetter && !isEditing && !generationInProgress && (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="py-1 px-3 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 font-medium text-sm flex items-center gap-1"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
-              </svg>
-              Edit Letter
-            </button>
-          )}
-          {coverLetter && isEditing && !generationInProgress && (
-            <button
-              onClick={() => {
-                setCoverLetter(editableCoverLetter);
-                setIsEditing(false);
-              }}
-              className="py-1 px-3 bg-green-100 text-green-700 rounded-md hover:bg-green-200 font-medium text-sm flex items-center gap-1"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M20 6L9 17l-5-5" />
-              </svg>
-              Save Changes
-            </button>
-          )}
-        </div>
-
-        {isEditing ? (
-          <textarea
-            value={editableCoverLetter}
-            onChange={(e) => setEditableCoverLetter(e.target.value)}
-            className="w-full bg-gray-50 p-6 rounded-md border border-gray-200 min-h-96 whitespace-pre-wrap font-serif resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        ) : (
-          <div className="bg-gray-50 p-6 rounded-md border border-gray-200 min-h-96 whitespace-pre-wrap font-serif">
-            {generationInProgress && showLivePreview ? (
-              <div className="relative">
-                <div>{streamedContent || "Generating..."}</div>
-                {/* Cursor animation */}
-                <div className="absolute h-5 w-1 bg-blue-500 opacity-75 animate-pulse inline-block ml-1 -mt-3"></div>
-              </div>
-            ) : coverLetter ? (
-              coverLetter
-            ) : (
-              <div className="text-center text-gray-500 italic mt-20">
-                Your cover letter will appear here after generation
-              </div>
-            )}
-          </div>
-        )}
-
-        {coverLetter && !generationInProgress && (
-          <div className="mt-4 flex justify-end gap-2">
-            <button
-              onClick={() => {
-                const printWindow = window.open("", "_blank");
-                printWindow.document.write(`
-                  <html>
-                    <head>
-                      <title>Cover Letter - ${jobDetails.position} at ${
-                  jobDetails.company
-                }</title>
-                      <style>
-                        body { font-family: Georgia, serif; line-height: 1.6; padding: 40px; max-width: 800px; margin: 0 auto; }
-                        @media print { body { padding: 0; } }
-                      </style>
-                    </head>
-                    <body>
-                      <pre style="font-family: Georgia, serif; white-space: pre-wrap;">${
-                        isEditing ? editableCoverLetter : coverLetter
-                      }</pre>
-                    </body>
-                  </html>
-                `);
-                printWindow.document.close();
-                printWindow.focus();
-                setTimeout(() => {
-                  printWindow.print();
-                }, 300);
-              }}
-              className="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium"
-            >
-              Print
-            </button>
-            <button
-              onClick={() => {
-                // In a real app, you would use a library like jsPDF to create a PDF
-                const blob = new Blob(
-                  [isEditing ? editableCoverLetter : coverLetter],
-                  { type: "text/plain" }
-                );
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = `Cover_Letter_${jobDetails.company}_${jobDetails.position}.txt`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-              }}
-              className="py-2 px-4 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium"
-            >
-              Download Text
-            </button>
-          </div>
-        )}
-      </div>
+      <div className="w-full md:w-2/3">{renderSelectedTemplate()}</div>
     </div>
   );
 }

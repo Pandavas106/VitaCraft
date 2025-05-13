@@ -3,11 +3,12 @@ import { FaArrowLeft, FaArrowRight, FaPlus } from "react-icons/fa";
 import CP1 from "./../assets/CP1.png";
 import { motion, useInView } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/auth_context";
 
 function CoverLetter() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const navigator = useNavigate();
-
+  const { isLoggedIn } = useAuth();
   useEffect(() => {
     document.documentElement.style.overflowX = "hidden";
     return () => {
