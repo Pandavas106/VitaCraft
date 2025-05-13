@@ -54,7 +54,7 @@ function Nav({ setShowPopup, setIsSignUp }) {
   const navLinks = [
     { to: "/", label: "Home", icon: <FaHome /> },
     { to: "/templates", label: "Templates", icon: <FaFileAlt /> },
-    { to: "/coverpage", label: "Cover Page", icon: <FaClipboard /> },
+    { to: "/coverpage", label: "Cover Letters", icon: <FaClipboard /> },
     { to: "/ats", label: "ATS Checker", icon: <FaCheckCircle /> },
   ];
 

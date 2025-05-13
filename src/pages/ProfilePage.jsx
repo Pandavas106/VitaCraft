@@ -8,6 +8,7 @@ import ProjectsSection from "../components/profile/ProjectsSection";
 import AchievementsSection from "../components/profile/AchievementsSection";
 import { useResumeData } from "../context/Resume_Data";
 import { useAuth } from "../context/auth_context";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   // Active section state
@@ -68,6 +69,7 @@ const ProfilePage = () => {
     "Projects",
     "Achievements",
   ];
+  const navigator = useNavigate();
 
   // Function to navigate between sections
   const handleNavigate = (section) => {
@@ -132,7 +134,10 @@ const ProfilePage = () => {
             </div>
 
             <div className="mt-6 pt-6 border-t border-white/20">
-              <button className="w-full bg-white text-[#406B98] px-4 py-2 rounded font-medium hover:bg-gray-100 transition-colors">
+              <button
+                onClick={() => navigator(`/livepreview/${0}`)}
+                className="w-full bg-white text-[#406B98] px-4 py-2 rounded font-medium hover:bg-gray-100 transition-colors"
+              >
                 Preview Resume
               </button>
             </div>

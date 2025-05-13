@@ -5,7 +5,7 @@ import CoverPageSection from "../components/Home_Components/Coverpage_Section";
 import ATSScoreSection from "../components/Home_Components/ATS_Section";
 import FAQSection from "../components/Home_Components/FAQ_Section";
 
-function Home() {
+function Home({setShowPopup,setIsSignUp}) {
   useEffect(() => {
     document.documentElement.style.overflowX = "hidden";
     return () => {
@@ -15,7 +15,7 @@ function Home() {
 
   return (
     <div className="overflow-x-hidden">
-      <HeroSection />
+      <HeroSection setIsSignUp={setIsSignUp} setShowPopup={setShowPopup} />
       <TemplateSection />
       <CoverPageSection />
       <ATSScoreSection />

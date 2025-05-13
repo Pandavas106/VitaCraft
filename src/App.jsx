@@ -35,7 +35,7 @@ function App() {
 
             <div className="mt-16">
               <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Home setShowPopup={setShowPopup} setIsSignUp={setIsSignUp}/>} />
                 <Route path="/templates" element={<Template />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/coverpage" element={<CoverLetter />} />
