@@ -9,9 +9,11 @@ import R6 from "./../assets/Resumes/R6.jpg";
 import R7 from "./../assets/Resumes/R7.jpg";
 import { useNavigate } from "react-router-dom";
 import { useInView, motion } from "framer-motion";
+import { useAuth } from "../context/auth_context";
 
 function Templates() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     document.documentElement.style.overflowX = "hidden";
