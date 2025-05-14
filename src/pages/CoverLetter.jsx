@@ -16,6 +16,10 @@ function CoverLetter() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const navigator = useNavigate();
   const { isLoggedIn } = useAuth();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   useEffect(() => {
     document.documentElement.style.overflowX = "hidden";
     return () => {

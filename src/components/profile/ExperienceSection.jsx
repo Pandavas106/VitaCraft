@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { useResumeData } from "../../context/Resume_Data";
 import { doc, updateDoc } from "firebase/firestore";
@@ -19,6 +19,9 @@ const ExperienceSection = ({ isActive, setActiveSection, authUser }) => {
     description: "",
     points: [""],
   });
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handlePointChange = (index, value) => {
     const updatedPoints = [...newExperience.points];
@@ -391,7 +394,7 @@ const ExperienceSection = ({ isActive, setActiveSection, authUser }) => {
         </div>
       </div>
 
-      <div className="mt-6 flex justify-between">
+      <div className="mt-6 flex  md:justify-between gap-7">
         <button
           onClick={() => setActiveSection("Personal Info")}
           className="px-6 py-3 bg-gray-200 text-gray-700 rounded font-medium hover:bg-gray-300 transition-colors"

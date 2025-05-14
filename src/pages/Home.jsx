@@ -5,12 +5,15 @@ import CoverPageSection from "../components/Home_Components/Coverpage_Section";
 import ATSScoreSection from "../components/Home_Components/ATS_Section";
 import FAQSection from "../components/Home_Components/FAQ_Section";
 
-function Home({setShowPopup,setIsSignUp}) {
+function Home({ setShowPopup, setIsSignUp }) {
   useEffect(() => {
     document.documentElement.style.overflowX = "hidden";
     return () => {
       document.documentElement.style.overflowX = "auto";
     };
+  }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
   return (

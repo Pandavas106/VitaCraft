@@ -32,6 +32,9 @@ export default function LivePreview() {
     achievements: false,
     organizations: false,
   });
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const toggleSection = (section) => {
     setOpenSections({

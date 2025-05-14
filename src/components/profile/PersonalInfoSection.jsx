@@ -49,15 +49,16 @@ const PersonalInfoSection = ({
   const [formData, setFormData] = useState(initialFormData);
 
   // Update form data when context data changes
-  useEffect(() => {
-    if (defaultPersonalInfo) {
-      setFormData((prev) => ({
-        ...prev,
-        ...defaultPersonalInfo,
-      }));
-      setSummary(defaultProfile || "");
-    }
-  }, [defaultPersonalInfo, defaultProfile]);
+ useEffect(() => {
+  if (defaultPersonalInfo) {
+    setFormData((prev) => {
+      const isSame = JSON.stringify(prev) === JSON.stringify({ ...prev, ...defaultPersonalInfo });
+      return isSame ? prev : { ...prev, ...defaultPersonalInfo };
+    });
+  }
+
+  setSummary((prev) => (prev === defaultProfile ? prev : defaultProfile || ""));
+}, [defaultPersonalInfo, defaultProfile]);
 
   // Memoized input change handler
   const handleInputChange = useCallback((e) => {

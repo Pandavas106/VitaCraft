@@ -18,6 +18,9 @@ export default function CoverLetterGenerator() {
     notes: "",
     companyAddress: "",
   });
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const { isLoggedIn } = useAuth();
   const [coverLetter, setCoverLetter] = useState("");
   const [editableCoverLetter, setEditableCoverLetter] = useState("");
@@ -839,7 +842,9 @@ Thank you for considering my application. I look forward to the opportunity to d
       </div>
 
       {/* Preview Section */}
-      <div className="w-full overflow-y-auto md:w-2/3">{renderSelectedTemplate()}</div>
+      <div className="w-full overflow-y-auto md:w-2/3">
+        {renderSelectedTemplate()}
+      </div>
     </div>
   );
 }
