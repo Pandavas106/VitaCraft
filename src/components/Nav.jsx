@@ -164,7 +164,13 @@ function Nav({ setShowPopup, setIsSignUp }) {
                   <>
                     <div className="flex items-center gap-2 text-[#406B98] font-medium">
                       <FaUserCircle className="text-xl" />
-                      {authUser?.displayName || "Profile"}
+                      <Link
+                        to="/profile"
+                        onClick={() => setIsOpen(false)}
+                        className={getLinkClass("/profile")}
+                      >
+                        {authUser?.displayName || "Profile"}
+                      </Link>
                     </div>
                     <button
                       onClick={() => {

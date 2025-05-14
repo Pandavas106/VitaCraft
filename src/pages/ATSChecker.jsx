@@ -1,17 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Resume from "../components/Resume";
 import mammoth from "mammoth";
 // utils/pdfUtils.js
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
-import pdfjsWorker from 'pdfjs-dist/build/pdf.worker?url'; 
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker?url";
 import jsPDF from "jspdf";
 
-
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
-
-
 
 export async function extractTextFromPDF(arrayBuffer) {
   const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
@@ -27,10 +24,6 @@ export async function extractTextFromPDF(arrayBuffer) {
 
   return text;
 }
-
-
-
-
 
 const ATSCheckerPage = () => {
   const [file, setFile] = useState(null);
@@ -48,6 +41,9 @@ const ATSCheckerPage = () => {
       setFile(e.target.files[0]);
     }
   };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const navigateToTemplates = () => {
     navigator("/templates");
@@ -61,16 +57,19 @@ const ATSCheckerPage = () => {
       alert("Please upload your resume and add a job description");
       return;
     }
-  
+
     setIsAnalyzing(true);
-  
+
     try {
       let resumeText = "";
-  
+
       if (file.type === "application/pdf") {
         const arrayBuffer = await file.arrayBuffer();
         resumeText = await extractTextFromPDF(arrayBuffer);
-      } else if (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+      } else if (
+        file.type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ) {
         const arrayBuffer = await file.arrayBuffer();
         const result = await mammoth.extractRawText({ arrayBuffer });
         resumeText = result.value;
@@ -86,7 +85,7 @@ const ATSCheckerPage = () => {
         setIsAnalyzing(false);
         return;
       }
-  
+
       const prompt = `
   You are an ATS resume analyzer. Based on the following resume and job description, evaluate the resume and return a JSON object like this:
   {
@@ -103,7 +102,7 @@ const ATSCheckerPage = () => {
   Job Description: """${jobDescription}"""
   Resume: """${resumeText}"""
       `;
-  
+
       const response = await fetch(GEMINI_API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -111,28 +110,28 @@ const ATSCheckerPage = () => {
           contents: [{ parts: [{ text: prompt }] }],
         }),
       });
-  
+
       const data = await response.json();
       const jsonText = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
-if (!jsonText) {
-  console.log("Raw Gemini response:", data);
-  console.log("API key being used:", GEMINI_API_KEY);
-  throw new Error("Invalid response from Gemini API");
-}
+      if (!jsonText) {
+        console.log("Raw Gemini response:", data);
+        console.log("API key being used:", GEMINI_API_KEY);
+        throw new Error("Invalid response from Gemini API");
+      }
 
-let result;
-const cleanedJsonText = jsonText.replace(/```json|```/g, '').trim();
-try {
-  result = JSON.parse(cleanedJsonText);
-} catch (parseError) {
-  console.log(cleanedJsonText);
-  console.error("Error parsing Gemini response:", parseError);
-  alert("Received an unexpected response from Gemini.");
-  setIsAnalyzing(false);
-  return;
-}
-setResults(result);
+      let result;
+      const cleanedJsonText = jsonText.replace(/```json|```/g, "").trim();
+      try {
+        result = JSON.parse(cleanedJsonText);
+      } catch (parseError) {
+        console.log(cleanedJsonText);
+        console.error("Error parsing Gemini response:", parseError);
+        alert("Received an unexpected response from Gemini.");
+        setIsAnalyzing(false);
+        return;
+      }
+      setResults(result);
 
       setResults(result);
     } catch (error) {
@@ -144,31 +143,30 @@ setResults(result);
   };
 
   const handleDownloadPDF = () => {
-  const doc = new jsPDF();
-  doc.setFontSize(16);
-  doc.text("ATS Resume Analysis Report", 20, 20);
-  doc.setFontSize(12);
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text("ATS Resume Analysis Report", 20, 20);
+    doc.setFontSize(12);
 
-  doc.text(`Overall ATS Score: ${results.score}%`, 20, 40);
-  doc.text(`Keyword Match: ${results.keywordMatch}%`, 20, 50);
-  doc.text(`Section Headings: ${results.sectionHeadings}%`, 20, 60);
-  doc.text(`File Compatibility: ${results.fileCompatibility}%`, 20, 70);
-  doc.text(`Readability: ${results.readability}%`, 20, 80);
+    doc.text(`Overall ATS Score: ${results.score}%`, 20, 40);
+    doc.text(`Keyword Match: ${results.keywordMatch}%`, 20, 50);
+    doc.text(`Section Headings: ${results.sectionHeadings}%`, 20, 60);
+    doc.text(`File Compatibility: ${results.fileCompatibility}%`, 20, 70);
+    doc.text(`Readability: ${results.readability}%`, 20, 80);
 
-  doc.text("Missing Keywords:", 20, 100);
-  results.missingKeywords.forEach((keyword, idx) => {
-    doc.text(`- ${keyword}`, 25, 110 + idx * 10);
-  });
+    doc.text("Missing Keywords:", 20, 100);
+    results.missingKeywords.forEach((keyword, idx) => {
+      doc.text(`- ${keyword}`, 25, 110 + idx * 10);
+    });
 
-  const suggestionsStartY = 110 + results.missingKeywords.length * 10 + 10;
-  doc.text("Suggestions to Improve:", 20, suggestionsStartY);
-  results.suggestions.forEach((suggestion, idx) => {
-    doc.text(`- ${suggestion}`, 25, suggestionsStartY + 10 + idx * 10);
-  });
+    const suggestionsStartY = 110 + results.missingKeywords.length * 10 + 10;
+    doc.text("Suggestions to Improve:", 20, suggestionsStartY);
+    results.suggestions.forEach((suggestion, idx) => {
+      doc.text(`- ${suggestion}`, 25, suggestionsStartY + 10 + idx * 10);
+    });
 
-  doc.save("ATS_Report.pdf");
-};
-
+    doc.save("ATS_Report.pdf");
+  };
 
   const handleReset = () => {
     setFile(null);
@@ -359,8 +357,10 @@ setResults(result);
                 </div>
 
                 <div className="mt-6 pt-6 border-t border-gray-200">
-                  <button onClick={handleDownloadPDF}
-                    className="bg-[#406B98] text-white px-6 py-3 rounded text-lg font-semibold hover:bg-[#335680] transition-colors w-full">
+                  <button
+                    onClick={handleDownloadPDF}
+                    className="bg-[#406B98] text-white px-6 py-3 rounded text-lg font-semibold hover:bg-[#335680] transition-colors w-full"
+                  >
                     Download Detailed Report
                   </button>
                 </div>

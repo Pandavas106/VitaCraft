@@ -14,6 +14,9 @@ const ProfilePage = () => {
   // Active section state
   const [activeSection, setActiveSection] = useState("Personal Info");
   const { authUser } = useAuth();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const defaultResumeData = useResumeData();
   // Personal info states

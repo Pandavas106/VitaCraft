@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { useResumeData } from "../../context/Resume_Data";
 import { db } from "../../../firebase";
@@ -17,6 +17,10 @@ const EducationSection = ({ isActive, setActiveSection, authUser }) => {
     startYear: "",
     endYear: "",
   });
+  
+   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true });
@@ -319,7 +323,7 @@ const EducationSection = ({ isActive, setActiveSection, authUser }) => {
         </div>
       </div>
 
-      <div className="mt-6 flex justify-between">
+      <div className="mt-6 flex md:justify-between gap-7">
         <button
           onClick={() => setActiveSection("Experience")}
           className="px-6 py-3 bg-gray-200 text-gray-700 rounded font-medium hover:bg-gray-300 transition-colors"

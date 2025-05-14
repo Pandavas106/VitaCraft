@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { useResumeData } from "../../context/Resume_Data";
 import { db } from "../../../firebase";
@@ -21,6 +21,9 @@ const AchievementsSection = ({ isActive, setActiveSection, authUser }) => {
     setNewAchievement(e.target.value);
     setHasChanges(true);
   };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleAddAchievement = () => {
     if (newAchievement.trim()) {

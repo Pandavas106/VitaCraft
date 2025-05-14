@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { useResumeData } from "../../context/Resume_Data";
 import { db } from "../../../firebase";
@@ -31,6 +31,9 @@ const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
     position: "",
     location: "",
   });
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true });
@@ -209,8 +212,8 @@ const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
 
         {/* Technical Skills */}
         <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-[#406B98]">
+          <div className="md:flex justify-between items-center mb-4">
+            <h3 className="text-lg mb-3 md:mb-0 font-semibold text-[#406B98]">
               Technical Skills
             </h3>
             <div className="flex space-x-2">
@@ -299,8 +302,8 @@ const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
 
         {/* Soft Skills */}
         <div>
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-[#406B98]">
+          <div className="md:flex justify-between items-center mb-4">
+            <h3 className="text-lg mb-3 md:mb-0 font-semibold text-[#406B98]">
               Soft Skills
             </h3>
             <div className="flex space-x-2">
@@ -382,8 +385,8 @@ const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
 
       {/* Certificates Section */}
       <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold font-[Hanuman] text-[#406B98]">
+        <div className="md:flex justify-between items-center mb-6">
+          <h2 className="text-2xl mb-3 md:mb-0   font-bold font-[Hanuman] text-[#406B98]">
             Certificates
           </h2>
           <div className="flex space-x-2">
@@ -465,7 +468,7 @@ const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
 
       {/* Organizations Section */}
       <div className="bg-white p-6 rounded-lg shadow-lg">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex md:justify-between gap-4 items-center mb-6">
           <h2 className="text-2xl font-bold font-[Hanuman] text-[#406B98]">
             Organizations
           </h2>
@@ -630,7 +633,7 @@ const SkillsSection = ({ isActive, setActiveSection, authUser }) => {
         </div>
       </div>
 
-      <div className="mt-6 flex justify-between">
+      <div className="mt-6 flex  md:justify-between gap-7">
         <button
           onClick={() => setActiveSection("Education")}
           className="px-6 py-3 bg-gray-200 text-gray-700 rounded font-medium hover:bg-gray-300 transition-colors"

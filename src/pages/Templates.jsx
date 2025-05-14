@@ -14,6 +14,10 @@ import { useAuth } from "../context/auth_context";
 function Templates() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const { isLoggedIn } = useAuth();
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     document.documentElement.style.overflowX = "hidden";
