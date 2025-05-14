@@ -1,7 +1,8 @@
+
 import React, { useState, useRef, useEffect } from "react";
+
 import { motion, useInView } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import Resume from "../components/Resume";
 import mammoth from "mammoth";
 // utils/pdfUtils.js
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
@@ -143,30 +144,97 @@ const ATSCheckerPage = () => {
   };
 
   const handleDownloadPDF = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.text("ATS Resume Analysis Report", 20, 20);
-    doc.setFontSize(12);
 
-    doc.text(`Overall ATS Score: ${results.score}%`, 20, 40);
-    doc.text(`Keyword Match: ${results.keywordMatch}%`, 20, 50);
-    doc.text(`Section Headings: ${results.sectionHeadings}%`, 20, 60);
-    doc.text(`File Compatibility: ${results.fileCompatibility}%`, 20, 70);
-    doc.text(`Readability: ${results.readability}%`, 20, 80);
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
 
-    doc.text("Missing Keywords:", 20, 100);
-    results.missingKeywords.forEach((keyword, idx) => {
-      doc.text(`- ${keyword}`, 25, 110 + idx * 10);
-    });
+  // Set main title
+  doc.setTextColor("#406B98");
+  doc.setFontSize(18);
+  doc.setFont("helvetica", "bold");
+  doc.text("ATS Resume Analysis Report", pageWidth / 2, 20, { align: "center" });
 
-    const suggestionsStartY = 110 + results.missingKeywords.length * 10 + 10;
-    doc.text("Suggestions to Improve:", 20, suggestionsStartY);
-    results.suggestions.forEach((suggestion, idx) => {
-      doc.text(`- ${suggestion}`, 25, suggestionsStartY + 10 + idx * 10);
-    });
+  // Section: Score Overview
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor("#000");
+  doc.text("Overall ATS Score:", 20, 35);
+  doc.setTextColor("#406B98");
+  doc.setFontSize(20);
+  doc.setFont("helvetica", "bold");
+  doc.text(`${results.score}%`, 70, 35);
 
-    doc.save("ATS_Report.pdf");
-  };
+  // Metrics
+  const metrics = [
+    { label: "Keyword Match", value: results.keywordMatch },
+    { label: "Section Headings", value: results.sectionHeadings },
+    { label: "File Compatibility", value: results.fileCompatibility },
+    { label: "Readability", value: results.readability },
+  ];
+
+  let y = 50;
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor("#000");
+  metrics.forEach((metric) => {
+    doc.text(`${metric.label}:`, 20, y);
+    doc.setTextColor("#406B98");
+    doc.text(`${metric.value}%`, 70, y);
+    y += 10;
+    doc.setTextColor("#000");
+  });
+
+  // Section: Missing Keywords
+  y += 10;
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.text("Missing Keywords", 20, y);
+  y += 8;
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
+  results.missingKeywords.forEach((keyword, idx) => {
+    if (y > 280) { doc.addPage(); y = 20; }
+    doc.text(`- ${keyword}`, 25, y);
+    y += 8;
+  });
+
+ // Section: Suggestions
+y += 10;
+doc.setFontSize(14);
+doc.setFont("helvetica", "bold");
+doc.text("Suggestions to Improve", 20, y);
+y += 8;
+doc.setFontSize(12);
+doc.setFont("helvetica", "normal");
+
+results.suggestions.forEach((suggestion) => {
+  const leftMargin = 25;
+  const bulletWidth = 5; // Space for the bullet ✓
+  const textWidth = pageWidth - leftMargin - 15; // Right margin
+
+  const wrappedText = doc.splitTextToSize(suggestion, textWidth);
+
+  // Add a page if text will overflow
+  if (y + wrappedText.length * 6 > 280) {
+    doc.addPage();
+    y = 20;
+  }
+
+  // Draw the bullet on the first line
+  doc.text("✓", leftMargin, y);
+
+  // Draw the wrapped text with small indent
+  doc.text(wrappedText, leftMargin + bulletWidth, y);
+
+  // Move y for next item
+  y += wrappedText.length * 6 + 2;
+});
+
+
+
+
+  doc.save("ATS_Report.pdf");
+};
 
   const handleReset = () => {
     setFile(null);
@@ -357,10 +425,10 @@ const ATSCheckerPage = () => {
                 </div>
 
                 <div className="mt-6 pt-6 border-t border-gray-200">
-                  <button
-                    onClick={handleDownloadPDF}
-                    className="bg-[#406B98] text-white px-6 py-3 rounded text-lg font-semibold hover:bg-[#335680] transition-colors w-full"
-                  >
+
+                  <button onClick={handleDownloadPDF}
+                     className="bg-[#406B98] text-white px-6 py-3 rounded text-lg font-semibold hover:bg-[#335680] transition-colors w-full">
+
                     Download Detailed Report
                   </button>
                 </div>
